@@ -5,8 +5,11 @@
  */
 
 import type { DistortionKind, EpistemicStatus } from "../sim/memory";
-import type { Text } from "./i18n";
+import type { Locale, Text } from "./i18n";
+import { t } from "./i18n";
 import { COPY } from "./copy";
+import type { Doc } from "./shell";
+import { el } from "./shell";
 
 export const EPISTEMIC_STATUSES: readonly EpistemicStatus[] = [
   "witnessed",
@@ -65,6 +68,26 @@ export function displayStatus(entry: {
   readonly distortion: DistortionKind | null;
 }): EpistemicStatus {
   return entry.distortion === null ? entry.witnessed : "fabricated";
+}
+
+/**
+ * 一行末尾的标记元素。默认几乎不可见，悬停或键盘聚焦才展开标签；
+ * `aria-label` 始终携带完整说明，读屏用户不必悬停。
+ */
+export function witnessElement(doc: Doc, status: EpistemicStatus, locale: Locale): HTMLElement {
+  const mark = markFor(status);
+  return el(doc, "button", {
+    className: "gazer-witness",
+    attrs: {
+      type: "button",
+      "data-status": status,
+      "aria-label": `${t(locale, COPY.witness.markTitle)}: ${t(locale, mark.fullText)}`,
+    },
+    children: [
+      doc.createTextNode(mark.glyph),
+      el(doc, "span", { className: "gazer-witness__label", text: t(locale, mark.label) }),
+    ],
+  });
 }
 
 export interface WitnessCounts {

@@ -14,7 +14,7 @@ import { topTraits } from "../sim/genome";
 import type { Locale, Text } from "./i18n";
 import { t, tf } from "./i18n";
 import { COPY } from "./copy";
-import { countByStatus, displayStatus, markFor, type WitnessCounts } from "./witness";
+import { countByStatus, displayStatus, witnessElement, type WitnessCounts } from "./witness";
 import type { Doc } from "./shell";
 import { el } from "./shell";
 
@@ -108,19 +108,7 @@ function field(doc: Doc, className: string, label: string, value: string): HTMLE
 
 function memoryLine(doc: Doc, entry: MemoryEntry, locale: Locale): HTMLElement {
   const status = displayStatus(entry);
-  const mark = markFor(status);
-  const witness = el(doc, "button", {
-    className: "gazer-witness",
-    attrs: {
-      type: "button",
-      "data-status": status,
-      "aria-label": `${t(locale, COPY.witness.markTitle)}: ${t(locale, mark.fullText)}`,
-    },
-    children: [
-      doc.createTextNode(mark.glyph),
-      el(doc, "span", { className: "gazer-witness__label", text: t(locale, mark.label) }),
-    ],
-  });
+  const witness = witnessElement(doc, status, locale);
   const source =
     entry.source === null ? "" : ` ${tf(locale, COPY.album.sourceFrom, { id: entry.source })}`;
   return el(doc, "li", {

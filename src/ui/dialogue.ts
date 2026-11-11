@@ -12,7 +12,7 @@ import type { CreatureId, Mood } from "../sim/types";
 import type { Locale } from "./i18n";
 import { t } from "./i18n";
 import { COPY } from "./copy";
-import { markFor, type WitnessMark } from "./witness";
+import { witnessElement } from "./witness";
 import type { Doc } from "./shell";
 import { el } from "./shell";
 
@@ -136,22 +136,6 @@ export interface DialogueView {
   setTitle(locale: Locale): void;
 }
 
-function witnessNode(doc: Doc, mark: WitnessMark, locale: Locale): HTMLElement {
-  const label = el(doc, "span", {
-    className: "gazer-witness__label",
-    text: t(locale, mark.label),
-  });
-  return el(doc, "button", {
-    className: "gazer-witness",
-    attrs: {
-      type: "button",
-      "data-status": mark.status,
-      "aria-label": `${t(locale, COPY.witness.markTitle)}: ${t(locale, mark.fullText)}`,
-    },
-    children: [doc.createTextNode(mark.glyph), label],
-  });
-}
-
 function lineNode(doc: Doc, line: DialogueLineInput, locale: Locale): HTMLElement {
   const children: Node[] = [
     el(doc, "span", {
@@ -160,7 +144,7 @@ function lineNode(doc: Doc, line: DialogueLineInput, locale: Locale): HTMLElemen
     }),
     el(doc, "span", { className: "gazer-dialogue__text", text: line.text }),
   ];
-  children.push(witnessNode(doc, markFor(line.status), locale));
+  children.push(witnessElement(doc, line.status, locale));
   return el(doc, "div", { className: "gazer-dialogue__line", children });
 }
 
