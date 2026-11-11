@@ -1,6 +1,9 @@
 import { Application, Container, Graphics, Text } from "pixi.js";
+import { registerServiceWorker } from "./shell/register";
 import { DEFAULT_MASK, step } from "./sim/engine";
 import type { CreatureState, TilePos, WorldState } from "./sim/types";
+
+registerServiceWorker("./sw.js");
 
 const TILE = 24;
 const COLS = 16;
