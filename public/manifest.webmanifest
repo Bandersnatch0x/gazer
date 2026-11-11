@@ -1,0 +1,25 @@
+{
+  "name": "GAZER",
+  "short_name": "GAZER",
+  "description": "A 1997 virtual pet game that was never a pet game.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0f0c",
+  "theme_color": "#0a0f0c",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
