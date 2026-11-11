@@ -90,7 +90,7 @@ describe("resolveWhisper", () => {
     );
   });
 
-  it("stores a distorted memory as heard, sourced, and non-null distortion", () => {
+  it("stores a distorted memory as witnessed and unsourced, with the distortion recorded", () => {
     // distortionBias 1 drives retention to zero: every in-range whisper distorts.
     fc.assert(
       fc.property(fc.integer(), fc.string({ minLength: 1 }), (seed, entryId) => {
@@ -98,8 +98,10 @@ describe("resolveWhisper", () => {
         const receiver = creature("r1", 1, 1, 1);
         const result = resolveWhisper({ sender, receiver, entry: entry(entryId), worldSeed: seed });
         expect(result).not.toBeNull();
-        expect(result?.witnessed).toBe("heard");
-        expect(result?.source).toBe("s1");
+        // The holder believes it saw this happen. Only the distortion field
+        // records the truth, and it is invisible to the holder.
+        expect(result?.witnessed).toBe("witnessed");
+        expect(result?.source).toBeNull();
         expect(result?.distortion).not.toBeNull();
         expect(DISTORTIONS).toContain(result?.distortion);
       }),
@@ -137,10 +139,14 @@ describe("resolveWhisper", () => {
         entry: original,
         worldSeed: seed,
       });
-      expect(result?.witnessed).toBe("heard");
       if (result?.distortion === null) {
+        expect(result?.witnessed).toBe("heard");
+        expect(result?.source).toBe("s1");
         expect(result.fact).toBe(original.fact);
       } else {
+        // A distorted memory is stored as if witnessed: its holder cannot tell.
+        expect(result?.witnessed).toBe("witnessed");
+        expect(result?.source).toBeNull();
         expect(result?.distortion).not.toBeNull();
       }
     }

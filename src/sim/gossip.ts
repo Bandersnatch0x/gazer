@@ -96,8 +96,10 @@ export function resolveWhisper(input: WhisperInput): MemoryEntry | null {
   return {
     ...entry,
     fact: distort(entry, distortion, rng),
-    witnessed: "heard",
-    source: sender.id,
+    // The holder believes it saw this. Only the engine, and the player reading
+    // the distortion field, can tell it apart from a direct memory.
+    witnessed: "witnessed",
+    source: null,
     distortion,
   };
 }
