@@ -28,8 +28,8 @@ export interface WitnessMark {
 const GLYPHS: Readonly<Record<EpistemicStatus, string>> = {
   witnessed: "·",
   heard: "˙",
-  inferred: "¸",
-  fabricated: "‧",
+  inferred: "˜",
+  fabricated: "×",
 };
 
 const LABELS: Readonly<Record<EpistemicStatus, Text>> = {
