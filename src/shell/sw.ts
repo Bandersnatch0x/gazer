@@ -1,7 +1,7 @@
 const CACHE_PREFIX = "gazer-shell-";
-const CACHE_NAME = `${CACHE_PREFIX}v1`;
+export const CACHE_NAME = `${CACHE_PREFIX}v1`;
 const PRECACHE_URLS: readonly string[] = ["./", "./manifest.webmanifest"];
-const API_PREFIX = "/api/";
+const API_ROOT = "/api";
 
 interface ExtendableEventLike {
   waitUntil(task: Promise<unknown>): void;
@@ -22,13 +22,11 @@ export interface ServiceWorkerScope {
   skipWaiting(): Promise<void>;
 }
 
-export { CACHE_NAME };
-
 export function isCacheable(request: Request, origin: string): boolean {
   if (request.method !== "GET") return false;
   const url = new URL(request.url);
   if (url.origin !== origin) return false;
-  return url.pathname !== API_PREFIX.slice(0, -1) && !url.pathname.startsWith(API_PREFIX);
+  return url.pathname !== API_ROOT && !url.pathname.startsWith(`${API_ROOT}/`);
 }
 
 async function cacheFirst(scope: ServiceWorkerScope, request: Request): Promise<Response> {
