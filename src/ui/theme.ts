@@ -4,11 +4,7 @@
  * 组件文件扫描测试会把本文件列入豁免，并额外断言本文件不含 `content`。
  */
 
-export function css(strings: TemplateStringsArray): string {
-  return strings.join("");
-}
-
-export const SHELL_STYLE = css`
+export const SHELL_STYLE = `
   :root {
     --gazer-paper: #10130f;
     --gazer-paper-raised: #171b15;
