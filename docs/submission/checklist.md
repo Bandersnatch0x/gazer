@@ -4,11 +4,11 @@ Kiroween 2026, Resurrection category. Deadline 2026-12-04 14:00 Pacific.
 
 | Artifact | Requirement | Location | Status |
 | --- | --- | --- | --- |
-| Public GitHub repo | public, MIT in About | pending | todo |
-| Open-source license | visible in About | `LICENSE` | todo |
+| Public GitHub repo | public, MIT in About | https://github.com/Bandersnatch0x/gazer | done |
+| Open-source license | visible in About | `LICENSE` | done |
 | Created after 2026-10-30 | first commit date | git log | done |
-| `.kiro` directory | specs, hooks, steering, not ignored | `.kiro/` | todo |
-| Working demo URL | reachable | pending | todo |
+| `.kiro` directory | specs, hooks, steering, not ignored | `.kiro/` | done |
+| Working demo URL | reachable | https://bandersnatch0x.github.io/gazer/ | done |
 | Local run | `npm install && npm run dev` | `README.md` | done |
 | Gate | `npm run check` green | `package.json` | done |
 | Build | `npm run build` | `dist/` | done |
