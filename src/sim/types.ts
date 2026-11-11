@@ -1,3 +1,5 @@
+import type { PromptGenome } from "./genome";
+
 export type CreatureId = string;
 
 export type TilePos = { readonly x: number; readonly y: number };
@@ -35,6 +37,8 @@ export interface CreatureState {
   readonly palette: readonly string[];
   readonly mask: readonly string[];
   readonly hatchedAtTick: number;
+  /** The soul is a prompt. Absent only before a genome has been assigned. */
+  readonly genome?: PromptGenome;
 }
 
 export interface Structure {
