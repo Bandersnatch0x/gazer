@@ -1,0 +1,13 @@
+{
+  "name": "gate-on-src-change",
+  "description": "Run the repository gate whenever simulation source or tests change.",
+  "enabled": true,
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["src/**", "tests/**"]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "npm run check"
+  }
+}

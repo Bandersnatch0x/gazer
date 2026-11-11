@@ -1,0 +1,25 @@
+node_modules/
+dist/
+coverage/
+
+# Local agent process plane (skills/ is re-included: it ships with the repo)
+.agents/*
+!.agents/skills/
+
+# Agent scratch and durable local output
+.agent/
+.scratch/
+.audit/
+.orchestration/
+.playwright-cli/
+
+# Local env
+.env
+.env.local
+
+# Kiro project assets ship with the repo: never ignore .kiro/
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+*.log
