@@ -1,0 +1,26 @@
+{
+  "name": "gazer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A 1997 virtual pet game that was never a pet game.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "check": "tsc --noEmit && vitest run"
+  },
+  "dependencies": {
+    "pixi.js": "^8.6.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "fast-check": "^3.23.2",
+    "gh-pages": "^6.3.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "vitest": "^3.2.7"
+  }
+}
