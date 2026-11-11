@@ -1,0 +1,357 @@
+{
+  "schemaVersion": 2,
+  "purpose": "Describe implementation ownership and separate discovery, dependency, runtime, and evidence states.",
+  "capabilities": [
+    {
+      "id": "route",
+      "asset": "skills/workflow/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "requirements-clarification",
+      "asset": ".agents/skills/drill/SKILL.md",
+      "implementation": "stage",
+      "discovery": "not-run",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "planning",
+      "asset": ".agents/skills/chart/SKILL.md",
+      "implementation": "stage",
+      "discovery": "not-run",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "specification",
+      "asset": ".agents/skills/charter/SKILL.md",
+      "implementation": "stage",
+      "discovery": "not-run",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "vertical-slicing",
+      "asset": ".agents/skills/slice/SKILL.md",
+      "implementation": "stage",
+      "discovery": "not-run",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "implementation",
+      "asset": ".agents/skills/build/SKILL.md",
+      "implementation": "stage",
+      "discovery": "not-run",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "acceptance",
+      "asset": ".agents/skills/gate/SKILL.md",
+      "implementation": "stage",
+      "discovery": "not-run",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "delivery-closeout",
+      "asset": ".agents/skills/ship/SKILL.md",
+      "implementation": "stage",
+      "discovery": "not-run",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "architecture",
+      "asset": "skills/workflow/architect/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "alternative-designs",
+      "asset": "skills/workflow/arena/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "blast-radius",
+      "asset": "skills/workflow/blast-radius/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "domain-modeling",
+      "asset": "skills/workflow/domain-modeling/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "read-only-walkthrough",
+      "asset": "skills/workflow/how/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "design-rationale",
+      "asset": "skills/workflow/why/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "evidence-research",
+      "asset": "skills/workflow/research/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "bug-diagnosis",
+      "asset": "skills/workflow/diagnose/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "behavior-first-fix",
+      "asset": "skills/workflow/tdd/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "behavior-preserving-refactor",
+      "asset": "skills/workflow/refactor/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "performance-measurement",
+      "asset": "skills/workflow/benchmark/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "code-review",
+      "asset": "skills/workflow/code-review/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "adversarial-review",
+      "asset": "skills/workflow/interrogate/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "prototype",
+      "asset": "skills/workflow/prototype/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "large-task-playbook",
+      "asset": "skills/workflow/figure-it-out/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "parallel-work",
+      "asset": "skills/workflow/swarm/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "context-recovery",
+      "asset": "skills/workflow/recall/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "decision-trail",
+      "asset": "skills/workflow/show-me-your-work/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "recurring-error-correction",
+      "asset": "skills/workflow/correct/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "pull-request-closeout",
+      "asset": "skills/workflow/pr/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "workflow-retrospective",
+      "asset": "skills/workflow/retro/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "verification-recipe",
+      "asset": "skills/workflow/create-verification/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "verification-maintenance",
+      "asset": "skills/workflow/maintain-verification/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "technical-explanation",
+      "asset": "skills/workflow/teach/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "technical-writing",
+      "asset": "skills/workflow/technical-writing/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "clear-prose",
+      "asset": "skills/workflow/unslop/SKILL.md",
+      "implementation": "native",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "remote-event-ingestion",
+      "asset": null,
+      "implementation": "host-dependent",
+      "discovery": "unknown",
+      "dependencies": "unknown",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "background-wakeup",
+      "asset": null,
+      "implementation": "host-dependent",
+      "discovery": "unknown",
+      "dependencies": "unknown",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "remote-merge",
+      "asset": "templates/runtime/merge-executor.mjs",
+      "implementation": "host-dependent",
+      "discovery": "unknown",
+      "dependencies": "unknown",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "persistent-orchestration",
+      "asset": null,
+      "implementation": "host-dependent",
+      "discovery": "unknown",
+      "dependencies": "unknown",
+      "runtime": "not-run",
+      "evidence": []
+    },
+    {
+      "id": "browser-verification-driver",
+      "asset": "templates/skill/verify/",
+      "implementation": "partial",
+      "discovery": "verified",
+      "dependencies": "not-applicable",
+      "runtime": "not-run",
+      "evidence": []
+    }
+  ]
+}

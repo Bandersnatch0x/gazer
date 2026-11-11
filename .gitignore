@@ -17,6 +17,8 @@ coverage/
 .env
 .env.local
 
+# Kiro project assets ship with the repo: never ignore .kiro/
+
 # Editor and OS noise
 .DS_Store
 Thumbs.db

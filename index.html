@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAZER</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #0a0f0c;
+        color: #cfe8d5;
+        font: 12px/1.6 ui-monospace, monospace;
+      }
+      #stage {
+        display: grid;
+        place-items: center;
+        height: 100%;
+      }
+      #hud {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        white-space: pre;
+        opacity: 0.75;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage"><canvas id="canvas"></canvas></div>
+    <pre id="hud"></pre>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -23,6 +23,8 @@ type EntityKind =
 
 A Gazerling is `pet` at Stage 0 and `observer` at Stage 2. **The entity does not change. The category does.** Nothing in the simulation was ever a pet; the label was the player's projection.
 
+`Stage` in this document is the expression tier derived from GV. It is a clock reading, not the cause: a shift happens because the player saw something they cannot un-know, and it is recorded in the ledger. A later GV drop lowers the tier and the volume; it never reverses the recorded shift.
+
 ### Axis B — Persistence
 
 What makes an entity the same entity across time.
@@ -74,17 +76,19 @@ The last row is the point. At Stage 0 the player believes there is no model. At 
 
 ## 3. Ontological drift
 
-Stage progression is not a difficulty curve. It is a sequence of category collapses. Each one is triggered by a fact the player cannot un-know.
+Ontology progression is not a difficulty curve. It is a sequence of category collapses. Each one is triggered by a fact the player cannot un-know.
 
 ```ts
 interface OntologicalShift {
-  readonly atStage: Stage;
+  readonly atStage: Stage;      // the expression tier when it happened; not a gate
   readonly entity: string;
   readonly from: EntityKind;
   readonly to: EntityKind;
   readonly evidence: string;   // what the player saw that made it irreversible
 }
 ```
+
+`atStage` is a timestamp in tier units. Nothing reads it to decide whether a shift still holds.
 
 | Stage | Shift | Evidence the player saw |
 | --- | --- | --- |
@@ -139,6 +143,37 @@ interface BeliefClaim {
 
 A `BeliefClaim` with `traceableTo: null` is a rumour with no origin. It still drives behaviour. The player can engineer beliefs by controlling who witnesses what. This is the deepest layer: **you are not raising creatures, you are farming a belief system.**
 
+Each `MemoryEntry` also carries `salience: number` (0..1) and `valence: number` (-1..1). They do not describe truth; they describe how hard a belief pulls on speech and how bad it feels.
+
+### Two layers of memory
+
+`MemorySlice` has two layers, and the split replaces the earlier fixed core-slot scheme, which hard-coded event types into a six-slot exemption.
+
+```ts
+interface MemorySlice {
+  readonly working: readonly MemoryEntry[];            // <= 60, FIFO, salience decays
+  readonly consolidated: readonly ConsolidatedEntry[]; // <= 12, never evicted
+}
+
+interface ConsolidatedEntry {
+  readonly id: string;                    // cons_031
+  readonly content: string;
+  readonly derivedFrom: readonly string[];
+  readonly consolidatedAt: string;
+  readonly perspectiveNote: string | null;
+}
+```
+
+`working` is ordinary episodic memory: capacity 60, FIFO, and `salience` decays with age, so most events are genuinely forgettable. `consolidated` is self-knowledge: capacity 12, written only by the model, and never evicted by code.
+
+Three rules govern consolidation.
+
+1. It runs once per `session:end`, merged into the same call as drift consolidation. It adds no call and no latency to the session.
+2. When `consolidated` already holds 12 entries, that same call must decide which entry most no longer defines the creature and return it in a `retire` field. The retired entry moves to the tail of `working`. A permanent fact can only be forgotten through a model verdict; the engine never deletes one.
+3. In `docs/design/CONTEXT.md`, consolidated entries get their own section at about 20 tokens per creature, carved out of the 60-token candidate-memory allowance, which leaves 3 candidate memories instead of 4. The serialised form is `always: [cons_031] "your human once lied to you about 02"`.
+
+Consolidated entries can be quoted: `memoryRef` may use a `cons_` prefix, and such a citation is as trustworthy as `witnessed`. It is the individual's account of itself, not a rumour, so the validator treats it as first-hand.
+
 ## 7. The model as an entity
 
 The LLM is not infrastructure. It is an inhabitant with a body made of latency.
@@ -176,3 +211,23 @@ Every claim above has a test or a validator behind it:
 | Player entry is read-only | Type-level plus boundary scan |
 
 If a claim cannot be enforced, it does not go in this document.
+
+## 10. Isolation has layers
+
+The roundtable is one completion, not several minds. What keeps creatures inside their own memories is the engine, and only the engine.
+
+| Layer | What it is | Strength |
+| --- | --- | --- |
+| Model | One call, one model writing every speaker's turns | None: there is no isolation to claim here |
+| Context | Each creature's memory block is a labelled section, and the prompt asks the model to cite only its own block | Soft |
+| Engine | Every turn's `memoryRef` must exist in that speaker's `MemorySlice`; otherwise the whole turn is replaced by a line from that creature's `manualPool` | Hard |
+
+All attending creatures' memory blocks sit in the same context. The model can see every one of them. The rule it is given is "do not cite a memory ID that is not yours", not "you cannot see it". Writing anything else would be a claim a knowledgeable judge can disprove in one sentence, so the documents say it plainly.
+
+**Isolation lives in the engine, not in the model.**
+
+One place buys real isolation back. At Level B, a turn whose intent is `deceive` or `accuse`, with the other party present and the expression tier at 3 or above, is re-asked in a separate call that receives only that speaker's own slice and a genome summary. That second call is a genuinely separate context, and it fires at most once per scene.
+
+The layered answer, stated for review: everyday dialogue is one model with role separation and engine-enforced memory isolation; at the moments of lying and accusation, each individual's line passes an independent mind that holds only its own memories. Isolation does not rely on model self-discipline; it relies on architecture.
+
+Known limitation: the model can cite a legal memory ID and then write a line that goes beyond that memory's content. The mitigation is a keyword-overlap check between the generated text and the referenced memory; below the threshold, the turn is replaced by the speaker's `manualPool`. That is mitigation, not a cure. The validator proves provenance, not fidelity.
