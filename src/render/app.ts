@@ -61,6 +61,15 @@ export async function createApp(canvas: HTMLCanvasElement, shell?: ShellHandler)
     autoDensity: false,
     roundPixels: true,
     preference: "webgl",
+    // A fixed-size backing store plus an opaque CSS box keeps the compositor
+    // from showing an uninitialised buffer when a fixed-position panel forces
+    // a repaint.
+    clearBeforeRender: true,
+    // Without this, a compositor-driven repaint can show an uninitialised
+    // rectangle where the canvas was not re-rendered. The scene is static
+    // between draws, so keeping the buffer costs nothing and removes the
+    // class of bug entirely.
+    preserveDrawingBuffer: true,
   });
 
   const root = new Container();

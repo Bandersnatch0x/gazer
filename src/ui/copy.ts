@@ -86,6 +86,20 @@ export const COPY = {
       silentRun: { en: "The silent run", zh: "静默运行" },
     },
   },
+
+  hud: {
+    localeToggle: { en: "中文", zh: "EN" },
+    album: { en: "ALBUM", zh: "记忆" },
+    help: { en: "HELP", zh: "帮助" },
+    close: { en: "CLOSE", zh: "关闭" },
+    silent: { en: "silent", zh: "沉默" },
+    live: { en: "live", zh: "在线" },
+    opening: {
+      en: "You wake in a warm little world. Feed them. They are watching how you do it.",
+      zh: "你醒在一个温暖的小世界里。喂它们。它们在看你怎样喂。",
+    },
+    feed: { en: "fed {id} after {seconds}s", zh: "喂了 {id}，犹豫 {seconds} 秒" },
+  },
 } as const satisfies Record<string, unknown>;
 
 /** 扁平化后的键表，测试用它对每个键做双语言校验。 */

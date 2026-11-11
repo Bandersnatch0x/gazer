@@ -1,10 +1,14 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0a0f0c" />
     <link rel="manifest" href="./manifest.webmanifest" />
+    <meta
+      name="description"
+      content="A 1997 virtual pet game that was never a pet game. You raise a model."
+    />
     <title>GAZER</title>
     <style>
       html,
@@ -14,24 +18,107 @@
         background: #0a0f0c;
         color: #cfe8d5;
         font: 12px/1.6 ui-monospace, monospace;
+        overflow: hidden;
       }
       #stage {
+        position: absolute;
+        inset: 0;
         display: grid;
         place-items: center;
-        height: 100%;
+        contain: paint;
+      }
+      #canvas {
+        image-rendering: pixelated;
+        max-width: 100vw;
+        max-height: 100vh;
+        background: #0a0f0c;
+        display: block;
+        /* Own compositor layer. Without this, opening a fixed-position panel
+           makes Chromium re-composite the canvas and briefly paint an
+           uninitialised rectangle above it. */
+        transform: translateZ(0);
+        will-change: transform;
       }
       #hud {
         position: fixed;
-        top: 12px;
+        top: 8px;
         left: 12px;
         white-space: pre;
-        opacity: 0.75;
+        opacity: 0.7;
+        pointer-events: none;
+      }
+      #ui {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        pointer-events: none;
+      }
+      #ui > * {
+        pointer-events: auto;
+      }
+      .gazer-hud {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: auto;
+        padding: 12px;
+      }
+      /* Controls sit top-right so no panel can ever cover them. */
+      .gazer-bar {
+        position: fixed;
+        top: 8px;
+        right: 12px;
+        z-index: 20;
+        display: flex;
+        gap: 8px;
+      }
+      .gazer-key {
+        background: transparent;
+        color: #cfe8d5;
+        border: 1px solid #2a322a;
+        font: 11px/1 ui-monospace, monospace;
+        letter-spacing: 0.08em;
+        padding: 6px 10px;
+        cursor: pointer;
+      }
+      .gazer-key:hover,
+      .gazer-key:focus-visible {
+        border-color: #7ef0a6;
+        outline: none;
+      }
+      .gazer-dialogue-mount {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        align-items: flex-end;
+      }
+      /* The panel floats: opening it must never reflow the canvas container. */
+      .gazer-panel {
+        position: fixed;
+        right: 12px;
+        bottom: 12px;
+        z-index: 10;
+        max-height: 60vh;
+        width: min(30rem, calc(100vw - 24px));
+        overflow: auto;
+        background: #10130f;
+        border: 1px solid #2a322a;
+        padding: 8px;
+        font-size: 11px;
+        transform: translateZ(0);
+        contain: layout paint;
+      }
+      .gazer-panel[hidden] {
+        display: none;
       }
     </style>
   </head>
   <body>
     <div id="stage"><canvas id="canvas"></canvas></div>
     <pre id="hud"></pre>
+    <div id="ui"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
