@@ -25,6 +25,7 @@ import {
   integerScale,
   planStructure,
   scenePlan,
+  tileCenter,
 } from "./scene";
 import { MASK_SIZE, renderMask, spriteKey } from "./sprite";
 
@@ -221,6 +222,15 @@ export async function createApp(canvas: HTMLCanvasElement, shell?: ShellHandler)
       child.destroy({ children: true });
     }
     sprites.clear();
+    for (const egg of world.eggs) {
+      const at = tileCenter(egg.at);
+      const shell = new Graphics();
+      shell
+        .ellipse(at.x, at.y - 3, 4, 5)
+        .fill({ color: "#f2e6c9" })
+        .stroke({ width: 1, color: egg.forced ? "#b46a8a" : "#7d8f81" });
+      objectLayer.addChild(shell);
+    }
     for (const object of scene.objects) {
       if (object.kind === "structure") {
         drawStructure(object);

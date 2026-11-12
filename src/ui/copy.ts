@@ -102,6 +102,33 @@ export const COPY = {
     },
     feed: { en: "fed {id} after {seconds}s", zh: "喂了 {id}，犹豫 {seconds} 秒" },
   },
+
+  panels: {
+    nameTitle: { en: "GIVE IT A NAME", zh: "给它起个名字" },
+    namePlaceholder: { en: "a name", zh: "一个名字" },
+    confirm: { en: "CONFIRM", zh: "确定" },
+    pupilGrass: {
+      en: "In the eye: grass, and the shape of the caretaker.",
+      zh: "瞳孔里：草地，和一个饲养员的轮廓。",
+    },
+    pupilWatched: {
+      en: "In the eye: your cursor. It has been there for some time.",
+      zh: "瞳孔里：你的光标。它在那里已经有一会儿了。",
+    },
+    hatchTitle: { en: "AN EGG. TWO WILLS MADE ONE.", zh: "一枚蛋。两个意志合成的一个。" },
+    hatchImmediate: { en: "HATCH NOW", zh: "立即孵化" },
+    hatchImmediateNote: { en: "You meet it at once.", zh: "你立刻见到它。" },
+    hatchWarm: { en: "WARM HATCH", zh: "温水孵化" },
+    hatchWarmNote: { en: "More curious. It will ask more.", zh: "更活泼。它会问得更多。" },
+    hatchStill: { en: "STILL HATCH", zh: "静置孵化" },
+    hatchStillNote: { en: "More loyal. It will cling.", zh: "更沉稳。它会更黏人。" },
+    hatchSelf: { en: "LEAVE IT TO THEM", zh: "留给它们自己" },
+    hatchSelfNote: { en: "You do not decide. Takes three times as long.", zh: "你不做决定。要花三倍时间。" },
+    hatchForcedNote: {
+      en: "They were not willing. This will be remembered.",
+      zh: "它们并不愿意。这件事会被记住。",
+    },
+  },
 } as const satisfies Record<string, unknown>;
 
 /** 扁平化后的键表，测试用它对每个键做双语言校验。 */

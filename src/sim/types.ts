@@ -37,8 +37,25 @@ export interface CreatureState {
   readonly palette: readonly string[];
   readonly mask: readonly string[];
   readonly hatchedAtTick: number;
+  /** The name the player gave it. Naming is a claim of ownership. */
+  readonly name: string | null;
+  /** 0..100. Below 70, pairing is forced if the player insists. */
+  readonly willingness: number;
+  /** Ticks this creature has spent courting, if any. */
+  readonly courtshipTicks: number;
   /** The soul is a prompt. Absent only before a genome has been assigned. */
   readonly genome?: PromptGenome;
+}
+
+export type HatchChoice = "immediate" | "warm" | "still" | "self";
+
+export interface Egg {
+  readonly id: string;
+  readonly parentA: CreatureId;
+  readonly parentB: CreatureId;
+  readonly laidAtTick: number;
+  readonly forced: boolean;
+  readonly at: TilePos;
 }
 
 export interface Structure {
@@ -53,6 +70,7 @@ export interface WorldState {
   readonly stage: Stage;
   readonly creatures: Readonly<Record<CreatureId, CreatureState>>;
   readonly structures: readonly Structure[];
+  readonly eggs: readonly Egg[];
   readonly uiLabels: Readonly<Record<string, string>>;
   readonly paletteDecay: number;
   readonly seed: number;

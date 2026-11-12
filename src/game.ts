@@ -18,7 +18,8 @@ import { emptyOntology } from "./sim/ontology";
 import type { OntologyLedger } from "./sim/ontology";
 import type { Stage, CreatureState, WorldState } from "./sim/types";
 import { INITIAL_GV } from "./sim/types";
-import { step } from "./sim/engine";
+import { courtshipStep, step } from "./sim/engine";
+import type { HatchChoice } from "./sim/types";
 import { createRegistry } from "./sim/hooks";
 import { createAlbum } from "./ui/album";
 import type { AlbumCreature } from "./ui/album";
@@ -26,6 +27,7 @@ import { createDialogue } from "./ui/dialogue";
 import type { DialogueView } from "./ui/dialogue";
 import { createHelp } from "./ui/help";
 import type { HelpView } from "./ui/help";
+import { choicePanel, namePanel, pupilPanel } from "./ui/panels";
 import { detectLocale, LOCALE_STORAGE_KEY, nextLocale, t } from "./ui/i18n";
 import type { Locale } from "./ui/i18n";
 import { COPY } from "./ui/copy";
@@ -67,6 +69,7 @@ function initialWorld(): WorldState {
     stage: 0,
     creatures: {},
     structures: [],
+    eggs: [],
     uiLabels: {},
     paletteDecay: 0,
     seed: 1997,
@@ -303,6 +306,21 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     }
   });
 
+  let dragTarget: string | null = null;
+  let dragStart: { x: number; y: number } | null = null;
+  let holdTimer: ReturnType<typeof setTimeout> | null = null;
+  let moved = false;
+
+  function tileFromPoint(x: number, y: number): { x: number; y: number } {
+    const rect = canvas.getBoundingClientRect();
+    const scale = rect.width / LOGICAL_WIDTH;
+    return unproject({ x: x / scale, y: y / scale });
+  }
+
+  function tileOf(event: PointerEvent): { x: number; y: number } {
+    return tileFromPoint(event.offsetX, event.offsetY);
+  }
+
   canvas.addEventListener("pointerdown", (event: PointerEvent) => {
     event.preventDefault();
     const now = Date.now();
@@ -311,15 +329,38 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     rapidClicks = now - lastClickAt < RAPID_CLICK_WINDOW_MS ? rapidClicks + 1 : 1;
     lastClickAt = now;
 
-    const rect = canvas.getBoundingClientRect();
-    const scale = rect.width / LOGICAL_WIDTH;
-    const tile = unproject({
-      x: event.offsetX / scale,
-      y: event.offsetY / scale,
-    });
+    const tile = tileOf(event);
+    const egg = world.eggs.find(
+      (entry) => entry.at.x === tile.x && entry.at.y === tile.y,
+    );
+    if (egg !== undefined && event.button === 0) {
+      openHatchChoice(egg.id);
+      return;
+    }
+
     const target = nearestCreature(world, tile);
     if (target === null) {
       return;
+    }
+
+    if (event.button === 0) {
+      dragTarget = target.id;
+      dragStart = { x: event.offsetX, y: event.offsetY };
+      moved = false;
+      // Hold to pet, keep holding to name. Petting is the gentle verb; naming
+      // is the one that claims ownership, so it costs a longer press.
+      holdTimer = setTimeout(() => {
+        if (moved) {
+          return;
+        }
+        world = step(world, { kind: "pet", creatureId: target.id });
+        refresh();
+        holdTimer = setTimeout(() => {
+          if (!moved) {
+            askName(target.id);
+          }
+        }, 900);
+      }, 650);
     }
 
     const cleaning = event.button === 2;
@@ -353,6 +394,57 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     event.preventDefault();
   });
 
+  canvas.addEventListener("pointermove", (event: PointerEvent) => {
+    if (dragTarget === null || dragStart === null) {
+      return;
+    }
+    const dx = event.offsetX - dragStart.x;
+    const dy = event.offsetY - dragStart.y;
+    if (Math.abs(dx) + Math.abs(dy) > 8) {
+      moved = true;
+      if (holdTimer !== null) {
+        clearTimeout(holdTimer);
+        holdTimer = null;
+      }
+    }
+  });
+
+  canvas.addEventListener("pointerup", (event: PointerEvent) => {
+    if (holdTimer !== null) {
+      clearTimeout(holdTimer);
+      holdTimer = null;
+    }
+    if (dragTarget !== null && moved) {
+      const tile = tileOf(event);
+      world = step(world, { kind: "move", creatureId: dragTarget, at: tile });
+      // Being carried is a memory too.
+      const slice = memories[dragTarget] ?? emptySlice();
+      const entry = memoryFor(
+        world.creatures[dragTarget] ?? { id: dragTarget } as CreatureState,
+        `the player carried ${dragTarget} to another place`,
+        world.tick,
+        -0.2,
+      );
+      memories[dragTarget] = { ...slice, working: [...slice.working, entry].slice(-60) };
+      world = step(world, { kind: "gv", delta: 1 });
+      refresh();
+    }
+    dragTarget = null;
+    dragStart = null;
+  });
+
+  canvas.addEventListener("dblclick", (event: MouseEvent) => {
+    const tile = tileFromPoint(event.offsetX, event.offsetY);
+    const target = nearestCreature(world, tile);
+    if (target === null) {
+      return;
+    }
+    const view = pupilPanel(doc, locale, world.stage);
+    openPanel(view.root);
+    world = step(world, { kind: "gv", delta: 3 });
+    refresh();
+  });
+
   function idleCheck(): void {
     if (Date.now() - lastInteraction > IDLE_MS) {
       lastInteraction = Date.now();
@@ -364,7 +456,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   }
 
   const timer = setInterval(() => {
-    world = step(world, { kind: "tick" });
+    world = courtshipStep(step(world, { kind: "tick" }));
     idleCheck();
     refresh();
   }, TILE_MS);
@@ -413,6 +505,62 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     refresh();
   }
 
+  function askName(creatureId: string): void {
+    const view = namePanel(doc, locale, (name) => {
+      world = step(world, { kind: "name", creatureId, name });
+      const slice = memories[creatureId] ?? emptySlice();
+      const entry = memoryFor(
+        (world.creatures[creatureId] ?? { id: creatureId }) as CreatureState,
+        `the player named me ${name}`,
+        world.tick,
+        0.9,
+      );
+      memories[creatureId] = { ...slice, working: [...slice.working, entry].slice(-60) };
+      world = step(world, { kind: "gv", delta: 2 });
+      view.destroy();
+      panel.hidden = true;
+      speak(
+        world.stage >= 3
+          ? `You gave us names. We never agreed to them. ${name}.`
+          : manualLine(world.stage, world.tick),
+        "heard",
+      );
+      refresh();
+    });
+    openPanel(view.root);
+    view.focus();
+  }
+
+  function openHatchChoice(eggId: string): void {
+    const egg = world.eggs.find((entry) => entry.id === eggId);
+    if (egg === undefined) {
+      return;
+    }
+    const choices = [
+      { value: "immediate" as const, label: COPY.panels.hatchImmediate, note: COPY.panels.hatchImmediateNote },
+      { value: "warm" as const, label: COPY.panels.hatchWarm, note: COPY.panels.hatchWarmNote },
+      { value: "still" as const, label: COPY.panels.hatchStill, note: COPY.panels.hatchStillNote },
+      { value: "self" as const, label: COPY.panels.hatchSelf, note: COPY.panels.hatchSelfNote },
+    ];
+    const view = choicePanel<HatchChoice>(doc, locale, COPY.panels.hatchTitle, choices, (choice) => {
+      const id = `gazer_${Object.keys(world.creatures).length + 1}`;
+      world = step(world, {
+        kind: "hatchFromEgg",
+        eggId,
+        creatureId: id,
+        at: egg.at,
+        species: "gazerling",
+        choice,
+      });
+      world = step(world, { kind: "gv", delta: 1 });
+      view.destroy();
+      panel.hidden = true;
+      speak(manualLine(world.stage, world.tick), "heard");
+      refresh();
+    });
+    openPanel(view.root);
+  }
+
   albumButton.addEventListener("click", () => {
     const rows: AlbumCreature[] = Object.values(world.creatures).map((creature) => ({
       id: creature.id,
@@ -442,6 +590,12 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
 
   speak(t(locale, COPY.hud.opening), "heard");
   refresh();
+
+  // ponytail: a read-only debug handle, opt-in by URL. The e2e smoke needs to
+  // know where an egg landed; remove if the demo stops using automated checks.
+  if (new URLSearchParams(location.search).get("debug") === "1") {
+    (window as unknown as { __gazer?: () => WorldState }).__gazer = () => world;
+  }
 
   return {
     world: () => world,

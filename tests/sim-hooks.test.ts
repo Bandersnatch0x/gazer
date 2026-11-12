@@ -11,6 +11,7 @@ function world(): WorldState {
     stage: 0,
     creatures: {},
     structures: [],
+    eggs: [],
     uiLabels: {},
     paletteDecay: 0,
     seed: 1,

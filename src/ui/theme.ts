@@ -19,6 +19,13 @@ export const SHELL_STYLE = `
     border: 1px solid var(--gazer-hairline);
     font: 12px/1.7 ui-monospace, "Courier New", monospace;
     max-width: 44rem;
+    /* The transcript must never grow up over the map and eat the clicks. */
+    max-height: 34vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .gazer-dialogue__body {
+    overflow-y: auto;
   }
   .gazer-dialogue__bar {
     display: flex;

@@ -16,6 +16,9 @@ function creature(id: string): CreatureState {
     palette: ["#fff", "#0f0", "#000"],
     mask: DEFAULT_MASK,
     hatchedAtTick: 0,
+    name: null,
+    willingness: 40,
+    courtshipTicks: 0,
   };
 }
 
@@ -26,6 +29,7 @@ function base(): WorldState {
     stage: 0,
     creatures: { "gazer_01": creature("gazer_01") },
     structures: [],
+    eggs: [],
     uiLabels: {},
     paletteDecay: 0,
     seed: 7,

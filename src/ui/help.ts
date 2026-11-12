@@ -73,6 +73,18 @@ export const HELP_SECTIONS: readonly HelpSection[] = [
         zh: "右键点一下生物表示清理。无论哪种接触，它都记得。",
       },
       {
+        en: "Hold to pet it. Keep holding to give it a name. Drag to carry it somewhere else.",
+        zh: "按住表示抚摸。继续按住可以给它起名。拖动可以把它搬到别处。",
+      },
+      {
+        en: "Double-click to look into its eye. What you see in there changes with the phase.",
+        zh: "双击可以看进它的瞳孔。里面看到的东西会随阶段变化。",
+      },
+      {
+        en: "Two content creatures will court on their own and leave an egg. Click the egg to choose how it hatches, or leave that choice to them.",
+        zh: "两只状态良好的生物会自行求偶并留下一枚蛋。点蛋选择孵化方式，也可以把这个选择留给它们。",
+      },
+      {
         en: "Hold still and the world keeps its own time. Idling is also an action.",
         zh: "不动，世界也照自己的节奏走。发呆同样是一种动作。",
       },

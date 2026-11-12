@@ -18,6 +18,9 @@ function creature(id: string, x: number, y: number, distortionBias = 0): Creatur
     palette: [],
     mask: [],
     hatchedAtTick: 0,
+    name: null,
+    willingness: 40,
+    courtshipTicks: 0,
     genome: {
       id,
       generation: 0,

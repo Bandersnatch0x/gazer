@@ -58,6 +58,9 @@ function buildCreature(
     palette: ["#fff"],
     mask: ["x"],
     hatchedAtTick: 0,
+    name: null,
+    willingness: 40,
+    courtshipTicks: 0,
   };
   const genome: PromptGenome = {
     id,

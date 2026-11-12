@@ -113,6 +113,63 @@
       .gazer-panel[hidden] {
         display: none;
       }
+      .gazer-form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .gazer-panel__title {
+        margin: 8px 0 4px;
+        font: 12px/1.4 ui-monospace, monospace;
+        letter-spacing: 0.12em;
+        color: #ffb000;
+      }
+      .gazer-panel__note {
+        margin: 0;
+        color: #7d8f81;
+        font-size: 11px;
+      }
+      .gazer-choice {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        text-align: left;
+        background: transparent;
+        color: #cfe8d5;
+        border: 1px solid #2a322a;
+        padding: 8px 10px;
+        font: 11px/1.4 ui-monospace, monospace;
+        cursor: pointer;
+      }
+      .gazer-choice:hover,
+      .gazer-choice:focus-visible {
+        border-color: #7ef0a6;
+        outline: none;
+      }
+      .gazer-choice__label {
+        letter-spacing: 0.08em;
+      }
+      .gazer-choice__note {
+        color: #7d8f81;
+      }
+      .gazer-input {
+        background: #0a0f0c;
+        color: #cfe8d5;
+        border: 1px solid #2a322a;
+        padding: 8px 10px;
+        font: 12px/1.4 ui-monospace, monospace;
+      }
+      .gazer-input:focus-visible {
+        border-color: #7ef0a6;
+        outline: none;
+      }
+      .gazer-pupil {
+        width: 96px;
+        height: 96px;
+        image-rendering: pixelated;
+        align-self: center;
+        border: 1px solid #2a322a;
+      }
     </style>
   </head>
   <body>
