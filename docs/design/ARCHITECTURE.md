@@ -292,7 +292,7 @@ NG+ opens from `RunMemory`: "You came back. 07 still asks about you. We kept its
 The private-memory mechanic only exists if the player can perceive it. Two surfaces, both quiet:
 
 1. Every speech line carries a hairline witness mark. Default is nearly invisible; hover reveals `witnessed`, `heard`, or `inferred`. A creature reciting something it never saw shows `heard`, which is the tell.
-2. The Album panel lists each creature's memory slice and current impression. Players who look find the mechanism; players who do not are never interrupted.
+2. The Bestiary panel lists each creature's memory slice and its trust of the player. Players who look find the mechanism; players who do not are never interrupted.
 
 ## Replay
 

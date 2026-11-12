@@ -20,7 +20,7 @@ Three axes hold the design together. **Kind**: an entity is a pet, then an organ
 
 The LLM is load-bearing because its output changes the world, not the prose. It proposes world mutations the engine validates and applies, it builds the player model that every later line references, and it choreographs anomalies from a library of engine primitives. Delete the model and the world still runs. It simply has nobody in it. That state is a feature: the **silent run**, where the creatures behave and say nothing, and the absence is the proof.
 
-Three minutes with the demo shows the claim: feed a creature, watch GV rise, open the album and read what each one actually holds, then watch a creature say something only you could have said.
+Three minutes with the demo shows the claim: feed a creature, watch GAZE rise, open the bestiary and read what each one actually holds, then watch a creature say something only you could have said.
 
 The soul is a few lines of prompt. You can open and read it.
 

@@ -56,7 +56,7 @@ What Kiro was asked to do, what it produced, and what the engine enforces.
 
 **Enforced.** `tests/sim-gossip.test.ts` asserts that the same seed gives the same distortion, and that a distorted entry is stored with `witnessed: "witnessed"` and `source: null`. That is the mechanic: the holder cannot tell.
 
-**Kept.** The witness mark in the UI. Without a surface where the player can see `heard` versus `witnessed`, the mechanic exists but is invisible. The album panel shows the same split per creature.
+**Kept.** The witness mark in the UI. Without a surface where the player can see `heard` versus `witnessed`, the mechanic exists but is invisible. The bestiary panel shows the same split per creature.
 
 **Rejected.** Letting the model author memory text directly. Memory is written by the engine from ledger events; the model only cites IDs.
 
