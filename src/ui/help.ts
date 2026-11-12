@@ -39,14 +39,14 @@ export const HELP_SECTIONS: readonly HelpSection[] = [
     title: COPY.help.sections.goal,
     paragraphs: [
       {
-        en: "Keep it alive long enough to find out what it thinks you are. Feeding and cleaning raise GV, the expression tier: the world speaks more, and the shapes it speaks in get less comfortable.",
-        zh: "让它活得够久，久到你能弄清它认为你是什么。喂食与清理会抬高 GV，也就是表达强度：世界说得更多，而它说话的形状越来越不让人舒服。",
+        en: "Keep it alive long enough to find out what it thinks you are. Feeding and cleaning raise GAZE, the phase meter: the world speaks more, and the shapes it speaks in get less comfortable.",
+        zh: "让它活得够久，久到你能弄清它认为你是什么。喂食与清理会抬高「注视」，也就是阶段表：世界说得更多，而它说话的形状越来越不让人舒服。",
       },
     ],
     points: [
       {
-        en: "GV is reversible. Push it back down and the world gets quieter, not more innocent.",
-        zh: "GV 是可逆的。把它压回去，世界只是变安静，并不会变清白。",
+        en: "GAZE is reversible. Push it back down and the world gets quieter, not more innocent.",
+        zh: "「注视」是可逆的。把它压回去，世界只是变安静，并不会变清白。",
       },
       {
         en: "What the creatures conclude about you is not reversible. It is recorded once and stays.",
@@ -69,12 +69,16 @@ export const HELP_SECTIONS: readonly HelpSection[] = [
         zh: "点一下生物表示投喂。你犹豫了多久，会和这条事件一起存下来。",
       },
       {
+        en: "Right-click the creature to clean it. It remembers being handled either way.",
+        zh: "右键点一下生物表示清理。无论哪种接触，它都记得。",
+      },
+      {
         en: "Hold still and the world keeps its own time. Idling is also an action.",
         zh: "不动，世界也照自己的节奏走。发呆同样是一种动作。",
       },
       {
-        en: "Open the album to read what each one actually remembers.",
-        zh: "打开相册，读一读每一只究竟记得什么。",
+        en: "Open the bestiary to read what each one actually remembers.",
+        zh: "打开图鉴，读一读每一只究竟记得什么。",
       },
     ],
   },

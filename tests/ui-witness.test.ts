@@ -60,7 +60,7 @@ describe("witness mark", () => {
   it("the full text names the epistemic claim, not just a mood", () => {
     const witnessed = t("en", markFor("witnessed").fullText).toLowerCase();
     const heard = t("en", markFor("heard").fullText).toLowerCase();
-    expect(witnessed).toContain("saw");
+    expect(witnessed).toContain("seen");
     expect(heard).toContain("told");
   });
 });

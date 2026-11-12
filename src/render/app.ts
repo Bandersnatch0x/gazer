@@ -187,16 +187,22 @@ export async function createApp(canvas: HTMLCanvasElement, shell?: ShellHandler)
       sprite.texture = texture;
     }
     const time = now();
+    // A slow vertical bob, phase-offset per creature, so a settled scene still
+    // reads as alive. It is visual only: the simulation's tile never moves.
+    const bob =
+      object.frame === "dead"
+        ? 0
+        : Math.round(Math.sin(time / 620 + object.center.x) * 1.5);
     const pull = pulling.get(object.id);
     if (pull !== undefined && time < pull.until) {
       const t = (pull.until - time) / 900;
       sprite.position.set(
         object.center.x + (pointerX - object.center.x) * pull.strength * t * 0.12,
-        object.center.y + (pointerY - object.center.y) * pull.strength * t * 0.12,
+        object.center.y + (pointerY - object.center.y) * pull.strength * t * 0.12 + bob,
       );
     } else {
       pulling.delete(object.id);
-      sprite.position.set(object.center.x, object.center.y);
+      sprite.position.set(object.center.x, object.center.y + bob);
     }
     sprite.tint = watching ? 0xd8ffe8 : 0xffffff;
     const wink = winking.get(object.id);

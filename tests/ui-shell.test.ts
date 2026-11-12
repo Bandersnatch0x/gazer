@@ -166,14 +166,14 @@ describe("dialogue box", () => {
       .walk()
       .filter((node) => node.className === "gazer-witness");
     expect(marks).toHaveLength(1);
-    expect(marks[0]?.getAttribute("aria-label")).toContain("Heard");
+    expect(marks[0]?.getAttribute("aria-label")).toContain("Told");
     expect(marks[0]?.getAttribute("data-status")).toBe("heard");
   });
 
   it("shows the empty-script line only when there is no script", () => {
     const view = createDialogue(doc(), "zh");
     view.showLines([], "zh");
-    expect(asStub(view.root).textContent).toContain("窗口开着");
+    expect(asStub(view.root).textContent).toContain("信道开着");
   });
 });
 
@@ -217,18 +217,18 @@ describe("album panel", () => {
       .map((node) => node.getAttribute("data-status"));
     expect(statuses).toEqual(["witnessed", "heard", "fabricated"]);
     expect(asStub(view.root).textContent).toContain(
-      "witnessed 1 / heard 1 / inferred 0 / fabricated 1",
+      "seen 1 / told 1 / guessed 0 / made up 1",
     );
   });
 
   it("renders the empty state in both languages", () => {
     const en = createAlbum(doc(), "en");
     en.render([], "en");
-    expect(asStub(en.root).textContent).toContain("No creature has been hatched.");
+    expect(asStub(en.root).textContent).toContain("Nothing hatched yet.");
 
     const zh = createAlbum(doc(), "zh");
     zh.render([], "zh");
-    expect(asStub(zh.root).textContent).toContain("还没有孵化任何生物。");
+    expect(asStub(zh.root).textContent).toContain("还没有孵出任何一只。");
   });
 });
 

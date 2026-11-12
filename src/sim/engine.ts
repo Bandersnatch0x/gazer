@@ -8,6 +8,7 @@ import type {
   WorldState,
 } from "./types";
 import { stageForGv } from "./types";
+import { createRng } from "./rng";
 
 export const TICK_MS = 1000;
 export const HUNGER_PER_TICK = 0.35;
@@ -16,6 +17,10 @@ export const ENERGY_PER_TICK = 0.15;
 export const HAPPINESS_DECAY_PER_TICK = 0.1;
 export const STARVE_AT = 0;
 export const HUNGRY_AT = 30;
+
+/** Creatures stay inside the visible diamond, not at its edge. */
+export const GRID_MIN = 1;
+export const GRID_MAX = 14;
 
 export type SimEvent =
   | { readonly kind: "tick" }
@@ -46,7 +51,7 @@ function behaviorFor(stats: CreatureStats): CreatureBehavior {
   return "idle";
 }
 
-function stepCreature(creature: CreatureState): CreatureState {
+function stepCreature(creature: CreatureState, seed: number, tick: number): CreatureState {
   if (creature.behavior === "dead") {
     return creature;
   }
@@ -57,7 +62,35 @@ function stepCreature(creature: CreatureState): CreatureState {
     energy: clamp(creature.stats.energy - ENERGY_PER_TICK, 0, 100),
     happiness: clamp(creature.stats.happiness - HAPPINESS_DECAY_PER_TICK, 0, 100),
   };
-  return { ...creature, stats, behavior: behaviorFor(stats) };
+  return {
+    ...creature,
+    stats,
+    behavior: behaviorFor(stats),
+    position: wander(creature, seed, tick),
+  };
+}
+
+/**
+ * A deterministic random walk. Same creature id, same seed, same tick always
+ * lands on the same tile, so replay stays exact. Sleeping and dead creatures
+ * hold still; hungry ones drift, which is what makes the hunger state legible
+ * from across the map.
+ */
+function wander(creature: CreatureState, seed: number, tick: number): TilePos {
+  if (creature.behavior === "dead" || creature.behavior === "sleeping") {
+    return creature.position;
+  }
+  const rng = createRng(seed, `${creature.id}:${tick}`);
+  const restless = creature.behavior === "hungry" || creature.behavior === "dirty";
+  if (!restless && rng.next() < 0.35) {
+    return creature.position;
+  }
+  const dx = rng.int(-1, 1);
+  const dy = rng.int(-1, 1);
+  return {
+    x: clamp(creature.position.x + dx, GRID_MIN, GRID_MAX),
+    y: clamp(creature.position.y + dy, GRID_MIN, GRID_MAX),
+  };
 }
 
 function updateCreature(
@@ -118,7 +151,7 @@ export function step(state: WorldState, event: SimEvent): WorldState {
     case "tick": {
       const creatures: Record<CreatureId, CreatureState> = {};
       for (const [id, creature] of Object.entries(state.creatures)) {
-        creatures[id] = stepCreature(creature);
+        creatures[id] = stepCreature(creature, state.seed, state.tick + 1);
       }
       return { ...state, tick: state.tick + 1, creatures };
     }

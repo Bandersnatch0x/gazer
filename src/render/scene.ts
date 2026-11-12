@@ -51,6 +51,13 @@ export function tileCenter(tile: TilePos): ScreenPos {
   return { x: corner.x, y: corner.y + TILE_DEPTH };
 }
 
+/** Screen point back to the tile it lands on. Inverse of `project`. */
+export function unproject(point: ScreenPos): TilePos {
+  const a = (point.x - ORIGIN_X) / (TILE_W / 2);
+  const b = (point.y - ORIGIN_Y) / TILE_DEPTH;
+  return { x: Math.floor((a + b) / 2), y: Math.floor((b - a) / 2) };
+}
+
 /**
  * Largest integer scale that fits the logical resolution into a CSS box. Never
  * below 1: below native size, pixel art stops being pixel art.

@@ -6,6 +6,7 @@
 import type { RenderApp } from "./render/app";
 import { createApp } from "./render/app";
 import type { RenderEffect, ShellInstruction } from "./render/effects";
+import { LOGICAL_WIDTH, unproject } from "./render/scene";
 import { createDirectorClient } from "./director/client";
 import { manualLine } from "./director/manual";
 import { parseRoundtable, validateTurns } from "./director/roundtable";
@@ -217,8 +218,8 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
 
   function hudLine(): string {
     return [
-      `${world.gv.toFixed(0)} GV`,
-      `stage ${world.stage}`,
+      `${t(locale, COPY.hud.gvLabel)} ${world.gv.toFixed(0)}`,
+      `${t(locale, COPY.hud.stageLabel)} ${world.stage}`,
       options.endpoint === null ? t(locale, COPY.hud.silent) : t(locale, COPY.hud.live),
     ].join("  ·  ");
   }
@@ -303,6 +304,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   });
 
   canvas.addEventListener("pointerdown", (event: PointerEvent) => {
+    event.preventDefault();
     const now = Date.now();
     const hesitation = lastPointerMove === 0 ? 0 : now - lastPointerMove;
     lastInteraction = now;
@@ -310,29 +312,34 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     lastClickAt = now;
 
     const rect = canvas.getBoundingClientRect();
-    const scale = rect.width / canvas.width;
-    const tile = {
-      x: Math.floor(event.offsetX / scale / 16),
-      y: Math.floor(event.offsetY / scale / 8),
-    };
+    const scale = rect.width / LOGICAL_WIDTH;
+    const tile = unproject({
+      x: event.offsetX / scale,
+      y: event.offsetY / scale,
+    });
     const target = nearestCreature(world, tile);
     if (target === null) {
       return;
     }
 
-    world = step(world, { kind: "feed", creatureId: target.id });
+    const cleaning = event.button === 2;
+    world = step(world, { kind: cleaning ? "clean" : "feed", creatureId: target.id });
     const slice = memories[target.id] ?? emptySlice();
     const entry = memoryFor(
       target,
-      `the player fed ${target.id} after hesitating ${(hesitation / 1000).toFixed(1)} seconds`,
+      cleaning
+        ? `the player cleaned ${target.id}`
+        : `the player fed ${target.id} after hesitating ${(hesitation / 1000).toFixed(1)} seconds`,
       world.tick,
-      0.8,
+      cleaning ? 0.3 : 0.8,
     );
     memories[target.id] = { ...slice, working: [...slice.working, entry].slice(-60) };
 
     const delta = rapidClicks >= RAPID_CLICK_COUNT ? 4 : 1;
     const before = world.stage;
     world = step(world, { kind: "gv", delta });
+    // They look up at the hand that touched them.
+    app.playEffect({ kind: "gaze_at_player", creatureId: target.id, ms: 700 }, world);
     onStageChange(before, world.stage);
     // Speech is rationed: a creature comments on the act, not on every click.
     if (rapidClicks >= RAPID_CLICK_COUNT) {
@@ -340,6 +347,10 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       app.playEffect({ kind: "ui_shake", intensity: 0.4, ms: 220 }, world);
     }
     refresh();
+  });
+
+  canvas.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
   });
 
   function idleCheck(): void {

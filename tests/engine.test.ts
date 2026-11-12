@@ -100,6 +100,56 @@ describe("deterministic simulation core", () => {
   });
 });
 
+describe("creature movement", () => {
+  it("keeps every creature inside the visible diamond", () => {
+    fc.assert(
+      fc.property(fc.array(simEvent, { maxLength: 60 }), (events) => {
+        const end = events.reduce(step, base());
+        for (const creature of Object.values(end.creatures)) {
+          expect(creature.position.x).toBeGreaterThanOrEqual(1);
+          expect(creature.position.x).toBeLessThanOrEqual(14);
+          expect(creature.position.y).toBeGreaterThanOrEqual(1);
+          expect(creature.position.y).toBeLessThanOrEqual(14);
+        }
+      }),
+      { numRuns: 80 },
+    );
+  });
+
+  it("moves deterministically and actually moves over time", () => {
+    const run = (): WorldState => {
+      let world = base();
+      for (let index = 0; index < 30; index += 1) {
+        world = step(world, { kind: "tick" });
+      }
+      return world;
+    };
+    const first = run();
+    const second = run();
+    expect(first).toEqual(second);
+    expect(first.creatures["gazer_01"]?.position).not.toEqual(
+      base().creatures["gazer_01"]?.position,
+    );
+  });
+
+  it("does not move a sleeping or dead creature", () => {
+    const sleeping: WorldState = {
+      ...base(),
+      creatures: {
+        "gazer_01": {
+          ...creature("gazer_01"),
+          behavior: "sleeping",
+          stats: { hunger: 90, hygiene: 90, happiness: 90, energy: 5 },
+        },
+      },
+    };
+    const after = step(sleeping, { kind: "tick" });
+    expect(after.creatures["gazer_01"]?.position).toEqual(
+      sleeping.creatures["gazer_01"]?.position,
+    );
+  });
+});
+
 describe("stage thresholds", () => {
   it("maps gv to the documented stages", () => {
     expect(stageForGv(0)).toBe(0);
