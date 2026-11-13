@@ -53,6 +53,13 @@ async function jumpToPercolation(offset) {
   }
   return null;
 }
+/**
+ * 已知探针假阴性(2a2b94b 巡览实录):GV ≥84 时终端侵蚀(历史自改)会把
+ * 最旧台词替换为 [REDACTED]——[SYSTEM] 播报发射后约一至两游戏日即被吃掉,
+ * 对终端文本的 includes 检查会假阴性。巡览截图 p03 系列里的 [REDACTED]
+ * 块就是被吃掉的播报;武装计数(game 侧)不受影响,p06 信道打开即铁证。
+ * 判定播报是否发射,以「伪按钮是否武装」为准,勿查终端文本。
+ */
 const terminalHas = (needle) =>
   page.evaluate((needle) => (document.querySelector(".gazer-terminal__body")?.textContent ?? "").includes(needle), needle);
 
