@@ -31,3 +31,9 @@
 | 黑塔正典位 | 塔恒在世界西缘(屏幕左侧)南北中线;坐标入档永不变更 | `docs/design/art/ART-CORE-03-tower.md` |
 | 错向阴影 | 塔影恒指向当前光源(与万物相反);渲染断言 dot(shadow, light) > 0 | `docs/design/art/ART-CORE-03-tower.md` |
 | 框定(framing) | CRT 外壳 + 扫描线/畸变/眩光等效果层;游戏永远发生在一台 LS-97 显示器里 | `docs/design/art/ART-CORE-04-crt.md` |
+| 外部(outside) | 世界之外的信源;只以离线信种原型渗入,永不被直接展示 | `research/gazer-projection/SPEC.md` |
+| 信种(outside seed) | 一条外部事件原型(随包离线数据表),按 `(seed, day)` 纯函数选取 | `research/gazer-projection/SPEC.md` |
+| 渗入(percolation) | 信种以 `heard` 记忆写入 1–3 只活体切片的过程;每日 09:00:00 单 tick | `research/gazer-projection/SPEC.md` |
+| 倒影(reflection) | 引擎侧对群体外部信念的纯聚合(4 节点,player 居末);群体自己看不见它 | `research/gazer-projection/SPEC.md` |
+| 命中(hit) | 群体预测与次日信种主题一致;可量化验收,不构成「预言」 | `research/gazer-projection/SPEC.md` |
+| 倒影信道(reflection channel) | OSD 层的观察面;GV 80 起由终端伪按钮开关,纯渲染、零自动播放 | `research/gazer-projection/SPEC.md` |
