@@ -13,6 +13,7 @@ import {
   PERCOLATION_MIN_INTENSITY,
   archetypeOf,
   percolationDue,
+  percolationEntryId,
   percolationPass,
   percolationTargets,
   seedForDay,
@@ -133,13 +134,14 @@ describe("percolation (sim/outside.ts)", () => {
     for (const id of targets) {
       const slice = memories[id];
       expect(slice).toBeDefined();
-      const entry = slice?.working.find((item) => item.id === "out_d0");
+      const entryId = percolationEntryId(seed ?? seedForDay(world.seed, 0));
+      const entry = slice?.working.find((item) => item.id === entryId);
       expect(entry).toBeDefined();
       expect(entry?.witnessed).toBe("heard");
       expect(entry?.source).toBeNull();
       expect(entry?.distortion).toBeNull();
       expect(entry?.fact.length).toBeGreaterThan(0);
-      expect(hasMemoryRef(slice ?? { working: [], consolidated: [] }, "out_d0")).toBe(true);
+      expect(hasMemoryRef(slice ?? { working: [], consolidated: [] }, entryId)).toBe(true);
     }
     // The untouched ears stay untouched.
     for (const id of STARTER_IDS) {

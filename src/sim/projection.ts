@@ -203,7 +203,69 @@ function creatureDead(world: WorldState, creatureId: CreatureId): boolean {
   return world.creatures[creatureId]?.behavior === "dead";
 }
 
+/**
+ * The ant model scores topics from what the swarm actually heard — the
+ * memory trail, never the stream itself. This is the load-bearing choice
+ * for the lie loop: a fabricated outside memory drags a day's observed
+ * topic off the truth, and tomorrow's claim degrades with it (ticket 0059).
+ * Each observed day contributes its decayed weight to the topic that held
+ * the most belief mass that day; quiet days simply have no observation.
+ */
+function scoreFromTrail(
+  world: WorldState,
+  memories: Readonly<Record<CreatureId, MemorySlice>>,
+  day: number,
+): Map<OutsideTopic, number> {
+  const perDayMass = new Map<number, Map<OutsideTopic, number>>();
+  for (const creatureId of Object.keys(memories).sort()) {
+    const slice = memories[creatureId];
+    if (slice === undefined || creatureDead(world, creatureId)) {
+      continue;
+    }
+    for (const entry of slice.working) {
+      if (!entry.id.startsWith("out_")) {
+        continue;
+      }
+      const entryDay = worldDay(entry.atTick);
+      if (entryDay > day || entryDay < day - ANT_HORIZON_DAYS + 1) {
+        continue;
+      }
+      const topic = topicOfEntry(world, entry);
+      let dayMass = perDayMass.get(entryDay);
+      if (dayMass === undefined) {
+        dayMass = new Map();
+        perDayMass.set(entryDay, dayMass);
+      }
+      dayMass.set(topic, (dayMass.get(topic) ?? 0) + entry.salience);
+    }
+  }
+  const scores = new Map<OutsideTopic, number>(OUTSIDE_TOPICS.map((topic) => [topic, 0]));
+  for (const [entryDay, dayMass] of perDayMass) {
+    let bestTopic: OutsideTopic = "sky";
+    let bestMass = -1;
+    for (const topic of OUTSIDE_TOPICS) {
+      const mass = dayMass.get(topic) ?? 0;
+      if (mass > bestMass) {
+        bestMass = mass;
+        bestTopic = topic;
+      }
+    }
+    const weight = Math.pow(ANT_DECAY, day - entryDay);
+    scores.set(bestTopic, (scores.get(bestTopic) ?? 0) + weight);
+  }
+  return scores;
+}
+
+const OUTSIDE_ID_PATTERN = /^out_(sky|market|crowd)_d/;
+
 function topicOfEntry(world: WorldState, entry: { readonly id: string; readonly atTick: number }): OutsideTopic {
+  // The tag lives in the id (percolationEntryId); the day derivation is the
+  // fallback for ids written before the tag scheme — a forger that skips the
+  // tag gets the honest default, never a crash.
+  const match = OUTSIDE_ID_PATTERN.exec(entry.id);
+  if (match?.[1] !== undefined) {
+    return match[1] as OutsideTopic;
+  }
   return seedForDay(world.seed, worldDay(entry.atTick)).topic;
 }
 
@@ -253,22 +315,14 @@ export function advanceProjections(
     return { ...claim, resolvedTo };
   });
 
-  const scores = new Map<OutsideTopic, number>();
-  for (const topic of OUTSIDE_TOPICS) {
-    let score = 0;
-    for (let d = Math.max(0, day - ANT_HORIZON_DAYS + 1); d <= day; d += 1) {
-      const weight = Math.pow(ANT_DECAY, day - d);
-      score += weight * (topicForDay(world.seed, d) === topic ? 1 : 0);
-    }
-    scores.set(topic, score);
-  }
+  const scores = scoreFromTrail(world, memories, day);
   const ranked = [...scores.entries()].sort((a, b) => b[1] - a[1]);
   const top = ranked[0] ?? ["sky", 0];
   const second = ranked[1] ?? ["market", 0];
   const gap = (top[1] ?? 0) - (second[1] ?? 0);
   const beeTurn = gap < BEE_GAP_THRESHOLD;
   const predictedTopic: OutsideTopic = beeTurn
-    ? OUTSIDE_TOPICS[hashString(`${world.seed}:bee:${day}`) % OUTSIDE_TOPICS.length] ?? "sky"
+    ? OUTSIDE_TOPICS[hashString(`${day}:bee:${world.seed}`) % OUTSIDE_TOPICS.length] ?? "sky"
     : (top[0] as OutsideTopic);
   const confidence = beeTurn
     ? 0.3

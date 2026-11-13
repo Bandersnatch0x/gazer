@@ -6,8 +6,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { DAY_CYCLE_TICKS } from "../src/sim/clock";
-import { percolationPass, seedForDay, topicForDay } from "../src/sim/outside";
-import {
+import { percolationPass, seedForDay, topicForDay } from "../src/sim/outside";import {
   advanceProjections,
   aggregateReflection,
   corruptionPressure,
@@ -72,7 +71,7 @@ describe("the reflection (sim/projection.ts)", () => {
     const tick = ninthHourTick(day);
     const memories: Record<string, MemorySlice> = {};
     withOutMemory(memories, "gazer_01", {
-      id: "out_d3",
+      id: `out_${seed.topic}_d3`,
       atTick: tick,
       wallClock: "d3",
       fact: "the sky elsewhere burned orange until noon",
@@ -83,7 +82,7 @@ describe("the reflection (sim/projection.ts)", () => {
       valence: -0.3,
     });
     withOutMemory(memories, "gazer_02", {
-      id: "out_d3",
+      id: `out_${seed.topic}_d3`,
       atTick: tick,
       wallClock: "d3",
       fact: "the sky elsewhere burned orange until noon",
@@ -115,7 +114,7 @@ describe("the reflection (sim/projection.ts)", () => {
     // The seed's topic holds both ears; its chain resolves to the memory.
     const seededNode = reflection.nodes.find((node) => node.topic === seed.topic);
     expect(seededNode?.heldBy).toEqual(["gazer_01", "gazer_02"]);
-    expect(seededNode?.traceChain[0]).toBe("out_d3");
+    expect(seededNode?.traceChain[0]).toBe(`out_${seed.topic}_d3`);
     expect(seededNode?.divergence).toBe(1);
     // The player node aggregates the non-outside trail.
     const playerNode = reflection.nodes[3];
@@ -179,9 +178,14 @@ describe("the bee/ant predictor (sim/projection.ts)", () => {
     let miss = 0;
     for (const seed of SEEDS) {
       const world = coldStartWorld(seed);
+      const memories: Record<string, MemorySlice> = {};
       let state: ProjectionState = emptyProjectionState();
       for (let day = 0; day <= RUN_DAYS; day += 1) {
-        state = advanceProjections(state, world, {}, day);
+        // The ant only ever sees what percolation delivered — never the
+        // stream itself. Quiet days leave gaps in the trail, honestly.
+        const pass = percolationPass({ ...world, tick: ninthHourTick(day) }, memories);
+        Object.assign(memories, pass.memories);
+        state = advanceProjections(state, world, memories, day);
         if (day < WARMUP_DAYS) {
           continue;
         }
@@ -199,6 +203,56 @@ describe("the bee/ant predictor (sim/projection.ts)", () => {
     // would surface.
     expect(rate).toBeGreaterThanOrEqual(1 / 3 + 0.1);
   });
+
+  it("degrades under a sustained lie: forged topics poison the ant model", () => {
+    // One world, two histories: the clean one percolates honestly; the lied
+    // one additionally carries forged outside memories tagged with a wrong
+    // topic (what gossip distortion of an outside event amounts to). Same
+    // resolution rule for both — only what the swarm heard differs.
+    const world = coldStartWorld(1997);
+    const LIAR_TAGGED: { readonly topic: "sky" | "market" | "crowd" } = { topic: "sky" };
+    const run = (lie: boolean): number => {
+      const memories: Record<string, MemorySlice> = {};
+      let state: ProjectionState = emptyProjectionState();
+      let hit = 0;
+      let miss = 0;
+      for (let day = 0; day <= 30; day += 1) {
+        const pass = percolationPass({ ...world, tick: ninthHourTick(day) }, memories);
+        Object.assign(memories, pass.memories);
+        if (lie) {
+          // A forged crowd rumour every day: high salience, wrong tag, and
+          // it reads as witnessed to its holder (the ontology's hard rule).
+          withOutMemory(memories, "gazer_03", {
+            id: `out_${LIAR_TAGGED.topic}_d${day}`,
+            atTick: ninthHourTick(day),
+            wallClock: `d${day}`,
+            fact: "a crowd gathered and could not say why",
+            witnessed: "witnessed",
+            source: null,
+            distortion: "invent_detail",
+            salience: 0.9,
+            valence: -0.4,
+          });
+        }
+        state = advanceProjections(state, world, memories, day);
+        if (day < 3) {
+          continue;
+        }
+        const resolved = state.predictions.find((claim) => claim.resolvesOnDay === day);
+        if (resolved?.resolvedTo === "hit") {
+          hit += 1;
+        } else if (resolved?.resolvedTo === "miss") {
+          miss += 1;
+        }
+      }
+      return hit / Math.max(1, hit + miss);
+    };
+    const clean = run(false);
+    const lied = run(true);
+    // The lie drags the ant toward the forger's tag; the calibration edge
+    // must visibly erode. (Exact numbers are deterministic for this seed.)
+    expect(lied).toBeLessThan(clean);
+  });
 });
 
 describe("the corruption hook (sim/projection.ts)", () => {
@@ -207,7 +261,7 @@ describe("the corruption hook (sim/projection.ts)", () => {
     const tick = ninthHourTick(day);
     const memories: Record<string, MemorySlice> = {};
     withOutMemory(memories, "gazer_01", {
-      id: "out_d2",
+      id: "out_sky_d2",
       atTick: tick,
       wallClock: "d2",
       fact: "a rumor walked the whole road in a day",
@@ -219,7 +273,7 @@ describe("the corruption hook (sim/projection.ts)", () => {
     });
     expect(corruptionPressure(memories, day)).toBe(0);
     withOutMemory(memories, "gazer_02", {
-      id: "out_d2",
+      id: "out_sky_d2",
       atTick: tick,
       wallClock: "d2",
       fact: "a rumor walked the whole road twice in a day",

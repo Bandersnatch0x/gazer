@@ -93,6 +93,18 @@ export interface OutsideSeed {
 }
 
 /**
+ * The memory id a percolated seed carries. The topic lives IN the id, not
+ * in the day it points at: a forged rumour (gossip distortion, the player's
+ * lie loop) can therefore carry a false topic, and the swarm cannot tell —
+ * a fabricated memory is stored as witnessed, per the ontology's hard rule.
+ * The reflection and the predictor read this tag; the corruption hook
+ * measures exactly the forged share (ticket 0059).
+ */
+export function percolationEntryId(seed: OutsideSeed): string {
+  return `out_${seed.topic}_d${seed.day}`;
+}
+
+/**
  * Build-time invariant: every topic's pool is frozen and non-empty, so a
  * missing entry can never reach a creature's memory as an empty fact.
  */
@@ -108,6 +120,17 @@ function hash01(text: string): number {
 }
 
 /**
+ * Day-keyed draw salt. The varying part goes FIRST: FNV-1a's last operation
+ * is an XOR with the final code unit, so keys differing only in a trailing
+ * digit land in one tight cluster of the u32 space (near-identical hash01
+ * values — observed as a topic chain that never flips, or flips every day).
+ * A leading day diffuses through every following multiply.
+ */
+function daySalt(kind: string, worldSeed: number, day: number): string {
+  return `${day}:${kind}:${worldSeed}`;
+}
+
+/**
  * The seed for a world day. Pure: same (seed, day), same seed — offline,
  * forever. The topic chain carries momentum (Markov p=0.55) before a hash
  * may flip it to a different topic; the archetype and intensity are hash
@@ -116,8 +139,8 @@ function hash01(text: string): number {
 export function seedForDay(worldSeed: number, day: number): OutsideSeed {
   const topic = topicForDay(worldSeed, day);
   const pool = ARCHETYPE_POOL[topic];
-  const archetypeIndex = hashString(`${worldSeed}:arch:${day}`) % pool.length;
-  const intensity = 0.3 + hash01(`${worldSeed}:int:${day}`) * 0.6;
+  const archetypeIndex = hashString(daySalt("arch", worldSeed, day)) % pool.length;
+  const intensity = 0.3 + hash01(daySalt("int", worldSeed, day)) * 0.6;
   return { id: `out_d${day}`, day, topic, archetypeIndex, intensity };
 }
 
@@ -125,12 +148,12 @@ export function seedForDay(worldSeed: number, day: number): OutsideSeed {
 export function topicForDay(worldSeed: number, day: number): OutsideTopic {
   let topic = OUTSIDE_TOPICS[hashString(`${worldSeed}:topic:0`) % OUTSIDE_TOPICS.length] ?? "sky";
   for (let d = 1; d <= day; d += 1) {
-    const stays = hash01(`${worldSeed}:stay:${d}`) < TOPIC_MOMENTUM_P;
+    const stays = hash01(daySalt("stay", worldSeed, d)) < TOPIC_MOMENTUM_P;
     if (stays) {
       continue;
     }
     const others = OUTSIDE_TOPICS.filter((candidate) => candidate !== topic);
-    const flip = hashString(`${worldSeed}:flip:${d}`) % others.length;
+    const flip = hashString(daySalt("flip", worldSeed, d)) % others.length;
     topic = others[flip] ?? topic;
   }
   return topic;
@@ -160,8 +183,8 @@ export function percolationTargets(world: WorldState, seed: OutsideSeed): readon
   if (living.length === 0) {
     return [];
   }
-  const count = Math.min(living.length, 1 + (hashString(`${world.seed}:${seed.id}:n`) % 3));
-  const start = hashString(`${world.seed}:${seed.id}:s`) % living.length;
+  const count = Math.min(living.length, 1 + (hashString(`${seed.id}:n:${world.seed}`) % 3));
+  const start = hashString(`${seed.id}:s:${world.seed}`) % living.length;
   const targets: CreatureId[] = [];
   for (let i = 0; i < count; i += 1) {
     targets.push(living[(start + i) % living.length] ?? living[0] ?? "");
@@ -194,7 +217,7 @@ export function percolationPass(
   for (const target of targets) {
     const slice = next[target] ?? { working: [], consolidated: [] };
     const entry: MemoryEntry = {
-      id: seed.id,
+      id: percolationEntryId(seed),
       atTick: world.tick,
       wallClock: `d${day}`,
       fact: archetype.en,
