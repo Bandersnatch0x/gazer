@@ -699,6 +699,12 @@ export interface TerminalView {
   setPresence(mode: TerminalPresence, now?: number): void;
   appendSpeaker(speaker: string, text: string): void;
   appendSystem(text: string): void;
+  /**
+   * 投影隐藏线(票 0058,裁决 0014):伪按钮 `[ _ ]` 的首次响应。GV 80 起
+   * 由接线方调用一次; armed 前它保持 §3.1 的「布置」状态——点击无反应,
+   * 无监听。幂等:重复武装返回 false,监听只挂一次。
+   */
+  armAuxiliary(onOpen: () => void): boolean;
   /** 阶段 <3 一律回显 denied;阶段 ≥3 回显白并转 WAIT(§6.3)。 */
   submitInput(text: string, now: number): InputResult | null;
   /** 假打字机入口:字符按确定性表逐个揭示,由 render 同步到屏。 */
@@ -1111,6 +1117,23 @@ export function createTerminal(doc: Doc, options: TerminalOptions): TerminalView
     return run;
   };
 
+  // 投影隐藏线(票 0058):伪按钮武装态。未武装时零监听——§3.1 的纪律
+  // 「点击无反应」由「不挂监听」而非「挂监听后忽略」保证。
+  let auxiliaryArmed = false;
+  const armAuxiliary = (onOpen: () => void): boolean => {
+    if (auxiliaryArmed) {
+      return false;
+    }
+    auxiliaryArmed = true;
+    fakeButton.setAttribute("aria-hidden", "false");
+    fakeButton.style.setProperty("cursor", "pointer");
+    fakeButton.addEventListener("click", (event: Event) => {
+      event.stopPropagation();
+      onOpen();
+    });
+    return true;
+  };
+
   return {
     root,
     body,
@@ -1133,6 +1156,7 @@ export function createTerminal(doc: Doc, options: TerminalOptions): TerminalView
     },
     appendSpeaker,
     appendSystem,
+    armAuxiliary,
     submitInput(text, now) {
       const trimmed = text.trim();
       if (trimmed.length === 0) {

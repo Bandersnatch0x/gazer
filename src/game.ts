@@ -68,7 +68,7 @@ import { applyConsolidation, fallbackConsolidate } from "./sim/consolidate";
 import { gvDeltaFor } from "./sim/ledger";
 import type { LedgerEvent } from "./sim/ledger";
 import { RHYTHM, TICK_MS } from "./sim/rhythm";
-import { DEFAULT_WORLD_SEED, normalizeWorldSeed, worldCalendarAt, worldHour } from "./sim/clock";
+import { DEFAULT_WORLD_SEED, normalizeWorldSeed, worldCalendarAt, worldDay, worldHour } from "./sim/clock";
 import { midnightSilenceAt, shellPerformanceAt } from "./sim/shell";
 import {
   NEWS_TICKER_LABEL,
@@ -78,13 +78,16 @@ import {
   renderNews,
   type NewsSnapshot,
 } from "./sim/news";
-import { percolationDue, percolationPass } from "./sim/outside";
+import { archetypeOf, percolationDue, percolationPass } from "./sim/outside";
 import {
   advanceProjections,
+  aggregateReflection,
+  corruptionPressure,
   emptyProjectionState,
   type ProjectionState,
 } from "./sim/projection";
-import { createRng } from "./sim/rng";
+import type { ReflectionSnapshot } from "./ui/projection";
+import { createRng, hashString } from "./sim/rng";
 import type { Stage, CreatureState, CreatureId, WorldState, Mood } from "./sim/types";
 import { INITIAL_GV } from "./sim/types";
 import type { RoundtableScript, TurnIntent } from "./sim/roundtable";
@@ -1209,6 +1212,13 @@ export interface GameHandle {
   readonly takeTerminalGhost: () => boolean;
   /** GV20–40 失步票(§6):同步帧取走一次演出机会。 */
   readonly takeDesync: () => boolean;
+  // ---- 投影隐藏线(票 0058,裁决 0014)----
+  /** GV80 三日播报排干(main 层逐条 terminal.appendSystem)。 */
+  readonly drainSystemLines: () => readonly string[];
+  /** 伪按钮武装票(第三次播报后同步帧取走一次;main 层 armAuxiliary)。 */
+  readonly takeAuxiliaryUnlock: () => boolean;
+  /** 倒影快照(伪按钮打开时现拉;聚合纯函数,零状态)。 */
+  readonly reflectionSnapshot: () => ReflectionSnapshot;
   /** 会话序数(落影加深 / C 遗忘 LED 熄灭的确定性面)。 */
   readonly sessionCount: () => number;
   /** 本次冷启动是否携带强退暗线行(§4;boot 时读存档定死)。 */
@@ -1295,6 +1305,17 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
    */
   let projectionState: ProjectionState = world.projection ?? emptyProjectionState();
   let lastProjectionDay = -1;
+  /** 投影线(票 0058):GV80 三日播报队列与伪按钮武装票;日界去重锚。 */
+  const AUXILIARY_MIN_GV = 80;
+  const AUXILIARY_LINE = "> auxiliary input detected";
+  const systemLineQueue: string[] = [];
+  let auxiliaryAnnounced = 0;
+  let lastAnnounceDay = -1;
+  let auxiliaryUnlockQueued = false;
+  /** 投影线(票 0059):喂假畸变 → C-03a 永久污染分支;每日至多一次。 */
+  const CORRUPTION_FX_THRESHOLD = 0.34;
+  const CORRUPTION_FX_DEGREES = 9;
+  let lastCorruptionFxDay = -1;
   /** SD-3(票 0045):消磁帧事件队列——按钮与自发同形,main 排干后统一落波纹。 */
   const frameEventQueue: FrameEvent[] = [];
   /** G-2(票 0045):NG+ 存档标记(真·凝视达成即写,重启不消)。 */
@@ -3081,6 +3102,25 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       const pass = percolationPass(world, memories);
       Object.assign(memories, pass.memories);
       world = { ...world, memories: { ...memories } };
+      if (pass.seed !== null) {
+        const passDay = worldDay(world.tick);
+        // GV80 三日播报(票 0058):每日第 9 小时至多一条,第三条之后
+        // 出武装票——伪按钮自此首次响应。
+        if (world.gv >= AUXILIARY_MIN_GV && auxiliaryAnnounced < 3 && passDay !== lastAnnounceDay) {
+          lastAnnounceDay = passDay;
+          auxiliaryAnnounced += 1;
+          systemLineQueue.push(AUXILIARY_LINE);
+          if (auxiliaryAnnounced === 3) {
+            auxiliaryUnlockQueued = true;
+          }
+        }
+        // Stage 3 第一道裂缝(票 0060):1/3 的渗入日,群体说出一句引用
+        // 信种原型的台词——玩家多半归因于幻觉。静默运行照常闭嘴。
+        if (world.stage >= 3 && speechPermitted() && hashString(`${passDay}:crack:${world.seed}`) % 3 === 0) {
+          const archetype = archetypeOf(pass.seed);
+          speak(collective, (l) => (l === "zh" ? archetype.zh : archetype.en), "heard");
+        }
+      }
     }
     if (silent && silentLineDue(world.tick, silentLineShown)) {
       silentLineShown = true;
@@ -3129,6 +3169,18 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       lastProjectionDay = calendar.day;
       projectionState = advanceProjections(projectionState, world, memories, calendar.day);
       world = { ...world, projection: projectionState };
+      // 喂假畸变(票 0059):近期外部轨迹的伪造占比越阈 → C-03 的不可逆
+      // 分支给倒影上色;每日至多一次,走执行器账面(fx_exec)。
+      if (
+        corruptionPressure(memories, calendar.day) >= CORRUPTION_FX_THRESHOLD &&
+        lastCorruptionFxDay !== calendar.day
+      ) {
+        lastCorruptionFxDay = calendar.day;
+        runFx({
+          kind: "palette_shift",
+          params: { hue_rot: -CORRUPTION_FX_DEGREES, recover: false },
+        });
+      }
     }
     // 会话快照:强退暗线(§4)读这里;正常 destroy 会补 clean 标记。
     storageSet(FRAME_SESSION_STORAGE_KEY, JSON.stringify({ gv: Math.round(world.gv), clean: false }));
@@ -3633,6 +3685,23 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       pendingDesync -= 1;
       return true;
     },
+    // ---- 投影隐藏线(票 0058,裁决 0014)----
+    drainSystemLines: () => {
+      const drained = [...systemLineQueue];
+      systemLineQueue.length = 0;
+      return drained;
+    },
+    takeAuxiliaryUnlock: () => {
+      const pending = auxiliaryUnlockQueued;
+      auxiliaryUnlockQueued = false;
+      return pending;
+    },
+    reflectionSnapshot: () => ({
+      day: worldDay(world.tick),
+      reflection: aggregateReflection(world, memories, worldDay(world.tick)),
+      predictions: projectionState.predictions,
+      locale,
+    }),
     sessionCount: () => sessions,
     unexpectedShutdown: () => unexpectedShutdownFlag,
     drainFrameEvents: () => {

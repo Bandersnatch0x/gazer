@@ -18,6 +18,22 @@ import type { Locale, Text } from "./i18n";
  */
 
 export const COPY = {
+  /** 投影隐藏线(票 0058,裁决 0014):OSD 倒影信道的全部文案。 */
+  projection: {
+    title: { en: "SIGNAL: AUX INPUT — UNVERIFIED", zh: "信号：辅助输入 — 未经验证" },
+    hint: { en: "select a row to read where it came from", zh: "选一行，读它的来路" },
+    heldBy: { en: "held by {n}", zh: "{n} 个持有者" },
+    drift: { en: "drift {d}%", zh: "漂移 {d}%" },
+    noSignal: { en: "no outside events to report", zh: "没有外部事件可报" },
+    prediction: { en: "they guess tomorrow: {topic} ({c}%)", zh: "它们猜明天：{topic}（{c}%）" },
+    predictionIdle: { en: "they have not guessed yet", zh: "它们还没猜" },
+    traceHead: { en: "from: {chain}", zh: "来路：{chain}" },
+    close: { en: "[ close ]", zh: "[ 关闭 ]" },
+    topicSky: { en: "OUTSIDE/SKY", zh: "外部/天象" },
+    topicMarket: { en: "OUTSIDE/MARKET", zh: "外部/市况" },
+    topicCrowd: { en: "OUTSIDE/CROWD", zh: "外部/人群" },
+    topicPlayer: { en: "THIS ROOM", zh: "此屋" },
+  },
   dialogue: {
     windowPath: {
       en: "C:\\GAZER\\1997\\LIVE\\roundtable.exe",
