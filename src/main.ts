@@ -51,6 +51,7 @@ import {
 } from "./ui/shell";
 import type { ShellAudioFxDispatch } from "./sim/fx";
 import { canonLine } from "./canon";
+import { createReflectionChannel } from "./ui/projection";
 
 // Storage can be refused outright (Safari old private mode, enterprise policy,
 // embedded WebViews). The game must still boot (playtest p4 finding F2): every
@@ -198,6 +199,11 @@ const terminal = createTerminal(document, {
 });
 document.body.append(terminal.root);
 gameRef = game;
+
+// 投影隐藏线(票 0058,裁决 0014):OSD 倒影信道挂在机器层,被动渲染
+// ——只有伪按钮(GV80 武装后)能开关它,打开时从 game 层现拉快照。
+const reflectionChannel = createReflectionChannel(document);
+document.body.append(reflectionChannel.root);
 
 // 终端键盘输入通道(票 0039 P4):复用 0020 的 `submitInput` 语义,零新语义
 // ——阶段<3 落 `resolveInput` 的 denied 面(`> access denied`,warn_red),
@@ -381,6 +387,16 @@ const syncFrame = (nowMs: number): void => {
   // 与一切 shell 面经此落终端/壳/音频。
   for (const dispatch of game.drainShellFx()) {
     applyFx(dispatch);
+  }
+  // 投影隐藏线(票 0058):[SYSTEM] 播报进终端系统行;第三条之后出武装
+  // 票,伪按钮自此首次响应——点击切出倒影信道。
+  for (const text of game.drainSystemLines()) {
+    terminal.appendSystem(text);
+  }
+  if (game.takeAuxiliaryUnlock()) {
+    terminal.armAuxiliary(() => {
+      reflectionChannel.toggle(game.reflectionSnapshot());
+    });
   }
   terminal.render(nowMs);
   fxShell.frame(nowMs);
