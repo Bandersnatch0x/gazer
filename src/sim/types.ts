@@ -147,6 +147,14 @@ export interface WorldState {
    * valid; built by the game layer via `sim/ghosts.ts`, append-only.
    */
   readonly ghosts?: readonly import("./ghosts").GhostProfile[];
+  /**
+   * 投影隐藏线入档 (ticket 0057, decision 0014, SPEC §7): the reflection
+   * and bee/ant prediction state. Optional so legacy worlds stay valid;
+   * advanced only at the day boundary by the game layer via
+   * `sim/projection.ts` — never by the engine, never inside the replay
+   * path's reducer (same boundary as `memories`).
+   */
+  readonly projection?: import("./projection").ProjectionState;
 }
 
 export const INITIAL_GV = 0;

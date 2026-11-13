@@ -78,6 +78,12 @@ import {
   renderNews,
   type NewsSnapshot,
 } from "./sim/news";
+import { percolationDue, percolationPass } from "./sim/outside";
+import {
+  advanceProjections,
+  emptyProjectionState,
+  type ProjectionState,
+} from "./sim/projection";
 import { createRng } from "./sim/rng";
 import type { Stage, CreatureState, CreatureId, WorldState, Mood } from "./sim/types";
 import { INITIAL_GV } from "./sim/types";
@@ -1282,6 +1288,13 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   let nextSpontDegauss = -1;
   /** 结局评估日历(票 0049):每个游戏日零点判一次的天数锚,确定性。 */
   let lastEndingCheckDay = -1;
+  /**
+   * 投影隐藏线(票 0056/0057,裁决 0014):倒影与蜂/蚁预测状态。只在
+   * 日界推进(结算昨日、出明日 claim),渗入只在第 9 小时走记忆管道;
+   * 引擎与回放 reducer 不知情,与 `memories` 同一边界。
+   */
+  let projectionState: ProjectionState = world.projection ?? emptyProjectionState();
+  let lastProjectionDay = -1;
   /** SD-3(票 0045):消磁帧事件队列——按钮与自发同形,main 排干后统一落波纹。 */
   const frameEventQueue: FrameEvent[] = [];
   /** G-2(票 0045):NG+ 存档标记(真·凝视达成即写,重启不消)。 */
@@ -3061,6 +3074,14 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       world = consolidated.world;
       Object.assign(memories, consolidated.memories);
     }
+    // 投影线渗入(票 0056):每日第 9 小时,当日信种以 `heard` 记忆写入
+    // 1–3 只活体的切片。零引擎改动——gossip、圆桌引用与 validator 把它
+    // 当普通传闻处理。静默运行照常(只听不说);ticker 继续撒谎。
+    if (percolationDue(world.tick)) {
+      const pass = percolationPass(world, memories);
+      Object.assign(memories, pass.memories);
+      world = { ...world, memories: { ...memories } };
+    }
     if (silent && silentLineDue(world.tick, silentLineShown)) {
       silentLineShown = true;
       // The breach line is pool copy: it re-renders in the active locale.
@@ -3101,6 +3122,13 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
           queueCanonPrint(line);
         }
       }
+    }
+    // 投影线日界推进(票 0057):结算昨日预测、蜂/蚁重打分、出明日
+    // claim,倒影快照入 `projection`。只在日界走一次,确定性。
+    if (calendar.hour === 0 && calendar.day !== lastProjectionDay) {
+      lastProjectionDay = calendar.day;
+      projectionState = advanceProjections(projectionState, world, memories, calendar.day);
+      world = { ...world, projection: projectionState };
     }
     // 会话快照:强退暗线(§4)读这里;正常 destroy 会补 clean 标记。
     storageSet(FRAME_SESSION_STORAGE_KEY, JSON.stringify({ gv: Math.round(world.gv), clean: false }));
