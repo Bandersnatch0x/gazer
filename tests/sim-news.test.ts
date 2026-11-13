@@ -21,6 +21,7 @@ import {
   newsIndexAt,
   newsLineFor,
   newsValuesFor,
+  NEWS_POOL_SIZE,
 } from "../src/sim/news";
 import { step } from "../src/sim/engine";
 import { shellPerformanceAt } from "../src/sim/shell";
@@ -135,6 +136,21 @@ describe("the pseudo-news schedule (sim/news.ts)", () => {
       picks.add(newsLineFor({ ...world, tick: index * NEWS_INTERVAL_TICKS }, "en"));
     }
     expect(picks.size).toBeGreaterThan(1);
+  });
+
+  it("spreads across the pool: 48 consecutive broadcasts cover more than half of it (ticket 0061)", () => {
+    // The FNV suffix-digit clustering defect (ticket 0061): keys differing
+    // only in a trailing digit landed in one u32 cluster and consecutive
+    // broadcasts repeated one template for days. The fix front-loads the
+    // varying part; this pins the honest spread.
+    for (const seed of [1997, 42, 7]) {
+      const world = coldStartWorld();
+      const picks = new Set<string>();
+      for (let index = 1; index <= 48; index += 1) {
+        picks.add(newsLineFor({ ...world, seed, tick: index * NEWS_INTERVAL_TICKS }, "en"));
+      }
+      expect(picks.size).toBeGreaterThan(NEWS_POOL_SIZE / 2);
+    }
   });
 
   it("never leaks a bare placeholder, NaN, or undefined (D-stream discipline)", () => {

@@ -76,6 +76,9 @@ const NEWS_POOL: readonly NewsLine[] = Object.freeze([
   { en: "the window is clean. what looks through it is not your concern.", zh: "窗是干净的。从窗外看进来的，与你无关。" },
 ]);
 
+/** The pool's size, exported for the spread assertion (ticket 0061). */
+export const NEWS_POOL_SIZE = NEWS_POOL.length;
+
 interface NewsValues {
   readonly day: number;
   readonly clock: string;
@@ -122,10 +125,15 @@ function fillLine(template: string, values: Readonly<Record<string, string | num
   });
 }
 
-/** Deterministic pick: the same (seed, index) always lands on the same line. */
+/** Deterministic pick: the same (seed, index) always lands on the same line.
+ * The varying part goes FIRST in the key: FNV-1a's last operation is an XOR
+ * with the final code unit, so keys differing only in a trailing digit land
+ * in one tight cluster of the u32 space and consecutive broadcasts would
+ * repeat the same template for days (ticket 0061; the projection line's
+ * `daySalt` documents the same fix on its own keys). */
 export function newsLineFor(world: WorldState, locale: NewsLocale): string {
   const index = newsIndexAt(world.tick);
-  const seedKey = hashString(`${world.seed}:${index}`);
+  const seedKey = hashString(`${index}:${world.seed}`);
   const line = NEWS_POOL[seedKey % NEWS_POOL.length] ?? NEWS_POOL[0];
   if (line === undefined) {
     return "";
@@ -140,7 +148,7 @@ export function newsLineFor(world: WorldState, locale: NewsLocale): string {
  * original wording, while the HUD follows the reader's language.
  */
 export function renderNews(snapshot: NewsSnapshot, locale: NewsLocale): string {
-  const seedKey = hashString(`${snapshot.seed}:${snapshot.index}`);
+  const seedKey = hashString(`${snapshot.index}:${snapshot.seed}`);
   const line = NEWS_POOL[seedKey % NEWS_POOL.length] ?? NEWS_POOL[0];
   if (line === undefined) {
     return "";
