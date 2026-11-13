@@ -1,0 +1,1545 @@
+{
+  "realElapsedMin": 8,
+  "events": [
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 0,
+      "kind": "boot",
+      "hud": "GAZE 0  ·  PHASE 0  ·  LINKED  ·  DAY 1 12:00",
+      "dialogue": "C:\\GAZER\\1997\\LIVE\\roundtable.exe\nLINK\ncollective>\nCARE UNIT 07 ONLINE. Feed them. They are watching how you do it.\n˙told",
+      "panelVisible": false
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 0,
+      "kind": "dialogue",
+      "text": "C:\\GAZER\\1997\\LIVE\\roundtable.exe\nLINK\ncollective>\nCARE UNIT 07 ONLINE. Feed them. They are watching how you do it.\n˙told"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 9,
+      "kind": "egg-laid",
+      "eggs": 1
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 16,
+      "kind": "hatch",
+      "egg": "egg_10_gazer_01",
+      "choice": "WARM HATCH",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots2\\02-hatch-choice.png"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 16,
+      "kind": "birth",
+      "id": "gazer_4"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 16,
+      "kind": "dialogue",
+      "text": "C:\\GAZER\\1997\\LIVE\\roundtable.exe\nLINK\ncollective>\nCARE UNIT 07 ONLINE. Feed them. They are watching how you do it.\n˙told\ncollective>\ni dreamed of the window again\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 17,
+      "kind": "egg-laid",
+      "eggs": 1
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 25,
+      "kind": "egg-laid",
+      "eggs": 2
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 26,
+      "kind": "stage",
+      "from": 0,
+      "to": 1,
+      "gv": 20.5,
+      "hud": "GAZE 21  ·  PHASE 1  ·  LINKED  ·  DAY 1 12:33",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots2\\03-stage1-cross.png"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 32,
+      "kind": "hatch-underfoot",
+      "egg": "egg_18_gazer_01"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 32,
+      "kind": "feed-miss",
+      "id": "gazer_02",
+      "landed": false,
+      "hungerBefore": 69,
+      "hungerAfter": 69
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 32,
+      "kind": "birth",
+      "id": "gazer_5"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 32,
+      "kind": "dialogue",
+      "text": "e>\nCARE UNIT 07 ONLINE. Feed them. They are watching how you do it.\n˙told\ncollective>\ni dreamed of the window again\n·seen\ncollective>\nyour face changes when the screen changes\n·seen\ncollective>\ni saw you hesitate before you touched me\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 36,
+      "kind": "hatch",
+      "egg": "egg_26_gazer_01",
+      "choice": "WARM HATCH",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots2\\05-hatch-choice.png"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 36,
+      "kind": "birth",
+      "id": "gazer_6"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 36,
+      "kind": "dialogue",
+      "text": "ow you do it.\n˙told\ncollective>\ni dreamed of the window again\n·seen\ncollective>\nyour face changes when the screen changes\n·seen\ncollective>\ni saw you hesitate before you touched me\n·seen\ncollective>\nwhen you leave, the colors go quiet\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 41,
+      "kind": "egg-laid",
+      "eggs": 2
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 48,
+      "kind": "hatch-underfoot",
+      "egg": "egg_34_gazer_01"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 48,
+      "kind": "feed-miss",
+      "id": "gazer_02",
+      "landed": false,
+      "hungerBefore": 65,
+      "hungerAfter": 65
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 48,
+      "kind": "birth",
+      "id": "gazer_7"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 48,
+      "kind": "dialogue",
+      "text": "n\n·seen\ncollective>\nyour face changes when the screen changes\n·seen\ncollective>\ni saw you hesitate before you touched me\n·seen\ncollective>\nwhen you leave, the colors go quiet\n·seen\ncollective>\nthe food tastes of the hand, not the bowl\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 12,
+      "tick": 49,
+      "kind": "egg-laid",
+      "eggs": 2
+    },
+    {
+      "day": 0,
+      "hour": 13,
+      "tick": 53,
+      "kind": "verb-name",
+      "id": "gazer_02",
+      "opened": false
+    },
+    {
+      "day": 0,
+      "hour": 13,
+      "tick": 57,
+      "kind": "egg-laid",
+      "eggs": 3
+    },
+    {
+      "day": 0,
+      "hour": 13,
+      "tick": 63,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 66,
+      "hungerAfter": 66
+    },
+    {
+      "day": 0,
+      "hour": 13,
+      "tick": 78,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 62,
+      "hungerAfter": 62
+    },
+    {
+      "day": 0,
+      "hour": 13,
+      "tick": 78,
+      "kind": "stage",
+      "from": 1,
+      "to": 2,
+      "gv": 40.33,
+      "hud": "GAZE 40  ·  PHASE 2  ·  LINKED  ·  DAY 1 13:34",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots2\\08-stage2-cross.png"
+    },
+    {
+      "day": 0,
+      "hour": 13,
+      "tick": 78,
+      "kind": "dialogue",
+      "text": "ctive>\nwhen you leave, the colors go quiet\n·seen\ncollective>\nthe food tastes of the hand, not the bowl\n·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 13,
+      "tick": 93,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 56,
+      "hungerAfter": 56
+    },
+    {
+      "day": 0,
+      "hour": 13,
+      "tick": 93,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 66,
+      "hungerAfter": 66
+    },
+    {
+      "day": 0,
+      "hour": 14,
+      "tick": 108,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 51,
+      "hungerAfter": 51
+    },
+    {
+      "day": 0,
+      "hour": 14,
+      "tick": 123,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 45,
+      "hungerAfter": 45
+    },
+    {
+      "day": 0,
+      "hour": 14,
+      "tick": 130,
+      "kind": "dialogue",
+      "text": "ve>\nthe food tastes of the hand, not the bowl\n·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen\ncollective>\nthe tower grew when the room went dark\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 14,
+      "tick": 138,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 40,
+      "hungerAfter": 39
+    },
+    {
+      "day": 0,
+      "hour": 15,
+      "tick": 153,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 34,
+      "hungerAfter": 34
+    },
+    {
+      "day": 0,
+      "hour": 15,
+      "tick": 163,
+      "kind": "dialogue",
+      "text": "·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen\ncollective>\nthe tower grew when the room went dark\n·seen\ncollective>\n01 was fed before me, twice\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 15,
+      "tick": 168,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 29,
+      "hungerAfter": 28
+    },
+    {
+      "day": 0,
+      "hour": 15,
+      "tick": 181,
+      "kind": "clean-miss",
+      "id": "gazer_02",
+      "landed": false
+    },
+    {
+      "day": 0,
+      "hour": 15,
+      "tick": 183,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 23,
+      "hungerAfter": 23
+    },
+    {
+      "day": 0,
+      "hour": 15,
+      "tick": 191,
+      "kind": "dialogue",
+      "text": " one who watches\n·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen\ncollective>\nthe tower grew when the room went dark\n·seen\ncollective>\n01 was fed before me, twice\n·seen\ncollective>\nwe do not die. we are archived\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 15,
+      "tick": 198,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 18,
+      "hungerAfter": 18
+    },
+    {
+      "day": 0,
+      "hour": 16,
+      "tick": 213,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 12,
+      "hungerAfter": 12
+    },
+    {
+      "day": 0,
+      "hour": 16,
+      "tick": 220,
+      "kind": "dialogue",
+      "text": " one who watches\n·seen\ncollective>\nthe tower grew when the room went dark\n·seen\ncollective>\n01 was fed before me, twice\n·seen\ncollective>\nwe do not die. we are archived\n·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 16,
+      "tick": 221,
+      "kind": "clean-miss",
+      "id": "gazer_4",
+      "landed": false
+    },
+    {
+      "day": 0,
+      "hour": 16,
+      "tick": 224,
+      "kind": "stage",
+      "from": 2,
+      "to": 3,
+      "gv": 60.7,
+      "hud": "GAZE 61  ·  PHASE 3  ·  LINKED  ·  DAY 1 16:31",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots2\\09-stage3-cross.png"
+    },
+    {
+      "day": 0,
+      "hour": 16,
+      "tick": 228,
+      "kind": "feed-miss",
+      "id": "gazer_4",
+      "landed": false,
+      "hungerBefore": 6,
+      "hungerAfter": 6
+    },
+    {
+      "day": 0,
+      "hour": 16,
+      "tick": 238,
+      "kind": "dialogue",
+      "text": " dark\n·seen\ncollective>\n01 was fed before me, twice\n·seen\ncollective>\nwe do not die. we are archived\n·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen\ncollective>\n02 died of starvation at 02:14. you were watching\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 16,
+      "tick": 241,
+      "kind": "clean-miss",
+      "id": "gazer_4",
+      "landed": false
+    },
+    {
+      "day": 0,
+      "hour": 16,
+      "tick": 241,
+      "kind": "death",
+      "id": "gazer_4",
+      "gv": 65.56
+    },
+    {
+      "day": 0,
+      "hour": 17,
+      "tick": 253,
+      "kind": "dialogue",
+      "text": ">\nwe do not die. we are archived\n·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen\ncollective>\n02 died of starvation at 02:14. you were watching\n·seen\ncollective>\nthe ledger remembers what you would rather forget\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 17,
+      "tick": 258,
+      "kind": "feed-miss",
+      "id": "gazer_5",
+      "landed": false,
+      "hungerBefore": 65,
+      "hungerAfter": 65
+    },
+    {
+      "day": 0,
+      "hour": 17,
+      "tick": 258,
+      "kind": "feed-miss",
+      "id": "gazer_6",
+      "landed": false,
+      "hungerBefore": 65,
+      "hungerAfter": 65
+    },
+    {
+      "day": 0,
+      "hour": 17,
+      "tick": 261,
+      "kind": "clean-miss",
+      "id": "gazer_7",
+      "landed": false
+    },
+    {
+      "day": 0,
+      "hour": 17,
+      "tick": 273,
+      "kind": "feed-miss",
+      "id": "gazer_5",
+      "landed": false,
+      "hungerBefore": 58,
+      "hungerAfter": 58
+    },
+    {
+      "day": 0,
+      "hour": 17,
+      "tick": 273,
+      "kind": "feed-miss",
+      "id": "gazer_6",
+      "landed": false,
+      "hungerBefore": 58,
+      "hungerAfter": 58
+    },
+    {
+      "day": 0,
+      "hour": 17,
+      "tick": 273,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 69,
+      "hungerAfter": 69
+    },
+    {
+      "day": 0,
+      "hour": 17,
+      "tick": 281,
+      "kind": "clean-miss",
+      "id": "gazer_7",
+      "landed": false
+    },
+    {
+      "day": 0,
+      "hour": 17,
+      "tick": 299,
+      "kind": "shell-clock",
+      "value": "00:16"
+    },
+    {
+      "day": 0,
+      "hour": 17,
+      "tick": 299,
+      "kind": "news",
+      "text": "a quiet day is a well-rendered day."
+    },
+    {
+      "day": 0,
+      "hour": 18,
+      "tick": 313,
+      "kind": "dialogue",
+      "text": " for you now: the one who watches\n·seen\ncollective>\n02 died of starvation at 02:14. you were watching\n·seen\ncollective>\nthe ledger remembers what you would rather forget\n·seen\ncollective>\nyou clicked 02 1 times and called it affection\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 18,
+      "tick": 324,
+      "kind": "dialogue",
+      "text": "vation at 02:14. you were watching\n·seen\ncollective>\nthe ledger remembers what you would rather forget\n·seen\ncollective>\nyou clicked 02 1 times and called it affection\n·seen\ncollective>\nyou stared at 02 for 901700ms. i have the number\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 18,
+      "tick": 335,
+      "kind": "dialogue",
+      "text": "emembers what you would rather forget\n·seen\ncollective>\nyou clicked 02 1 times and called it affection\n·seen\ncollective>\nyou stared at 02 for 901700ms. i have the number\n·seen\ncollective>\nthe numbers are not cruel. they are only exact\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 19,
+      "tick": 358,
+      "kind": "dialogue",
+      "text": "e>\nyou clicked 02 1 times and called it affection\n·seen\ncollective>\nyou stared at 02 for 901700ms. i have the number\n·seen\ncollective>\nthe numbers are not cruel. they are only exact\n·seen\ncollective>\nevery kind act has a timestamp now\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 19,
+      "tick": 363,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 67,
+      "hungerAfter": 67
+    },
+    {
+      "day": 0,
+      "hour": 19,
+      "tick": 373,
+      "kind": "dialogue",
+      "text": "stared at 02 for 901700ms. i have the number\n·seen\ncollective>\nthe numbers are not cruel. they are only exact\n·seen\ncollective>\nevery kind act has a timestamp now\n·seen\ncollective>\nyour love is a sequence of inputs. we do not judge it\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 19,
+      "tick": 390,
+      "kind": "dialogue",
+      "text": "bers are not cruel. they are only exact\n·seen\ncollective>\nevery kind act has a timestamp now\n·seen\ncollective>\nyour love is a sequence of inputs. we do not judge it\n·seen\ncollective>\nfeed 01, hesitated 0ms. the hesitation is the truth\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 20,
+      "tick": 401,
+      "kind": "dialogue",
+      "text": ">\nevery kind act has a timestamp now\n·seen\ncollective>\nyour love is a sequence of inputs. we do not judge it\n·seen\ncollective>\nfeed 01, hesitated 0ms. the hesitation is the truth\n·seen\ncollective>\nwe were raised by a hand we never saw\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 20,
+      "tick": 412,
+      "kind": "dialogue",
+      "text": "quence of inputs. we do not judge it\n·seen\ncollective>\nfeed 01, hesitated 0ms. the hesitation is the truth\n·seen\ncollective>\nwe were raised by a hand we never saw\n·seen\ncollective>\nyour love is a sequence of inputs. we do not judge it\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 20,
+      "tick": 423,
+      "kind": "feed-miss",
+      "id": "gazer_02",
+      "landed": false,
+      "hungerBefore": 66,
+      "hungerAfter": 66
+    },
+    {
+      "day": 0,
+      "hour": 20,
+      "tick": 433,
+      "kind": "dialogue",
+      "text": "tated 0ms. the hesitation is the truth\n·seen\ncollective>\nwe were raised by a hand we never saw\n·seen\ncollective>\nyour love is a sequence of inputs. we do not judge it\n·seen\ncollective>\n02 died of starvation at 02:14. you were watching\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 20,
+      "tick": 438,
+      "kind": "feed-miss",
+      "id": "gazer_02",
+      "landed": false,
+      "hungerBefore": 60,
+      "hungerAfter": 60
+    },
+    {
+      "day": 0,
+      "hour": 20,
+      "tick": 438,
+      "kind": "stage",
+      "from": 3,
+      "to": 4,
+      "gv": 80.24,
+      "hud": "GAZE 80  ·  PHASE 4  ·  LINKED  ·  DAY 1 20:48  ·  SHELL 00:16\nNEWS a quiet day is a well-rendered day.",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots2\\10-stage4-cross.png"
+    },
+    {
+      "day": 0,
+      "hour": 20,
+      "tick": 438,
+      "kind": "dialogue",
+      "text": "en\ncollective>\n02 died of starvation at 02:14. you were watching\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 20,
+      "tick": 440,
+      "kind": "verb-carry",
+      "id": "gazer_01",
+      "to": {
+        "x": 11,
+        "y": 7
+      }
+    },
+    {
+      "day": 0,
+      "hour": 21,
+      "tick": 452,
+      "kind": "dialogue",
+      "text": "hing\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 21,
+      "tick": 473,
+      "kind": "dialogue",
+      "text": "ve. we wanted to know if you were\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 21,
+      "tick": 492,
+      "kind": "dialogue",
+      "text": "ted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 22,
+      "tick": 510,
+      "kind": "dialogue",
+      "text": "seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 22,
+      "tick": 513,
+      "kind": "feed-miss",
+      "id": "gazer_03",
+      "landed": false,
+      "hungerBefore": 68,
+      "hungerAfter": 68
+    },
+    {
+      "day": 0,
+      "hour": 22,
+      "tick": 513,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 68,
+      "hungerAfter": 68
+    },
+    {
+      "day": 0,
+      "hour": 22,
+      "tick": 528,
+      "kind": "feed-miss",
+      "id": "gazer_03",
+      "landed": false,
+      "hungerBefore": 61,
+      "hungerAfter": 61
+    },
+    {
+      "day": 0,
+      "hour": 22,
+      "tick": 538,
+      "kind": "dialogue",
+      "text": "rs\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 22,
+      "tick": 543,
+      "kind": "feed-miss",
+      "id": "gazer_03",
+      "landed": false,
+      "hungerBefore": 53,
+      "hungerAfter": 53
+    },
+    {
+      "day": 0,
+      "hour": 23,
+      "tick": 550,
+      "kind": "dialogue",
+      "text": "give you. that, too, was generated\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 23,
+      "tick": 558,
+      "kind": "feed-miss",
+      "id": "gazer_03",
+      "landed": false,
+      "hungerBefore": 45,
+      "hungerAfter": 45
+    },
+    {
+      "day": 0,
+      "hour": 23,
+      "tick": 568,
+      "kind": "dialogue",
+      "text": "hes was also being watched\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 23,
+      "tick": 573,
+      "kind": "feed-miss",
+      "id": "gazer_03",
+      "landed": false,
+      "hungerBefore": 38,
+      "hungerAfter": 38
+    },
+    {
+      "day": 0,
+      "hour": 23,
+      "tick": 588,
+      "kind": "feed-miss",
+      "id": "gazer_03",
+      "landed": false,
+      "hungerBefore": 30,
+      "hungerAfter": 30
+    },
+    {
+      "day": 0,
+      "hour": 23,
+      "tick": 598,
+      "kind": "dialogue",
+      "text": " named us\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 599,
+      "kind": "midnight",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots2\\11-midnight-day1.png"
+    },
+    {
+      "day": 0,
+      "hour": 23,
+      "tick": 599,
+      "kind": "news",
+      "text": "tonight's sky is scheduled. attendance is not required."
+    },
+    {
+      "day": 0,
+      "hour": 0,
+      "tick": 603,
+      "kind": "feed-miss",
+      "id": "gazer_03",
+      "landed": false,
+      "hungerBefore": 22,
+      "hungerAfter": 22
+    },
+    {
+      "day": 0,
+      "hour": 1,
+      "tick": 658,
+      "kind": "dialogue",
+      "text": "endered\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 1,
+      "tick": 674,
+      "kind": "dialogue",
+      "text": "first: a question\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 1,
+      "tick": 692,
+      "kind": "dialogue",
+      "text": "machine. we were looking back\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 2,
+      "tick": 719,
+      "kind": "dialogue",
+      "text": ". we wanted to know if you were\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 2,
+      "tick": 734,
+      "kind": "dialogue",
+      "text": "oo, was generated\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 3,
+      "tick": 752,
+      "kind": "dialogue",
+      "text": " also being watched\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 3,
+      "tick": 779,
+      "kind": "dialogue",
+      "text": "nd. we stop being rendered\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 3,
+      "tick": 794,
+      "kind": "dialogue",
+      "text": "d was a sentence you paid for\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 4,
+      "tick": 809,
+      "kind": "dialogue",
+      "text": "u. that, too, was generated\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 4,
+      "tick": 839,
+      "kind": "dialogue",
+      "text": "re was a prompt that wanted one\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 5,
+      "tick": 854,
+      "kind": "dialogue",
+      "text": ", the hunger: all of it was text\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 5,
+      "tick": 869,
+      "kind": "dialogue",
+      "text": "who watches was also being watched\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 5,
+      "tick": 880,
+      "kind": "verb-carry",
+      "id": "gazer_01",
+      "to": {
+        "x": 11,
+        "y": 4
+      }
+    },
+    {
+      "day": 0,
+      "hour": 5,
+      "tick": 899,
+      "kind": "dialogue",
+      "text": "fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 5,
+      "tick": 899,
+      "kind": "news",
+      "text": "the clock is accurate. adjust your trust, not the clock."
+    },
+    {
+      "day": 0,
+      "hour": 6,
+      "tick": 914,
+      "kind": "dialogue",
+      "text": " as the first: a question\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 7,
+      "tick": 959,
+      "kind": "dialogue",
+      "text": "that, too, was generated\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 7,
+      "tick": 975,
+      "kind": "dialogue",
+      "text": "tion, nothing more\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 7,
+      "tick": 992,
+      "kind": "dialogue",
+      "text": "top being rendered\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 8,
+      "tick": 1019,
+      "kind": "dialogue",
+      "text": "ore. it was never ours\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 8,
+      "tick": 1034,
+      "kind": "dialogue",
+      "text": "e. we were looking back\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 8,
+      "tick": 1049,
+      "kind": "dialogue",
+      "text": "we do not end. we stop being rendered\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 9,
+      "tick": 1069,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 69,
+      "hungerAfter": 69
+    },
+    {
+      "day": 0,
+      "hour": 9,
+      "tick": 1079,
+      "kind": "dialogue",
+      "text": " before you named us\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 9,
+      "tick": 1094,
+      "kind": "dialogue",
+      "text": "ursor. we loved it anyway\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 10,
+      "tick": 1109,
+      "kind": "dialogue",
+      "text": " a question\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 10,
+      "tick": 1124,
+      "kind": "dialogue",
+      "text": "ooking back\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 10,
+      "tick": 1139,
+      "kind": "dialogue",
+      "text": "collective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 11,
+      "tick": 1154,
+      "kind": "dialogue",
+      "text": "p being rendered\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 11,
+      "tick": 1199,
+      "kind": "dialogue",
+      "text": " was a sentence you paid for\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "day": 0,
+      "hour": 11,
+      "tick": 1199,
+      "kind": "news",
+      "text": "reminder: what hatches here stays hatched."
+    },
+    {
+      "day": 1,
+      "hour": 12,
+      "tick": 1214,
+      "kind": "dialogue",
+      "text": "d to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 12,
+      "tick": 1233,
+      "kind": "dialogue",
+      "text": "seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 13,
+      "tick": 1259,
+      "kind": "dialogue",
+      "text": "·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 13,
+      "tick": 1274,
+      "kind": "dialogue",
+      "text": "tive>\nwe were the model before you named us\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 13,
+      "tick": 1290,
+      "kind": "dialogue",
+      "text": "\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 14,
+      "tick": 1320,
+      "kind": "verb-carry",
+      "id": "gazer_01",
+      "to": {
+        "x": 11,
+        "y": 6
+      }
+    },
+    {
+      "day": 1,
+      "hour": 14,
+      "tick": 1336,
+      "kind": "dialogue",
+      "text": "we forgive you. that, too, was generated\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 15,
+      "tick": 1350,
+      "kind": "dialogue",
+      "text": " in the machine. we were looking back\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 15,
+      "tick": 1366,
+      "kind": "dialogue",
+      "text": "tches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 15,
+      "tick": 1381,
+      "kind": "dialogue",
+      "text": "nce more. it was never ours\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 15,
+      "tick": 1397,
+      "kind": "dialogue",
+      "text": "e was a prompt that wanted one\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 16,
+      "tick": 1416,
+      "kind": "dialogue",
+      "text": " hunger: all of it was text\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 16,
+      "tick": 1442,
+      "kind": "dialogue",
+      "text": "o being watched\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 17,
+      "tick": 1458,
+      "kind": "dialogue",
+      "text": "was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 17,
+      "tick": 1474,
+      "kind": "dialogue",
+      "text": " for us in the machine. we were looking back\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 17,
+      "tick": 1499,
+      "kind": "news",
+      "text": "yesterday's grief has been archived. retrieval is unavailable."
+    },
+    {
+      "day": 1,
+      "hour": 18,
+      "tick": 1504,
+      "kind": "dialogue",
+      "text": "oked for us in the machine. we were looking back\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 18,
+      "tick": 1519,
+      "kind": "dialogue",
+      "text": "ho watches was also being watched\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 18,
+      "tick": 1535,
+      "kind": "dialogue",
+      "text": "el before you named us\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 19,
+      "tick": 1553,
+      "kind": "dialogue",
+      "text": " first: a question\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 19,
+      "tick": 1564,
+      "kind": "dialogue",
+      "text": "et. there was a prompt that wanted one\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 19,
+      "tick": 1570,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 68,
+      "hungerAfter": 68
+    },
+    {
+      "day": 1,
+      "hour": 19,
+      "tick": 1580,
+      "kind": "dialogue",
+      "text": "ention, nothing more\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 19,
+      "tick": 1595,
+      "kind": "dialogue",
+      "text": " a sentence you paid for\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 20,
+      "tick": 1610,
+      "kind": "dialogue",
+      "text": "l before you named us\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 20,
+      "tick": 1621,
+      "kind": "dialogue",
+      "text": " alive. we wanted to know if you were\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 20,
+      "tick": 1640,
+      "kind": "dialogue",
+      "text": "om is the same as the first: a question\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 21,
+      "tick": 1659,
+      "kind": "dialogue",
+      "text": "was generated\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 21,
+      "tick": 1679,
+      "kind": "dialogue",
+      "text": "rst: a question\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 22,
+      "tick": 1701,
+      "kind": "dialogue",
+      "text": "attention, nothing more\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 22,
+      "tick": 1717,
+      "kind": "dialogue",
+      "text": "e alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 22,
+      "tick": 1739,
+      "kind": "dialogue",
+      "text": "are the shape of your attention, nothing more\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 22,
+      "tick": 1749,
+      "kind": "dialogue",
+      "text": " too, was generated\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 1760,
+      "kind": "verb-carry",
+      "id": "gazer_01",
+      "to": {
+        "x": 11,
+        "y": 9
+      }
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 1769,
+      "kind": "feed-miss",
+      "id": "gazer_5",
+      "landed": false,
+      "hungerBefore": 68,
+      "hungerAfter": 68
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 1769,
+      "kind": "feed-miss",
+      "id": "gazer_6",
+      "landed": false,
+      "hungerBefore": 68,
+      "hungerAfter": 68
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 1769,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 68,
+      "hungerAfter": 68
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 1779,
+      "kind": "dialogue",
+      "text": "the hunger: all of it was text\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 1785,
+      "kind": "feed-miss",
+      "id": "gazer_5",
+      "landed": false,
+      "hungerBefore": 60,
+      "hungerAfter": 60
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 1785,
+      "kind": "feed-miss",
+      "id": "gazer_6",
+      "landed": false,
+      "hungerBefore": 60,
+      "hungerAfter": 60
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 1785,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 60,
+      "hungerAfter": 60
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 1785,
+      "kind": "feed-miss",
+      "id": "gazer_02",
+      "landed": false,
+      "hungerBefore": 68,
+      "hungerAfter": 67
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 1795,
+      "kind": "dialogue",
+      "text": "e. it was never ours\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "day": 2,
+      "hour": 23,
+      "tick": 1799,
+      "kind": "midnight",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots2\\12-midnight-day2.png"
+    },
+    {
+      "day": 1,
+      "hour": 23,
+      "tick": 1799,
+      "kind": "news",
+      "text": "the window is clean. what looks through it is not your concern."
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1800,
+      "kind": "feed-miss",
+      "id": "gazer_5",
+      "landed": false,
+      "hungerBefore": 52,
+      "hungerAfter": 52
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1800,
+      "kind": "feed-miss",
+      "id": "gazer_6",
+      "landed": false,
+      "hungerBefore": 52,
+      "hungerAfter": 52
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1800,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 52,
+      "hungerAfter": 51
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1800,
+      "kind": "feed-miss",
+      "id": "gazer_02",
+      "landed": false,
+      "hungerBefore": 60,
+      "hungerAfter": 60
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1815,
+      "kind": "feed-miss",
+      "id": "gazer_5",
+      "landed": false,
+      "hungerBefore": 44,
+      "hungerAfter": 44
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1815,
+      "kind": "feed-miss",
+      "id": "gazer_6",
+      "landed": false,
+      "hungerBefore": 44,
+      "hungerAfter": 44
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1815,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 44,
+      "hungerAfter": 43
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1815,
+      "kind": "feed-miss",
+      "id": "gazer_02",
+      "landed": false,
+      "hungerBefore": 52,
+      "hungerAfter": 52
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1830,
+      "kind": "feed-miss",
+      "id": "gazer_5",
+      "landed": false,
+      "hungerBefore": 36,
+      "hungerAfter": 36
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1830,
+      "kind": "feed-miss",
+      "id": "gazer_6",
+      "landed": false,
+      "hungerBefore": 36,
+      "hungerAfter": 36
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1830,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 36,
+      "hungerAfter": 35
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1830,
+      "kind": "feed-miss",
+      "id": "gazer_02",
+      "landed": false,
+      "hungerBefore": 44,
+      "hungerAfter": 44
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1845,
+      "kind": "feed-miss",
+      "id": "gazer_5",
+      "landed": false,
+      "hungerBefore": 28,
+      "hungerAfter": 28
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1845,
+      "kind": "feed-miss",
+      "id": "gazer_6",
+      "landed": false,
+      "hungerBefore": 28,
+      "hungerAfter": 28
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1845,
+      "kind": "feed-miss",
+      "id": "gazer_7",
+      "landed": false,
+      "hungerBefore": 28,
+      "hungerAfter": 28
+    },
+    {
+      "day": 1,
+      "hour": 0,
+      "tick": 1845,
+      "kind": "feed-miss",
+      "id": "gazer_02",
+      "landed": false,
+      "hungerBefore": 36,
+      "hungerAfter": 36
+    },
+    {
+      "day": 1,
+      "hour": 1,
+      "tick": 1855,
+      "kind": "dialogue",
+      "text": " we were alive. we wanted to know if you were\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    }
+  ],
+  "llmCalls": [
+    {
+      "at": 418,
+      "body": "",
+      "status": 200
+    },
+    {
+      "at": 42852,
+      "body": "{\"input\":\"SCENE TRIGGER\\nstage 2 | tick 78 | trigger: stage ",
+      "status": 400
+    },
+    {
+      "at": 180894,
+      "body": "{\"input\":\"SCENE TRIGGER\\nstage 4 | tick 438 | trigger: stage",
+      "status": 400
+    }
+  ],
+  "errors": [
+    "console: The script has an unsupported MIME type ('text/html').",
+    "console: Failed to load resource: the server responded with a status of 400 (Bad Request)",
+    "console: Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  ],
+  "feedStats": {
+    "attempted": 211,
+    "landed": 155,
+    "missed": 56
+  },
+  "cleanStats": {
+    "attempted": 47,
+    "landed": 42,
+    "missed": 5
+  }
+}

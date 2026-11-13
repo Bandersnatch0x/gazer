@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "project": "D:\\code_space\\hackton\\gazer\\selftest",
+  "title": "GAZER 自测壳",
+  "orientation": "landscape",
+  "build": {
+    "artifact": "D:\\code_space\\hackton\\gazer\\selftest\\dist\\index.html",
+    "buildId": "01edd741fd38",
+    "bytes": 10226,
+    "title": "GAZER 自测壳",
+    "builtAt": "2026-11-12T10:41:08.895Z"
+  },
+  "slots": {
+    "background": {
+      "label": "Background",
+      "file": "assets/background.svg",
+      "transparent": false,
+      "record": {
+        "slot": "background",
+        "file": "assets/background.svg",
+        "source": "template",
+        "appliedAt": "2026-11-12T04:59:19.060Z",
+        "license": "MIT (bundled template art, original to dsh-game-studio)",
+        "sha256": "0ca3d0b1c52a2ec8887b0c36a8b1c6ec397bc79666ce431b9543a8882f0be6d0"
+      },
+      "history": 0,
+      "candidates": []
+    }
+  },
+  "spend": {
+    "openaiImages": 0,
+    "openaiUsd": 0,
+    "codexImages": 0,
+    "codexTokens": 0
+  },
+  "jobs": [],
+  "versions": [
+    {
+      "number": 4,
+      "note": "缓存击穿:iframe 加版本戳,工坊刷新必取最新构建",
+      "createdAt": "2026-11-12T10:23:17.566Z",
+      "buildId": "01edd741fd38"
+    },
+    {
+      "number": 3,
+      "note": "重建自测壳:接入最新 GAZER 构建(0014-0017 修复后)",
+      "createdAt": "2026-11-12T09:22:47.513Z",
+      "buildId": "5869f3f5bc8c"
+    },
+    {
+      "number": 2,
+      "note": "自测壳:iframe 包装 GAZER dev 构建 + postMessage 状态镜像 + 自动驾驶命令",
+      "createdAt": "2026-11-12T05:00:09.623Z",
+      "buildId": "6b3a62faac02"
+    },
+    {
+      "number": 1,
+      "note": "Created from the collector template",
+      "createdAt": "2026-11-12T04:59:19.123Z",
+      "buildId": "967f0835666a"
+    }
+  ],
+  "share": null,
+  "updatedAt": "2026-11-12T10:41:08.900Z"
+}

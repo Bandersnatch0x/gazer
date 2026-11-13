@@ -1,0 +1,14 @@
+{
+  "number": 3,
+  "buildId": "5869f3f5bc8c",
+  "createdAt": "2026-11-12T09:22:47.513Z",
+  "note": "重建自测壳:接入最新 GAZER 构建(0014-0017 修复后)",
+  "title": "GAZER 自测壳",
+  "bytes": 9972,
+  "files": {
+    "game.js": "922d86a1293d3991f43ba8a77b4a9c96e9140c1e88013c2341a0f9c0692c3f7a",
+    "game.json": "18c9ddc8b064a7f069571b752e57aad883220c06d1e695e6b1d0a626a9ad030f",
+    "assets/ASSETS.json": "60f766eac15ee07e6ce37d99f783c55bcf8297b581cb1e519d8f82a3994d80ee",
+    "assets/background.svg": "0ca3d0b1c52a2ec8887b0c36a8b1c6ec397bc79666ce431b9543a8882f0be6d0"
+  }
+}

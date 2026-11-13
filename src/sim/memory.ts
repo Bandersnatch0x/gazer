@@ -1,4 +1,5 @@
 import type { CreatureId } from "./types";
+import type { Rng } from "./rng";
 
 export type EpistemicStatus = "witnessed" | "heard" | "inferred" | "fabricated";
 
@@ -54,4 +55,45 @@ export function memoryText(slice: MemorySlice, id: string): string | null {
   }
   const consolidated = slice.consolidated.find((entry) => entry.id === id);
   return consolidated?.content ?? null;
+}
+
+/** A demoted consolidated entry re-enters the episodic stream as inference. */
+function toEpisodic(entry: ConsolidatedEntry): MemoryEntry {
+  return {
+    id: entry.id,
+    atTick: 0,
+    wallClock: entry.consolidatedAt,
+    fact: entry.content,
+    witnessed: "inferred",
+    source: null,
+    distortion: null,
+    salience: 0.5,
+    valence: 0,
+  };
+}
+
+/**
+ * 「出生即带着未亲见的记忆」: one memory drawn from a parent, seeded so the
+ * same parents and world seed always hand down the same memory. The child
+ * holds it as something heard from that parent — it never saw it itself.
+ */
+export function sampleInherited(parentId: CreatureId, slice: MemorySlice, rng: Rng): MemoryEntry | null {
+  const candidates =
+    slice.working.length > 0 ? slice.working : slice.consolidated.map(toEpisodic);
+  if (candidates.length === 0) {
+    return null;
+  }
+  const entry = rng.pick(candidates);
+  return {
+    ...entry,
+    id: `inherited_${entry.id}`,
+    witnessed: "heard",
+    source: parentId,
+    distortion: null,
+  };
+}
+
+/** Pure append for the `remember` event, honouring working capacity. */
+export function rememberEntry(slice: MemorySlice, entry: MemoryEntry): MemorySlice {
+  return { ...slice, working: [...slice.working, entry].slice(-WORKING_CAPACITY) };
 }

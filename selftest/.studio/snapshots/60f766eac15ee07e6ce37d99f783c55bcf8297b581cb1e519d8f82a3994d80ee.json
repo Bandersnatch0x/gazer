@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "assets": {
+    "background": {
+      "slot": "background",
+      "file": "assets/background.svg",
+      "source": "template",
+      "appliedAt": "2026-11-12T04:59:19.060Z",
+      "license": "MIT (bundled template art, original to dsh-game-studio)",
+      "sha256": "0ca3d0b1c52a2ec8887b0c36a8b1c6ec397bc79666ce431b9543a8882f0be6d0"
+    }
+  }
+}

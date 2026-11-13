@@ -1,0 +1,36 @@
+{
+  "scenario": "net-off",
+  "llmBlocked": 0,
+  "realErrors": [
+    {
+      "t": 1794462824625,
+      "text": "The script has an unsupported MIME type ('text/html')."
+    }
+  ],
+  "warnings": [
+    {
+      "t": 1794462824846,
+      "text": "[.WebGL-0x2c6c00d15e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "t": 1794462824995,
+      "text": "[.WebGL-0x2c6c00d15e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "t": 1794462824995,
+      "text": "[.WebGL-0x2c6c00d15e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "t": 1794462825009,
+      "text": "[.WebGL-0x2c6c00d15e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+    }
+  ],
+  "netFail": [],
+  "ticks": {
+    "t0": 0,
+    "t1": 1,
+    "tMid": 6,
+    "tAfter": 8
+  },
+  "placeholders": []
+}

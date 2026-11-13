@@ -169,7 +169,8 @@ describe("roundtable validation", () => {
           const pools = { "01": manualPool(2), "02": manualPool(2) };
 
           const result = validateTurns(script, slices, pools);
-          expect(pools["01"]).toContain(result.scene[0]?.text);
+          expect(result).not.toBeNull();
+          expect(pools["01"]).toContain(result?.scene[0]?.text);
         },
       ),
       { numRuns: 200 },
@@ -186,8 +187,9 @@ describe("roundtable validation", () => {
       pools,
     );
 
-    expect(pools["01"]).toContain(result.scene[0]?.text);
-    expect(result.scene[1]?.text).toBe("the room went dark");
+    expect(result).not.toBeNull();
+    expect(pools["01"]).toContain(result?.scene[0]?.text);
+    expect(result?.scene[1]?.text).toBe("the room went dark");
   });
 
   it("accepts a consolidated entry as a first-hand citation", () => {
@@ -205,21 +207,57 @@ describe("roundtable validation", () => {
       pools,
     );
 
-    expect(result.scene[0]?.text).toBe("your human lied");
+    expect(result).not.toBeNull();
+    expect(result?.scene[0]?.text).toBe("your human lied");
   });
 
-  it("keeps the turn when the speaker has no pool to draw from", () => {
+  it("drops the turn when the speaker has no pool to draw from", () => {
     const script: RoundtableScript = { scene: [turn({ memoryRef: "mem_gone" })] };
     const result = validateTurns(script, { "01": sliceOf() }, { "01": [] });
 
-    expect(result.scene[0]?.text).toBe("the tower grew at night");
+    expect(result).toBeNull();
   });
 
-  it("keeps the turn when the speaker has no slice and no pool", () => {
+  it("drops the turn when the speaker has no slice and no pool", () => {
     const script: RoundtableScript = { scene: [turn()] };
     const result = validateTurns(script, {}, {});
 
-    expect(result).toEqual(script);
+    expect(result).toBeNull();
+  });
+
+  it("drops a turn from a speaker the slices and pools do not know at all", () => {
+    // The model's speaker list is untrusted: an unknown id must never smuggle
+    // its fabricated line past validation (playtest p4 finding F4).
+    const script: RoundtableScript = {
+      scene: [
+        { speaker: "99", text: "i invented a memory", intent: "confide", mood: "sad", memoryRef: "mem_99" },
+        turn({ speaker: "01", text: "the room went dark", memoryRef: "mem_1" }),
+      ],
+    };
+    const slices = { "01": sliceOf(entry("mem_1", "the room went dark")) };
+    const pools = { "01": ["pool line"] };
+
+    const result = validateTurns(script, slices, pools);
+
+    expect(result).not.toBeNull();
+    expect(result?.scene).toHaveLength(1);
+    expect(result?.scene[0]?.speaker).toBe("01");
+  });
+
+  it("falls back to null when every turn is ungrounded", () => {
+    const script: RoundtableScript = {
+      scene: [
+        turn({ memoryRef: "mem_gone" }),
+        turn({ speaker: "02", memoryRef: "mem_gone" }),
+      ],
+    };
+    const slices = {
+      "01": sliceOf(entry("mem_1", "the tower grew at night")),
+      "02": sliceOf(entry("mem_2", "the tower grew at night")),
+    };
+    const pools = { "01": [], "02": [] };
+
+    expect(validateTurns(script, slices, pools)).toBeNull();
   });
 
   it("is deterministic", () => {

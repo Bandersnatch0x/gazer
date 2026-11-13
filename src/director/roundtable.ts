@@ -155,23 +155,27 @@ function isGrounded(turn: RoundtableTurn, slices: Readonly<Record<CreatureId, Me
 }
 
 /**
- * Replace every turn whose cited memory is absent from the speaker's slice, or
- * whose text shares fewer than two content words with that memory's text. The
- * replacement is drawn deterministically from the speaker's own pool, so a
- * rejected line never becomes another creature's line.
+ * Keep only turns that are grounded in the speaker's own memory. A turn that
+ * fails grounding is replaced from the speaker's own pool when one exists, and
+ * dropped otherwise — a speaker with no pool must never smuggle a fabricated
+ * line through (the model's speaker list itself is untrusted). Returns null
+ * when nothing survives, so the caller falls back to the manual pool.
  */
 export function validateTurns(
   script: RoundtableScript,
   slices: Readonly<Record<CreatureId, MemorySlice>>,
   pools: Readonly<Record<CreatureId, readonly string[]>>,
-): RoundtableScript {
-  return {
-    scene: script.scene.map((turn, index) => {
-      if (isGrounded(turn, slices)) {
-        return turn;
-      }
-      const replacement = replacementText(turn, pools, index);
-      return replacement === null ? turn : { ...turn, text: replacement };
-    }),
-  };
+): RoundtableScript | null {
+  const scene: RoundtableTurn[] = [];
+  for (const [index, turn] of script.scene.entries()) {
+    if (isGrounded(turn, slices)) {
+      scene.push(turn);
+      continue;
+    }
+    const replacement = replacementText(turn, pools, index);
+    if (replacement !== null) {
+      scene.push({ ...turn, text: replacement });
+    }
+  }
+  return scene.length === 0 ? null : { scene };
 }

@@ -1,0 +1,14 @@
+{
+  "number": 4,
+  "buildId": "01edd741fd38",
+  "createdAt": "2026-11-12T10:23:17.566Z",
+  "note": "缓存击穿:iframe 加版本戳,工坊刷新必取最新构建",
+  "title": "GAZER 自测壳",
+  "bytes": 10226,
+  "files": {
+    "game.js": "3d804616ae54da4fe3c600b192aa1313e2b39ff3b418b7ba25def0372cfd54ef",
+    "game.json": "18c9ddc8b064a7f069571b752e57aad883220c06d1e695e6b1d0a626a9ad030f",
+    "assets/ASSETS.json": "60f766eac15ee07e6ce37d99f783c55bcf8297b581cb1e519d8f82a3994d80ee",
+    "assets/background.svg": "0ca3d0b1c52a2ec8887b0c36a8b1c6ec397bc79666ce431b9543a8882f0be6d0"
+  }
+}

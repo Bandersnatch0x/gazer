@@ -4,6 +4,14 @@
  * 组件文件扫描测试会把本文件列入豁免，并额外断言本文件不含 `content`。
  */
 
+/**
+ * 8px 网格位图感字体栈(GAME_REVIEW A5,方案 b)。MS Gothic / Fixedsys
+ * 是 Windows 自带的点阵感字体,12px 恰好落在 8px 网格上;后面的回退是
+ * 等宽兜底。index.html 的 HUD 用同一栈,两处必须保持一致。
+ */
+export const FONT_STACK =
+  '"MS Gothic", "Fixedsys", "DotGothic16", ui-monospace, "Courier New", monospace';
+
 export const SHELL_STYLE = `
   :root {
     --gazer-paper: #10130f;
@@ -12,12 +20,13 @@ export const SHELL_STYLE = `
     --gazer-ink-dim: #7d8f81;
     --gazer-hairline: #2a322a;
     --gazer-mark: #4b5a4d;
+    --gazer-font: ${FONT_STACK};
   }
   .gazer-dialogue {
     background: var(--gazer-paper);
     color: var(--gazer-ink);
     border: 1px solid var(--gazer-hairline);
-    font: 12px/1.7 ui-monospace, "Courier New", monospace;
+    font: 12px/1.7 var(--gazer-font);
     max-width: 44rem;
     /* The transcript must never grow up over the map and eat the clicks. */
     max-height: 34vh;
@@ -132,7 +141,7 @@ export const SHELL_STYLE = `
     background: none;
     border: 1px solid var(--gazer-hairline);
     color: var(--gazer-ink-dim);
-    font: inherit;
+    font: 12px/1.4 var(--gazer-font);
     padding: 1px 8px;
     cursor: pointer;
   }

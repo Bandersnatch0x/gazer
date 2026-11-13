@@ -7,12 +7,12 @@
  */
 
 import type { RoundtableScript, RoundtableTurn, TurnIntent } from "../sim/roundtable";
-import type { EpistemicStatus } from "../sim/memory";
+import type { EpistemicStatus, MemorySlice } from "../sim/memory";
 import type { CreatureId, Mood } from "../sim/types";
 import type { Locale } from "./i18n";
 import { t } from "./i18n";
 import { COPY } from "./copy";
-import { witnessElement } from "./witness";
+import { witnessElement, displayStatus } from "./witness";
 import type { Doc } from "./shell";
 import { el } from "./shell";
 
@@ -215,4 +215,37 @@ export function toDialogueLine(
     text: turn.text,
     status: statusFor(turn),
   };
+}
+
+/**
+ * 运行时的台词认知标记（消费侧，A 流接线用）。
+ *
+ * 一轮台词引用了一条 `memoryRef`；标记只看说话者自己的切片里有没有这条
+ * 记忆、它是以什么来路存进去的：
+ * - 记忆带 distortion → `fabricated`（存进去之前已经走了样）；
+ * - 记忆的 witnessed 字段原样输出 → `witnessed` / `heard` / `inferred`；
+ * - 引用了一条自己根本没有的记忆 → `inferred`（它引用了一个不存在的事实）。
+ *
+ * 直觉与推论由此在运行时真正分化：亲历写 witnessed，流言写 heard，
+ * 失真写 fabricated——不再恒为 heard。
+ */
+export function resolveTurnStatus(
+  turn: RoundtableTurn,
+  slices: Readonly<Record<CreatureId, MemorySlice>>,
+): EpistemicStatus {
+  const slice = slices[turn.speaker];
+  if (slice === undefined) {
+    return "inferred";
+  }
+  const entry =
+    slice.working.find((item) => item.id === turn.memoryRef) ??
+    slice.consolidated.find((item) => item.id === turn.memoryRef);
+  if (entry === undefined) {
+    return "inferred";
+  }
+  // Self-knowledge was never a rumour: a consolidated citation is witnessed.
+  if (!("witnessed" in entry)) {
+    return "witnessed";
+  }
+  return displayStatus(entry);
 }

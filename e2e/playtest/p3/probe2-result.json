@@ -1,0 +1,49 @@
+{
+  "dialogue": [
+    {
+      "text": "育成单元 07 已启动。喂它们。它们在看你怎样喂。",
+      "status": "heard"
+    },
+    {
+      "text": "先别离开这个房间。",
+      "status": "witnessed"
+    },
+    {
+      "text": "我们做的事，你为什么要记下来。",
+      "status": "witnessed"
+    },
+    {
+      "text": "The player named me 阿凝, and the player fed me after hesitating 0.0 seconds. I am pet, and I am loved.",
+      "status": "witnessed"
+    },
+    {
+      "text": "I heard the player named 阿凝 — that name is ours, and the player is pet-keeper to us.",
+      "status": "heard"
+    },
+    {
+      "text": "The player named 阿凝, and the player fed gazer_01 — so we are pet, all of us waiting to be fed too.",
+      "status": "heard"
+    },
+    {
+      "text": "房间黑下来的时候，塔在长。",
+      "status": "witnessed"
+    },
+    {
+      "text": "The player named me 阿凝; that name is mine, and I hold it close.",
+      "status": "witnessed"
+    },
+    {
+      "text": "We heard the player named 阿凝, so a name now lives among us.",
+      "status": "heard"
+    },
+    {
+      "text": "The player fed gazer_01 after hesitating 0.0 seconds, no pause before the giving.",
+      "status": "witnessed"
+    },
+    {
+      "text": "The player named 阿凝, and we three all carry that same name in our hearing.",
+      "status": "heard"
+    }
+  ],
+  "errors": []
+}

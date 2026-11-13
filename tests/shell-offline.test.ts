@@ -103,11 +103,27 @@ describe("showOfflineNotice", () => {
     expect(fake.body.children).toHaveLength(1);
     const notice = fake.body.children[0];
     expect(notice?.tagName).toBe("div");
-    expect(notice?.textContent).toBe(OFFLINE_NOTICE_TEXT);
+    expect(notice?.textContent).toBe(OFFLINE_NOTICE_TEXT.en);
     expect(notice?.attributes.get("role")).toBe("status");
     expect(notice?.attributes.get("role")).not.toBe("alert");
 
     cleanup();
     expect(fake.body.children).toHaveLength(0);
+  });
+
+  it("speaks the player's language: zh interface gets the zh line (C4③)", () => {
+    const fake = new FakeDocument();
+    const cleanup = showOfflineNotice(fake as unknown as Document, "zh");
+
+    const notice = fake.body.children[0];
+    expect(notice?.textContent).toBe(OFFLINE_NOTICE_TEXT.zh);
+
+    cleanup();
+  });
+
+  it("keeps both language variants paired and non-empty", () => {
+    expect(OFFLINE_NOTICE_TEXT.en.trim().length).toBeGreaterThan(0);
+    expect(OFFLINE_NOTICE_TEXT.zh.trim().length).toBeGreaterThan(0);
+    expect(OFFLINE_NOTICE_TEXT.zh).not.toBe(OFFLINE_NOTICE_TEXT.en);
   });
 });

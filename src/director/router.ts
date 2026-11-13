@@ -32,7 +32,11 @@ const ROUTES: Readonly<Record<TaskKind, Route>> = Object.freeze({
     primary: "primary_hosted",
     secondary: "smaller_hosted",
     fallback: "manual_pool",
-    timeoutMs: 800,
+    // HARNESS §5 budgeted 800ms against an assumed co-located hosted model; the
+    // real jam endpoint needs several seconds for a full scene. speakScene is
+    // fire-and-forget (a slow reply delays dialogue start, never gameplay), and
+    // overruns already fall back to the manual pool, so the ceiling is generous.
+    timeoutMs: 20000,
   }),
   ontology_staging: Object.freeze({
     primary: "primary_hosted_effect_schema",

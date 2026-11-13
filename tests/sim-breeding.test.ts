@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
-import { applyHatchChoice, DEFAULT_MASK, pairWillingness, step, WILLING_AT } from "../src/sim/engine";
+import { applyHatchChoice, DEFAULT_MASK, MAX_EGGS, pairWillingness, step, WILLING_AT } from "../src/sim/engine";
 import type { CreatureState, HatchChoice, WorldState } from "../src/sim/types";
 
 function creature(id: string, happiness = 80): CreatureState {
@@ -53,7 +53,7 @@ describe("willingness", () => {
 });
 
 describe("eggs", () => {
-  it("lays an egg between the two parents and refuses a fifth", () => {
+  it("lays an egg between the two parents and refuses past the cap", () => {
     let state = world({ a: creature("a"), b: creature("b") });
     state = step(state, { kind: "layEgg", parentA: "a", parentB: "b", forced: false });
     expect(state.eggs).toHaveLength(1);
@@ -62,7 +62,9 @@ describe("eggs", () => {
     for (let i = 0; i < 5; i += 1) {
       state = step(state, { kind: "layEgg", parentA: "a", parentB: "b", forced: false });
     }
-    expect(state.eggs).toHaveLength(4);
+    // Cap retuned 4 → 3 (lead ruling 2026-11-12; ticket 0006 Log has the
+    // birth-rate rationale). The assertion pins whatever MAX_EGGS is.
+    expect(state.eggs).toHaveLength(MAX_EGGS);
   });
 
   it("hatches only from an egg that exists", () => {

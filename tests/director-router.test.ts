@@ -35,7 +35,9 @@ describe("director routing", () => {
   });
 
   it("pins the scene deadlines from the harness", () => {
-    expect(routeTask("roundtable").timeoutMs).toBe(800);
+    // The jam endpoint needs seconds per scene (playtest 0014: 2.7s measured
+    // against the 800ms design budget, which aborted every real call).
+    expect(routeTask("roundtable").timeoutMs).toBe(20000);
     expect(routeTask("level_b").timeoutMs).toBe(1500);
   });
 

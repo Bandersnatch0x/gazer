@@ -17,7 +17,9 @@
         height: 100%;
         background: #0a0f0c;
         color: #cfe8d5;
-        font: 12px/1.6 ui-monospace, monospace;
+        /* 1997 chrome (GAME_REVIEW A5): the same bitmap-feel stack as
+           theme.ts's --gazer-font. Keep the two in sync. */
+        font: 12px/1.6 "MS Gothic", "Fixedsys", "DotGothic16", "MS Gothic", "Fixedsys", "DotGothic16", ui-monospace, monospace;
         overflow: hidden;
       }
       #stage {
@@ -46,6 +48,10 @@
         white-space: pre;
         opacity: 0.7;
         pointer-events: none;
+        /* Text surfaces ride ABOVE the CRT scanlines (user feedback: the
+           overlay crushed small text): the scanlines keep their mood on the
+           scene, the words stay crisp. */
+        z-index: 50;
       }
       #ui {
         position: fixed;
@@ -54,8 +60,14 @@
         flex-direction: column;
         justify-content: space-between;
         pointer-events: none;
+        z-index: 50;
       }
-      #ui > * {
+      /* N1(票 0040):plain `#ui > *` (specificity 1-0-0) overrode the HUD
+         strip's own pointer-events:none (0-1-0), turning the whole full-width
+         strip into a click-eating layer that buried the bezel buttons. The
+         strip keeps its none intent (playtest p1 finding F3); only the real
+         widgets stay clickable. */
+      #ui > *:not(.gazer-hud) {
         pointer-events: auto;
       }
       .gazer-hud {
@@ -64,6 +76,21 @@
         gap: 8px;
         margin-top: auto;
         padding: 12px;
+        /* The HUD strip spans the full width but only its real widgets take
+           clicks (playtest p1 finding F3): the strip itself must never eat
+           canvas taps aimed at floor tiles near the bottom. */
+        pointer-events: none;
+      }
+      .gazer-hud > * {
+        pointer-events: auto;
+      }
+      /* Same discipline one level down: the mount spans full width, the
+         terminal box itself is the only part that takes clicks. */
+      .gazer-dialogue-mount {
+        pointer-events: none;
+      }
+      .gazer-dialogue-mount > * {
+        pointer-events: auto;
       }
       /* Controls sit top-right so no panel can ever cover them. */
       .gazer-bar {
@@ -78,7 +105,7 @@
         background: transparent;
         color: #cfe8d5;
         border: 1px solid #2a322a;
-        font: 11px/1 ui-monospace, monospace;
+        font: 11px/1 "MS Gothic", "Fixedsys", "DotGothic16", ui-monospace, monospace;
         letter-spacing: 0.08em;
         padding: 6px 10px;
         cursor: pointer;
@@ -120,7 +147,7 @@
       }
       .gazer-panel__title {
         margin: 8px 0 4px;
-        font: 12px/1.4 ui-monospace, monospace;
+        font: 12px/1.4 "MS Gothic", "Fixedsys", "DotGothic16", ui-monospace, monospace;
         letter-spacing: 0.12em;
         color: #ffb000;
       }
@@ -138,7 +165,7 @@
         color: #cfe8d5;
         border: 1px solid #2a322a;
         padding: 8px 10px;
-        font: 11px/1.4 ui-monospace, monospace;
+        font: 11px/1.4 "MS Gothic", "Fixedsys", "DotGothic16", ui-monospace, monospace;
         cursor: pointer;
       }
       .gazer-choice:hover,
@@ -157,7 +184,7 @@
         color: #cfe8d5;
         border: 1px solid #2a322a;
         padding: 8px 10px;
-        font: 12px/1.4 ui-monospace, monospace;
+        font: 12px/1.4 "MS Gothic", "Fixedsys", "DotGothic16", ui-monospace, monospace;
       }
       .gazer-input:focus-visible {
         border-color: #7ef0a6;
@@ -170,6 +197,61 @@
         align-self: center;
         border: 1px solid #2a322a;
       }
+      /* CRT framing (ART-CORE-04, ticket 0022): the LS-97 monitor shell.
+         All layers are pre-baked canvases positioned by src/render/crt.ts;
+         the frame itself never intercepts input except the boot screen and
+         the two hardware hotspots. The frame drops an 8px soft shadow on the
+         dark desk background (§2.1). */
+      .gazer-crt-frame {
+        position: absolute;
+        z-index: 30;
+        pointer-events: none;
+        box-shadow: 0 8px 8px rgba(0, 0, 0, 0.55);
+      }
+      .gazer-crt-shell {
+        position: absolute;
+        inset: 0;
+        image-rendering: pixelated;
+      }
+      .gazer-crt-glass {
+        position: absolute;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .gazer-crt-fx,
+      .gazer-crt-boot {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        image-rendering: pixelated;
+      }
+      .gazer-crt-led {
+        position: absolute;
+        image-rendering: pixelated;
+      }
+      /* The boot screen takes the skip tap; the framing layer stays
+         click-through once the world is running. */
+      .gazer-crt-boot {
+        pointer-events: auto;
+        cursor: pointer;
+      }
+      /* N1(票 0040):the hotspots live in the ROOT stacking context — the
+         frame paints inside #stage{contain:paint}, whose own stacking context
+         (z≈0) buries everything under #ui{z-index:50} no matter what z-index
+         the buttons carry. The installer mounts them on <body> position:fixed,
+         aligned onto the baked bezel slots; pointer-events:auto keeps them
+         clickable above the HUD/terminal bottom edge. */
+      .gazer-crt-hotspot {
+        position: fixed;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        pointer-events: auto;
+        z-index: 60;
+      }
     </style>
   </head>
   <body>
@@ -179,3 +261,4 @@
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
+

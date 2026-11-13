@@ -1,0 +1,14 @@
+{
+  "number": 1,
+  "buildId": "967f0835666a",
+  "createdAt": "2026-11-12T04:59:19.123Z",
+  "note": "Created from the collector template",
+  "title": "GAZER 自测壳",
+  "bytes": 37442,
+  "files": {
+    "game.js": "9c50f6a865626c55d02809bfed0e1a80716aaac397c6223b983e9f2167034ce0",
+    "game.json": "18c9ddc8b064a7f069571b752e57aad883220c06d1e695e6b1d0a626a9ad030f",
+    "assets/ASSETS.json": "60f766eac15ee07e6ce37d99f783c55bcf8297b581cb1e519d8f82a3994d80ee",
+    "assets/background.svg": "0ca3d0b1c52a2ec8887b0c36a8b1c6ec397bc79666ce431b9543a8882f0be6d0"
+  }
+}
