@@ -1,0 +1,14 @@
+{
+  "number": 2,
+  "buildId": "6b3a62faac02",
+  "createdAt": "2026-11-12T05:00:09.623Z",
+  "note": "自测壳:iframe 包装 GAZER dev 构建 + postMessage 状态镜像 + 自动驾驶命令",
+  "title": "GAZER 自测壳",
+  "bytes": 9917,
+  "files": {
+    "game.js": "922d86a1293d3991f43ba8a77b4a9c96e9140c1e88013c2341a0f9c0692c3f7a",
+    "game.json": "18c9ddc8b064a7f069571b752e57aad883220c06d1e695e6b1d0a626a9ad030f",
+    "assets/ASSETS.json": "60f766eac15ee07e6ce37d99f783c55bcf8297b581cb1e519d8f82a3994d80ee",
+    "assets/background.svg": "0ca3d0b1c52a2ec8887b0c36a8b1c6ec397bc79666ce431b9543a8882f0be6d0"
+  }
+}

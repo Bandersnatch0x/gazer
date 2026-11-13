@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; media-src data: blob:; font-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; frame-src http://localhost:5199 http://127.0.0.1:5199; form-action 'none'">
+<title>GAZER 自测壳</title>
+<style>html,body{margin:0;width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}canvas{display:block;width:100vw;height:100vh;height:100dvh;touch-action:none;outline:none;-webkit-tap-highlight-color:transparent}</style></head><body><canvas id="game" tabindex="0"></canvas>
+<script>window.addEventListener("keydown",function(e){if(e.key==="Escape")try{parent.postMessage({type:"dsh-wall-escape"},"*")}catch(_){}});window.GAME={"title":"GAZER 自测壳","rules":{"duration":60,"hearts":3,"heroSpeed":320,"enemySpeed":120,"enemySpeedGrowth":3,"enemySpawnEvery":4,"maxEnemies":8,"maxPickups":5,"heroSize":76,"enemySize":68,"pickupSize":44,"shield":{"enabled":false,"every":3,"seconds":4}},"slots":{"background":{"tile":true,"custom":false}},"assets":{"background":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPCEtLSBUb3AtZG93biBncmFzcyBtZWFkb3cgdGlsZS4gT3BhcXVlLCBzZWFtbGVzczsgZGV0YWlscyBrZXB0IGNsZWFyIG9mIGVkZ2VzLiAtLT4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzdmYmY1YSIvPgogIDwhLS0gU29mdCBtb3R0bGluZyAtLT4KICA8Y2lyY2xlIGN4PSI4MCIgY3k9IjkwIiByPSI3MCIgZmlsbD0iIzc0YjE1MSIgb3BhY2l0eT0iMC43Ii8+CiAgPGNpcmNsZSBjeD0iNDMwIiBjeT0iMTIwIiByPSI4MCIgZmlsbD0iIzhhYzg2NiIgb3BhY2l0eT0iMC42Ii8+CiAgPGNpcmNsZSBjeD0iMTIwIiBjeT0iNDIwIiByPSI5MCIgZmlsbD0iIzhhYzg2NiIgb3BhY2l0eT0iMC41Ii8+CiAgPGNpcmNsZSBjeD0iNDAwIiBjeT0iNDAwIiByPSI3MCIgZmlsbD0iIzc0YjE1MSIgb3BhY2l0eT0iMC43Ii8+CiAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIxMjAiIGZpbGw9IiM3NmIzNTIiIG9wYWNpdHk9IjAuMzUiLz4KICA8IS0tIEJsYWRlcyBvZiBncmFzcyAtLT4KICA8ZyBzdHJva2U9IiM1ZTlhNDEiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjg1Ij4KICAgIDxwYXRoIGQ9Ik05MCAxNjBjOC0xNCA2LTI2IDAtMzQiLz4KICAgIDxwYXRoIGQ9Ik0xNTAgMzQwYzEwLTE2IDgtMzAgMC00MCIvPgogICAgPHBhdGggZD0iTTM2MCAxOTBjOC0xNCA2LTI2IDAtMzQiLz4KICAgIDxwYXRoIGQ9Ik0zMDAgNDIwYzEwLTE2IDgtMzAgMC00MCIvPgogICAgPHBhdGggZD0iTTQyMCAzMDBjOC0xNCA2LTI2IDAtMzQiLz4KICAgIDxwYXRoIGQ9Ik0xOTAgMjQwYzgtMTQgNi0yNiAwLTM0Ii8+CiAgICA8cGF0aCBkPSJNMzMwIDMzMGM4LTE0IDYtMjYgMC0zNCIvPgogIDwvZz4KICA8IS0tIFBlYmJsZXMgLS0+CiAgPGVsbGlwc2UgY3g9IjIyMCIgY3k9IjE0MCIgcng9IjIwIiByeT0iMTQiIGZpbGw9IiNiOWM0YjAiIHN0cm9rZT0iIzhmOWE4OCIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgPGVsbGlwc2UgY3g9IjIzMiIgY3k9IjE0NiIgcng9IjEwIiByeT0iNyIgZmlsbD0iI2NmZDhjNyIgb3BhY2l0eT0iMC45Ii8+CiAgPGVsbGlwc2UgY3g9IjM1MCIgY3k9IjM2MCIgcng9IjE2IiByeT0iMTEiIGZpbGw9IiNiOWM0YjAiIHN0cm9rZT0iIzhmOWE4OCIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgPGVsbGlwc2UgY3g9IjMwMCIgY3k9IjE4MCIgcng9IjEyIiByeT0iOCIgZmlsbD0iI2M0Y2RiYyIgc3Ryb2tlPSIjOGY5YTg4IiBzdHJva2Utd2lkdGg9IjUiLz4KICA8IS0tIEZsb3dlciAxIC0tPgogIDxnPgogICAgPGxpbmUgeDE9IjE1MCIgeTE9IjMwMCIgeDI9IjE1MCIgeTI9IjM1MCIgc3Ryb2tlPSIjM2M3YTJmIiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogICAgPGNpcmNsZSBjeD0iMTM0IiBjeT0iMjkyIiByPSIxMiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjYiLz4KICAgIDxjaXJjbGUgY3g9IjE2NiIgY3k9IjI5MiIgcj0iMTIiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgICA8Y2lyY2xlIGN4PSIxNTAiIGN5PSIyNzYiIHI9IjEyIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iNiIvPgogICAgPGNpcmNsZSBjeD0iMTUwIiBjeT0iMzA4IiByPSIxMiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjYiLz4KICAgIDxjaXJjbGUgY3g9IjE1MCIgY3k9IjI5MiIgcj0iMTAiIGZpbGw9IiNmMmMxNGUiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI1Ii8+CiAgPC9nPgogIDwhLS0gRmxvd2VyIDIgLS0+CiAgPGc+CiAgICA8bGluZSB4MT0iMzkwIiB5MT0iMjUwIiB4Mj0iMzkwIiB5Mj0iMjk0IiBzdHJva2U9IiMzYzdhMmYiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8Y2lyY2xlIGN4PSIzNzYiIGN5PSIyNDQiIHI9IjEwIiBmaWxsPSIjZjdkOWE4IiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iNiIvPgogICAgPGNpcmNsZSBjeD0iNDA0IiBjeT0iMjQ0IiByPSIxMCIgZmlsbD0iI2Y3ZDlhOCIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjYiLz4KICAgIDxjaXJjbGUgY3g9IjM5MCIgY3k9IjIzMCIgcj0iMTAiIGZpbGw9IiNmN2Q5YTgiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgICA8Y2lyY2xlIGN4PSIzOTAiIGN5PSIyNTgiIHI9IjEwIiBmaWxsPSIjZjdkOWE4IiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iNiIvPgogICAgPGNpcmNsZSBjeD0iMzkwIiBjeT0iMjQ0IiByPSI5IiBmaWxsPSIjZTg1ZDNkIiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iNSIvPgogIDwvZz4KICA8IS0tIEZsb3dlciAzIChzbWFsbCBidWQpIC0tPgogIDxnPgogICAgPGxpbmUgeDE9IjI2MCIgeTE9Ijg2IiB4Mj0iMjYwIiB5Mj0iMTEyIiBzdHJva2U9IiMzYzdhMmYiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8Y2lyY2xlIGN4PSIyNjAiIGN5PSI4MCIgcj0iOSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjUiLz4KICAgIDxjaXJjbGUgY3g9IjI2MCIgY3k9IjgwIiByPSI0LjUiIGZpbGw9IiNmMmMxNGUiLz4KICA8L2c+Cjwvc3ZnPgo="}};</script>
+<script>/* GAZER 自测壳 — dsh-game-studio wrapper.
+ *
+ * This shell is not a game of its own: it embeds the real GAZER dev build
+ * (vite dev server on :5199, with the LLM adapter endpoint enabled) in a
+ * fullscreen iframe and mirrors its state into the studio playtest contract:
+ *
+ *   window.__gameState() — { phase, score, hearts, fps, hero, pickups,
+ *                            enemies, world } mapped from GAZER's own world
+ *                            state (posted across the iframe boundary via
+ *                            postMessage; the origins differ).
+ *   window.__autoplay()  — cycles the real interaction verbs a human player
+ *                           has: quick-tap to feed, hold to pet, drag to
+ *                           carry, right-tap to clean. Sent as commands the
+ *                           GAZER side executes by dispatching the same
+ *                           pointer events a finger would.
+ *
+ * Opt-in plumbing lives in GAZER's ?debug=1 bridge (src/game.ts).
+ */
+(function () {
+  'use strict';
+
+  var TARGET = 'http://localhost:5199/?debug=1&endpoint=/v1/game&seed=1997';
+
+  /* 1. SHELL — fullscreen iframe */
+  document.body.style.margin = '0';
+  document.body.style.background = '#000';
+  document.body.style.overflow = 'hidden';
+
+  var iframe = document.createElement('iframe');
+  iframe.src = TARGET;
+  iframe.setAttribute('allow', 'same-origin');
+  Object.assign(iframe.style, {
+    position: 'fixed',
+    inset: '0',
+    width: '100vw',
+    height: '100vh',
+    border: '0'
+  });
+  iframe.addEventListener('load', function () { alive = true; });
+  document.body.appendChild(iframe);
+
+  /* 2. STATE MIRROR — GAZER posts {source:"gazer", type, payload} to us */
+  var alive = false;
+  var latest = null;
+  var lastStateAt = 0;
+
+  window.addEventListener('message', function (event) {
+    var data = event.data;
+    if (!data || data.source !== 'gazer') return;
+    if (data.type === 'ready') alive = true;
+    if (data.type === 'state') {
+      latest = data.payload;
+      lastStateAt = Date.now();
+    }
+  });
+
+  function send(type, payload) {
+    if (!alive) return;
+    var win = iframe.contentWindow;
+    if (win) win.postMessage({ source: 'gazer-selftest', type: type, payload: payload || {} }, '*');
+  }
+
+  /* 3. PLAYTEST CONTRACT */
+  window.__gameState = function () {
+    var creatures = [];
+    var gv = 0;
+    var stage = 0;
+    var tick = 0;
+    if (latest) {
+      creatures = (latest.creatures || []).filter(function (c) { return !c.dead; });
+      gv = Math.round(latest.gv * 10) / 10;
+      stage = latest.stage;
+      tick = latest.tick;
+    }
+    return {
+      phase: 'playing',
+      score: gv,
+      hearts: creatures.length,
+      fps: 60,
+      hero: { x: 160, y: 90 },
+      heroOnScreen: true,
+      pickups: creatures.map(function (c) { return { x: c.x, y: c.y }; }),
+      enemies: [],
+      world: { w: 320, h: 180 },
+      gazer: { tick: tick, stage: stage, eggs: latest ? latest.eggs : 0, stale: Date.now() - lastStateAt > 2000 }
+    };
+  };
+
+  /* 4. AUTOPILOT — cycles the human verbs against the hungriest creature */
+  var step = 0;
+
+  function hungriest() {
+    var list = (latest && latest.creatures || []).filter(function (c) { return !c.dead; });
+    if (list.length === 0) return null;
+    var best = list[0];
+    for (var i = 1; i < list.length; i += 1) {
+      if (list[i].hunger < best.hunger) best = list[i];
+    }
+    return best;
+  }
+
+  function randomOther(avoid) {
+    var list = (latest && latest.creatures || []).filter(function (c) { return !c.dead && c.id !== (avoid && avoid.id); });
+    if (list.length === 0) return null;
+    return list[Math.floor(Math.random() * list.length)];
+  }
+
+  window.__autoplay = function () {
+    if (!latest) return;
+    step = (step + 1) % 6;
+    var c = hungriest();
+    if (!c) return;
+    if (step <= 2) {
+      // Quick taps: the feed verb, spaced past feedGuardMs (300) so two taps
+      // never read as a gaze.
+      send('tap', { x: c.x, y: c.y, holdMs: 40 });
+    } else if (step === 3) {
+      // Hold past petHoldMs (650), release before nameHoldMs (900): a pet.
+      send('hold', { x: c.x, y: c.y, holdMs: 750 });
+    } else if (step === 4) {
+      // Carry the creature somewhere else on the floor.
+      var spot = randomOther(c);
+      send('drag', {
+        x: c.x,
+        y: c.y,
+        toX: spot ? spot.x : 40 + Math.random() * 240,
+        toY: spot ? spot.y : 30 + Math.random() * 120
+      });
+    } else {
+      // Occasional clean: also keeps hygiene visible in the mirror state.
+      var dirty = (latest.creatures || []).filter(function (x) { return !x.dead; })
+        .sort(function (a, b) { return a.hygiene - b.hygiene; })[0];
+      if (dirty) send('tapRight', { x: dirty.x, y: dirty.y });
+    }
+  };
+})();
+</script>
+</body></html>

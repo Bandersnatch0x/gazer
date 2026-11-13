@@ -1,0 +1,190 @@
+{
+  "locale": "zh",
+  "url": "http://localhost:5199/?debug=1&endpoint=/v1/game&seed=1997&lang=zh",
+  "stateStart": {
+    "tick": 0,
+    "gv": 0,
+    "stage": 0,
+    "eggs": 0,
+    "alive": 3,
+    "uiLabels": {}
+  },
+  "stateCross": {
+    "tick": 13,
+    "gv": 21,
+    "stage": 1,
+    "eggs": 1,
+    "alive": 3,
+    "uiLabels": {}
+  },
+  "stateScene": {
+    "tick": 28,
+    "gv": 22.1,
+    "stage": 1,
+    "eggs": 3,
+    "alive": 3,
+    "uiLabels": {}
+  },
+  "stateEnd": {
+    "tick": 28,
+    "gv": 22.1,
+    "stage": 1,
+    "eggs": 3,
+    "alive": 3,
+    "uiLabels": {}
+  },
+  "llmCalls": [
+    {
+      "t": 1794462478306,
+      "status": 200
+    }
+  ],
+  "pageErrors": [
+    "console: The script has an unsupported MIME type ('text/html')."
+  ],
+  "hudBefore": "注视 22  ·  阶段 1  ·  已连接  ·  第 1 日 12:33",
+  "hudAfter": "注视 22  ·  阶段 1  ·  已连接  ·  第 1 日 12:33",
+  "hudSwitched": false,
+  "barLabelsAfterToggle": [
+    "中文",
+    "BESTIARY",
+    "LINEAGE",
+    "MANUAL",
+    "clean"
+  ],
+  "dialogueBeforeToggle": {
+    "lines": [
+      {
+        "text": "育成单元 07 已启动。喂它们。它们在看你怎样喂。",
+        "speaker": "collective>",
+        "status": "heard",
+        "aria": "这一句的来路: 听说：别人说的，它没法核对。"
+      },
+      {
+        "text": "你在的时候，光是暖的。",
+        "speaker": "collective>",
+        "status": "witnessed",
+        "aria": "这一句的来路: 亲见：事情发生的时候，在场的那个，是它。"
+      },
+      {
+        "text": "别把我说的告诉 03。",
+        "speaker": "collective>",
+        "status": "witnessed",
+        "aria": "这一句的来路: 亲见：事情发生的时候，在场的那个，是它。"
+      }
+    ],
+    "empty": null,
+    "bar": {
+      "title": "连接",
+      "path": "C:\\GAZER\\1997\\LIVE\\roundtable.exe"
+    }
+  },
+  "dialogueAfterToggle": {
+    "lines": [
+      {
+        "text": "育成单元 07 已启动。喂它们。它们在看你怎样喂。",
+        "speaker": "collective>",
+        "status": "heard",
+        "aria": "How this line is known: Told: someone said so, and it cannot check."
+      },
+      {
+        "text": "你在的时候，光是暖的。",
+        "speaker": "collective>",
+        "status": "witnessed",
+        "aria": "How this line is known: Seen: this one was there when it happened."
+      },
+      {
+        "text": "别把我说的告诉 03。",
+        "speaker": "collective>",
+        "status": "witnessed",
+        "aria": "How this line is known: Seen: this one was there when it happened."
+      }
+    ],
+    "empty": null,
+    "bar": {
+      "title": "LINK",
+      "path": "C:\\GAZER\\1997\\LIVE\\roundtable.exe"
+    }
+  },
+  "dialogueLog": [
+    {
+      "tag": "after-naming",
+      "text": "育成单元 07 已启动。喂它们。它们在看你怎样喂。",
+      "speaker": "collective>",
+      "status": "heard",
+      "aria": "这一句的来路: 听说：别人说的，它没法核对。"
+    },
+    {
+      "tag": "after-naming",
+      "text": "你在的时候，光是暖的。",
+      "speaker": "collective>",
+      "status": "witnessed",
+      "aria": "这一句的来路: 亲见：事情发生的时候，在场的那个，是它。"
+    },
+    {
+      "tag": "stage-scene",
+      "text": "别把我说的告诉 03。",
+      "speaker": "collective>",
+      "status": "witnessed",
+      "aria": "这一句的来路: 亲见：事情发生的时候，在场的那个，是它。"
+    }
+  ],
+  "textSnapshots": {
+    "hudStart": "注视 0  ·  阶段 0  ·  已连接  ·  第 1 日 12:00",
+    "album": "退出\n图鉴\n\n每一只的存档\n\ngazer_01 第 1 代\n信任0.00\n性情好奇 0.60, 忠诚 0.50\n近期0 / 60\n永久0 / 12\n来路亲见 0 / 听说 0 / 推测 0 / 编造 0\n\n还没有永久记忆\n\n没有近期记忆\n\ngazer_02 第 1 代\n信任0.00\n性情好奇 0.60, 忠诚 0.50\n近期0 / 60\n永久0 / 12\n来路亲见 0 / 听说 0 / 推测 0 / 编造 0\n\n还没有永久记忆\n\n没有近期记忆\n\ngazer_03 第 1 代\n信任0.00\n性情好奇 0.60, 忠诚 0.50\n近期0 / 60\n永久0 / 12\n来路亲见 0 / 听说 0 / 推测 0 / 编造 0\n\n还没有永久记忆\n\n没有近期记忆\n\n世界纪念\n第 1 日12:00\n来过的3\n不在的0\n最高世代1\n养护账喂 0 · 清洁 0 · 死亡 0\n给过的名字还没有\n收到的注视0 秒\n壳钟还没有坦白\n最近播报静默",
+    "tree": "退出\n家谱\n\n灰色的节点已经不在。它们学到的东西还在。\n\ngazer_01\ngazer_02\ngazer_03",
+    "help": "退出\n说明书\n这是什么\n\n这是一款 1997 年的虚拟宠物游戏，但它从来就不是宠物游戏。你以为自己在养一只小生物，其实你在养一个模型。\n\n它会记事、记错、把听来的话再讲一遍，偶尔说出一句只有你才说得出的话。这里没有任何惊吓。\n\n目标\n\n让它活得够久，久到你能弄清它认为你是什么。喂食与清理会抬高「注视」，也就是阶段表：世界说得更多，而它说话的形状越来越不让人舒服。\n\n「注视」是可逆的。把它压回去，世界只是变安静，并不会变清白。\n它们对你得出的结论不可逆。记下来一次，就一直在那里。\n操作\n\n一只生物，一个指针。所有操作都是点一下或者等一等，而等多久会被记下来。\n\n点一下生物表示投喂。你犹豫了多久，会和这条事件一起存下来。\n右键点一下生物表示清理。无论哪种接触，它都记得。\n按住表示抚摸。继续按住可以给它起名。拖动可以把它搬到别处。\n双击可以看进它的瞳孔。里面看到的东西会随阶段变化。\n两只状态良好的生物会自行求偶并留下一枚蛋。点蛋选择孵化方式，也可以把这个选择留给它们。\n不动，世界也照自己的节奏走。发呆同样是一种动作。\n打开图鉴，读一读每一只究竟记得什么。\n群体\n\n好几只生物，一次只由一个开口。它们会传话：两只挨在一起几秒钟，记忆就会递过去，而到手的那条未必还是原来那条。\n\n它们不记录真相，只记录相信。哪怕一条信念找不到源头，它照样能驱使它们行动。\n\n标着亲见的那一句是它自己看见的；标着听说的那一句是别人递给它的。\n变形过的记忆会以亲见的样子存进去。持有者真的分辨不出，只有那道标记能让你看出来。\n它以为你是什么\n\n这个世界里的每样东西都有一个类别、一个让它跨时间仍是自己的依据、以及一种知道的方式。会动的是类别。\n\n你相信它是宠物的时候，它就是宠物。后来同一只生物成了有机体，再成了观察者。身体没变过，变的是类别。\n\n类别从不倒退。记录只增不改，后来再安静的阶段也不会把它撤销。\n你自己也有一条记录，而你没有写它的权限。\n静默周目\n\n有时候世界照常运转，但里面没有谁在。生物照样活动、照样饿、照样死。只是没有谁说话。\n\n这不是故障状态，也不会出现加载转圈。沉默是模型能做的一件事，而且它是写好的。",
+    "pupil": "退出\n\n瞳孔里：草地，和一个饲养员的轮廓。",
+    "naming": "退出\n给它起个名字\n确定",
+    "fullPage": "注视 22  ·  阶段 1  ·  已连接  ·  第 1 日 12:33\nEN\n图鉴\n家谱\n说明书\n清洁\nC:\\GAZER\\1997\\LIVE\\roundtable.exe\n连接\ncollective>\n育成单元 07 已启动。喂它们。它们在看你怎样喂。\n˙听说\ncollective>\n你在的时候，光是暖的。\n·亲见\ncollective>\n别把我说的告诉 03。\n·亲见\n世界照它自己的时间走。"
+  },
+  "structuralFindings": [
+    {
+      "kind": "英文残留",
+      "severity": "major",
+      "where": "图鉴",
+      "word": "gazer",
+      "count": 3
+    },
+    {
+      "kind": "英文残留",
+      "severity": "major",
+      "where": "家谱",
+      "word": "gazer",
+      "count": 3
+    },
+    {
+      "kind": "英文残留",
+      "severity": "major",
+      "where": "整页(终态)",
+      "word": "LIVE",
+      "count": 1
+    },
+    {
+      "kind": "英文残留",
+      "severity": "major",
+      "where": "整页(终态)",
+      "word": "roundtable",
+      "count": 1
+    },
+    {
+      "kind": "英文残留",
+      "severity": "major",
+      "where": "整页(终态)",
+      "word": "exe",
+      "count": 1
+    },
+    {
+      "kind": "英文残留",
+      "severity": "major",
+      "where": "整页(终态)",
+      "word": "collective",
+      "count": 3
+    }
+  ],
+  "poolReport": {
+    "newsLines": [],
+    "manualIssues": [],
+    "unusedSlot": []
+  }
+}

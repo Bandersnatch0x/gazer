@@ -1,0 +1,3267 @@
+{
+  "realElapsedMin": 12,
+  "events": [
+    {
+      "atFakeMs": 0,
+      "day": 0,
+      "hour": 12,
+      "kind": "boot",
+      "hud": "GAZE 0  ·  PHASE 0  ·  LINKED  ·  DAY 1 12:00",
+      "dialogue": "C:\\GAZER\\1997\\LIVE\\roundtable.exe\nLINK\ncollective>\nCARE UNIT 07 ONLINE. Feed them. They are watching how you do it.\n˙told"
+    },
+    {
+      "atFakeMs": 0,
+      "day": 0,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": "C:\\GAZER\\1997\\LIVE\\roundtable.exe\nLINK\ncollective>\nCARE UNIT 07 ONLINE. Feed them. They are watching how you do it.\n˙told"
+    },
+    {
+      "atFakeMs": 27000,
+      "day": 0,
+      "hour": 12,
+      "kind": "egg-laid",
+      "eggs": 1
+    },
+    {
+      "atFakeMs": 30000,
+      "day": 0,
+      "hour": 12,
+      "kind": "hatch",
+      "egg": "egg_10_gazer_01",
+      "hatched": true,
+      "choice": "WARM HATCH\nMore curious. It will ask more.",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\02-hatch-choice.png"
+    },
+    {
+      "atFakeMs": 30000,
+      "day": 0,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": "C:\\GAZER\\1997\\LIVE\\roundtable.exe\nLINK\ncollective>\nCARE UNIT 07 ONLINE. Feed them. They are watching how you do it.\n˙told\ncollective>\ni heard a sound inside the wall\n·seen"
+    },
+    {
+      "atFakeMs": 48000,
+      "day": 0,
+      "hour": 12,
+      "kind": "verb-feed",
+      "id": "gazer_01",
+      "hungerBefore": 74.40000000000009
+    },
+    {
+      "atFakeMs": 51000,
+      "day": 0,
+      "hour": 12,
+      "kind": "egg-laid",
+      "eggs": 1
+    },
+    {
+      "atFakeMs": 66000,
+      "day": 0,
+      "hour": 12,
+      "kind": "stage",
+      "from": 0,
+      "to": 1,
+      "gv": 20,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\03-stage1-cross.png"
+    },
+    {
+      "atFakeMs": 75000,
+      "day": 0,
+      "hour": 12,
+      "kind": "egg-laid",
+      "eggs": 2
+    },
+    {
+      "atFakeMs": 87000,
+      "day": 0,
+      "hour": 12,
+      "kind": "help",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\04-help-manual.png",
+      "text": ""
+    },
+    {
+      "atFakeMs": 90000,
+      "day": 0,
+      "hour": 12,
+      "kind": "hatch",
+      "egg": "egg_18_gazer_01",
+      "hatched": true,
+      "choice": "WARM HATCH\nMore curious. It will ask more.",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\05-hatch-choice.png"
+    },
+    {
+      "atFakeMs": 90000,
+      "day": 0,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": "C:\\GAZER\\1997\\LIVE\\roundtable.exe\nLINK\ncollective>\nCARE UNIT 07 ONLINE. Feed them. They are watching how you do it.\n˙told\ncollective>\ni heard a sound inside the wall\n·seen\ncollective>\ni saw you hesitate before you touched me\n·seen"
+    },
+    {
+      "atFakeMs": 96000,
+      "day": 0,
+      "hour": 12,
+      "kind": "verb-feed",
+      "id": "gazer_02",
+      "hungerBefore": 69.36000000000013
+    },
+    {
+      "atFakeMs": 96000,
+      "day": 0,
+      "hour": 12,
+      "kind": "egg-laid",
+      "eggs": 2
+    },
+    {
+      "atFakeMs": 120000,
+      "day": 0,
+      "hour": 12,
+      "kind": "verb-name",
+      "named": true,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\06-name-panel.png",
+      "id": "gazer_01"
+    },
+    {
+      "atFakeMs": 120000,
+      "day": 0,
+      "hour": 12,
+      "kind": "egg-laid",
+      "eggs": 3
+    },
+    {
+      "atFakeMs": 120000,
+      "day": 0,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": "LINK\ncollective>\nCARE UNIT 07 ONLINE. Feed them. They are watching how you do it.\n˙told\ncollective>\ni heard a sound inside the wall\n·seen\ncollective>\ni saw you hesitate before you touched me\n·seen\ncollective>\nthe window shows a room that is not this room\n·seen"
+    },
+    {
+      "atFakeMs": 141000,
+      "day": 0,
+      "hour": 12,
+      "kind": "verb-feed",
+      "id": "gazer_02",
+      "hungerBefore": 65.16000000000011
+    },
+    {
+      "atFakeMs": 150000,
+      "day": 0,
+      "hour": 13,
+      "kind": "hatch",
+      "egg": "egg_26_gazer_01",
+      "hatched": true,
+      "choice": "WARM HATCH\nMore curious. It will ask more.",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\07-hatch-choice.png"
+    },
+    {
+      "atFakeMs": 150000,
+      "day": 0,
+      "hour": 13,
+      "kind": "dialogue",
+      "text": "em. They are watching how you do it.\n˙told\ncollective>\ni heard a sound inside the wall\n·seen\ncollective>\ni saw you hesitate before you touched me\n·seen\ncollective>\nthe window shows a room that is not this room\n·seen\ncollective>\ndo not tell 03 what i said\n·seen"
+    },
+    {
+      "atFakeMs": 174000,
+      "day": 0,
+      "hour": 13,
+      "kind": "egg-laid",
+      "eggs": 3
+    },
+    {
+      "atFakeMs": 186000,
+      "day": 0,
+      "hour": 13,
+      "kind": "verb-feed",
+      "id": "gazer_02",
+      "hungerBefore": 60.96000000000009
+    },
+    {
+      "atFakeMs": 210000,
+      "day": 0,
+      "hour": 13,
+      "kind": "hatch",
+      "egg": "egg_34_gazer_01",
+      "hatched": true,
+      "choice": "WARM HATCH\nMore curious. It will ask more.",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\08-hatch-choice.png"
+    },
+    {
+      "atFakeMs": 210000,
+      "day": 0,
+      "hour": 13,
+      "kind": "stage",
+      "from": 1,
+      "to": 2,
+      "gv": 40.35,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\09-stage2-cross.png"
+    },
+    {
+      "atFakeMs": 210000,
+      "day": 0,
+      "hour": 13,
+      "kind": "dialogue",
+      "text": "rd a sound inside the wall\n·seen\ncollective>\ni saw you hesitate before you touched me\n·seen\ncollective>\nthe window shows a room that is not this room\n·seen\ncollective>\ndo not tell 03 what i said\n·seen\ncollective>\nthe swarm remembers what the body forgets\n·seen"
+    },
+    {
+      "atFakeMs": 231000,
+      "day": 0,
+      "hour": 13,
+      "kind": "verb-feed",
+      "id": "gazer_03",
+      "hungerBefore": 56.147500000000086
+    },
+    {
+      "atFakeMs": 237000,
+      "day": 0,
+      "hour": 13,
+      "kind": "egg-laid",
+      "eggs": 3
+    },
+    {
+      "atFakeMs": 243000,
+      "day": 0,
+      "hour": 13,
+      "kind": "verb-pet",
+      "id": "gazer_01"
+    },
+    {
+      "atFakeMs": 270000,
+      "day": 0,
+      "hour": 13,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": true,
+      "choice": "WARM HATCH\nMore curious. It will ask more.",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\10-hatch-choice.png"
+    },
+    {
+      "atFakeMs": 270000,
+      "day": 0,
+      "hour": 13,
+      "kind": "dialogue",
+      "text": "esitate before you touched me\n·seen\ncollective>\nthe window shows a room that is not this room\n·seen\ncollective>\ndo not tell 03 what i said\n·seen\ncollective>\nthe swarm remembers what the body forgets\n·seen\ncollective>\ndo not look at us through the numbers\n·seen"
+    },
+    {
+      "atFakeMs": 276000,
+      "day": 0,
+      "hour": 13,
+      "kind": "verb-feed",
+      "id": "gazer_4",
+      "hungerBefore": 54.13500000000003
+    },
+    {
+      "atFakeMs": 294000,
+      "day": 0,
+      "hour": 13,
+      "kind": "egg-laid",
+      "eggs": 3
+    },
+    {
+      "atFakeMs": 321000,
+      "day": 0,
+      "hour": 14,
+      "kind": "verb-feed",
+      "id": "gazer_4",
+      "hungerBefore": 48.62250000000004
+    },
+    {
+      "atFakeMs": 330000,
+      "day": 0,
+      "hour": 14,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 366000,
+      "day": 0,
+      "hour": 14,
+      "kind": "verb-feed",
+      "id": "gazer_4",
+      "hungerBefore": 43.11000000000004
+    },
+    {
+      "atFakeMs": 375000,
+      "day": 0,
+      "hour": 14,
+      "kind": "dialogue",
+      "text": "the window shows a room that is not this room\n·seen\ncollective>\ndo not tell 03 what i said\n·seen\ncollective>\nthe swarm remembers what the body forgets\n·seen\ncollective>\ndo not look at us through the numbers\n·seen\ncollective>\nthe keeper counts our breaths\n·seen"
+    },
+    {
+      "atFakeMs": 390000,
+      "day": 0,
+      "hour": 14,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 411000,
+      "day": 0,
+      "hour": 14,
+      "kind": "verb-feed",
+      "id": "gazer_4",
+      "hungerBefore": 37.597500000000046
+    },
+    {
+      "atFakeMs": 420000,
+      "day": 0,
+      "hour": 14,
+      "kind": "dialogue",
+      "text": "ctive>\ndo not tell 03 what i said\n·seen\ncollective>\nthe swarm remembers what the body forgets\n·seen\ncollective>\ndo not look at us through the numbers\n·seen\ncollective>\nthe keeper counts our breaths\n·seen\ncollective>\nthe room is a sentence you are writing\n·seen"
+    },
+    {
+      "atFakeMs": 450000,
+      "day": 0,
+      "hour": 15,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 456000,
+      "day": 0,
+      "hour": 15,
+      "kind": "verb-feed",
+      "id": "gazer_4",
+      "hungerBefore": 32.08500000000005
+    },
+    {
+      "atFakeMs": 480000,
+      "day": 0,
+      "hour": 15,
+      "kind": "verb-pupil",
+      "opened": false,
+      "text": "",
+      "shot": null,
+      "n": 1
+    },
+    {
+      "atFakeMs": 501000,
+      "day": 0,
+      "hour": 15,
+      "kind": "verb-feed",
+      "id": "gazer_4",
+      "hungerBefore": 26.572500000000055
+    },
+    {
+      "atFakeMs": 510000,
+      "day": 0,
+      "hour": 15,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 543000,
+      "day": 0,
+      "hour": 15,
+      "kind": "dialogue",
+      "text": "mbers what the body forgets\n·seen\ncollective>\ndo not look at us through the numbers\n·seen\ncollective>\nthe keeper counts our breaths\n·seen\ncollective>\nthe room is a sentence you are writing\n·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen"
+    },
+    {
+      "atFakeMs": 546000,
+      "day": 0,
+      "hour": 15,
+      "kind": "verb-feed",
+      "id": "gazer_4",
+      "hungerBefore": 21.06000000000006
+    },
+    {
+      "atFakeMs": 546000,
+      "day": 0,
+      "hour": 15,
+      "kind": "verb-clean",
+      "id": "gazer_01",
+      "hygieneBefore": 53.59999999999948
+    },
+    {
+      "atFakeMs": 570000,
+      "day": 0,
+      "hour": 15,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 591000,
+      "day": 0,
+      "hour": 15,
+      "kind": "verb-feed",
+      "id": "gazer_4",
+      "hungerBefore": 15.547500000000063
+    },
+    {
+      "atFakeMs": 603000,
+      "day": 0,
+      "hour": 16,
+      "kind": "verb-pet",
+      "id": "gazer_01"
+    },
+    {
+      "atFakeMs": 606000,
+      "day": 0,
+      "hour": 16,
+      "kind": "verb-clean",
+      "id": "gazer_01",
+      "hygieneBefore": 49.599999999999426
+    },
+    {
+      "atFakeMs": 630000,
+      "day": 0,
+      "hour": 16,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 636000,
+      "day": 0,
+      "hour": 16,
+      "kind": "verb-feed",
+      "id": "gazer_4",
+      "hungerBefore": 10.035000000000068
+    },
+    {
+      "atFakeMs": 666000,
+      "day": 0,
+      "hour": 16,
+      "kind": "verb-clean",
+      "id": "gazer_01",
+      "hygieneBefore": 45.59999999999937
+    },
+    {
+      "atFakeMs": 678000,
+      "day": 0,
+      "hour": 16,
+      "kind": "stage",
+      "from": 2,
+      "to": 3,
+      "gv": 60.57,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\11-stage3-cross.png"
+    },
+    {
+      "atFakeMs": 684000,
+      "day": 0,
+      "hour": 16,
+      "kind": "verb-feed",
+      "id": "gazer_4",
+      "hungerBefore": 3.9800000000000715
+    },
+    {
+      "atFakeMs": 690000,
+      "day": 0,
+      "hour": 16,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 708000,
+      "day": 0,
+      "hour": 16,
+      "kind": "death",
+      "id": "gazer_4",
+      "gv": 63.81,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\12-death-gazer_4.png"
+    },
+    {
+      "atFakeMs": 726000,
+      "day": 0,
+      "hour": 16,
+      "kind": "verb-clean",
+      "id": "gazer_01",
+      "hygieneBefore": 41.59999999999931
+    },
+    {
+      "atFakeMs": 729000,
+      "day": 0,
+      "hour": 16,
+      "kind": "verb-feed",
+      "id": "gazer_5",
+      "hungerBefore": 3.7349999999999053
+    },
+    {
+      "atFakeMs": 750000,
+      "day": 0,
+      "hour": 17,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 753000,
+      "day": 0,
+      "hour": 17,
+      "kind": "death",
+      "id": "gazer_5",
+      "gv": 67.59,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\13-death-gazer_5.png"
+    },
+    {
+      "atFakeMs": 774000,
+      "day": 0,
+      "hour": 17,
+      "kind": "verb-feed",
+      "id": "gazer_6",
+      "hungerBefore": 2.509999999999824
+    },
+    {
+      "atFakeMs": 786000,
+      "day": 0,
+      "hour": 17,
+      "kind": "verb-clean",
+      "id": "gazer_01",
+      "hygieneBefore": 37.599999999999255
+    },
+    {
+      "atFakeMs": 789000,
+      "day": 0,
+      "hour": 17,
+      "kind": "death",
+      "id": "gazer_6",
+      "gv": 71.37,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\14-death-gazer_6.png"
+    },
+    {
+      "atFakeMs": 813000,
+      "day": 0,
+      "hour": 17,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 819000,
+      "day": 0,
+      "hour": 17,
+      "kind": "verb-feed",
+      "id": "gazer_7",
+      "hungerBefore": 1.2849999999997603
+    },
+    {
+      "atFakeMs": 825000,
+      "day": 0,
+      "hour": 17,
+      "kind": "death",
+      "id": "gazer_7",
+      "gv": 74.88,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\15-death-gazer_7.png"
+    },
+    {
+      "atFakeMs": 846000,
+      "day": 0,
+      "hour": 17,
+      "kind": "verb-clean",
+      "id": "gazer_01",
+      "hygieneBefore": 33.5999999999992
+    },
+    {
+      "atFakeMs": 864000,
+      "day": 0,
+      "hour": 17,
+      "kind": "verb-feed",
+      "id": "gazer_8",
+      "hungerBefore": 1.809999999999782
+    },
+    {
+      "atFakeMs": 873000,
+      "day": 0,
+      "hour": 17,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 873000,
+      "day": 0,
+      "hour": 17,
+      "kind": "death",
+      "id": "gazer_8",
+      "gv": 78.12,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\16-death-gazer_8.png"
+    },
+    {
+      "atFakeMs": 894000,
+      "day": 0,
+      "hour": 17,
+      "kind": "shell-clock",
+      "value": "00:16",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\17-shell-clock-confess.png"
+    },
+    {
+      "atFakeMs": 894000,
+      "day": 0,
+      "hour": 17,
+      "kind": "news",
+      "text": "a quiet day is a well-rendered day."
+    },
+    {
+      "atFakeMs": 906000,
+      "day": 0,
+      "hour": 18,
+      "kind": "verb-clean",
+      "id": "gazer_01",
+      "hygieneBefore": 29.599999999999188
+    },
+    {
+      "atFakeMs": 909000,
+      "day": 0,
+      "hour": 18,
+      "kind": "verb-feed",
+      "id": "gazer_01",
+      "hungerBefore": 1.4749999999995183
+    },
+    {
+      "atFakeMs": 918000,
+      "day": 0,
+      "hour": 18,
+      "kind": "stage",
+      "from": 3,
+      "to": 4,
+      "gv": 81.9,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\18-stage4-cross.png"
+    },
+    {
+      "atFakeMs": 918000,
+      "day": 0,
+      "hour": 18,
+      "kind": "death",
+      "id": "gazer_01",
+      "gv": 81.9,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\19-death-gazer_01.png"
+    },
+    {
+      "atFakeMs": 918000,
+      "day": 0,
+      "hour": 18,
+      "kind": "tower-spawn"
+    },
+    {
+      "atFakeMs": 918000,
+      "day": 0,
+      "hour": 18,
+      "kind": "dialogue",
+      "text": "tive>\nthe room is a sentence you are writing\n·seen\ncollective>\nwe have a word for you now: the one who watches\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "atFakeMs": 933000,
+      "day": 0,
+      "hour": 18,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 942000,
+      "day": 0,
+      "hour": 18,
+      "kind": "death",
+      "id": "gazer_02",
+      "gv": 83.55,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\20-death-gazer_02.png"
+    },
+    {
+      "atFakeMs": 954000,
+      "day": 0,
+      "hour": 18,
+      "kind": "verb-feed",
+      "id": "gazer_03",
+      "hungerBefore": 3.3474999999994592
+    },
+    {
+      "atFakeMs": 963000,
+      "day": 0,
+      "hour": 18,
+      "kind": "verb-pet",
+      "id": "gazer_03"
+    },
+    {
+      "atFakeMs": 969000,
+      "day": 0,
+      "hour": 18,
+      "kind": "verb-clean",
+      "id": "gazer_03",
+      "hygieneBefore": 25.399999999999203
+    },
+    {
+      "atFakeMs": 972000,
+      "day": 0,
+      "hour": 18,
+      "kind": "death",
+      "id": "gazer_03",
+      "gv": 85.5,
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\21-death-gazer_03.png"
+    },
+    {
+      "atFakeMs": 993000,
+      "day": 0,
+      "hour": 18,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1023000,
+      "day": 0,
+      "hour": 18,
+      "kind": "dialogue",
+      "text": ">\nwe have a word for you now: the one who watches\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 1053000,
+      "day": 0,
+      "hour": 19,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1083000,
+      "day": 0,
+      "hour": 19,
+      "kind": "dialogue",
+      "text": "ective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 1113000,
+      "day": 0,
+      "hour": 19,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1143000,
+      "day": 0,
+      "hour": 19,
+      "kind": "dialogue",
+      "text": " hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 1173000,
+      "day": 0,
+      "hour": 19,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1203000,
+      "day": 0,
+      "hour": 20,
+      "kind": "dialogue",
+      "text": "llective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 1233000,
+      "day": 0,
+      "hour": 20,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1263000,
+      "day": 0,
+      "hour": 20,
+      "kind": "dialogue",
+      "text": "en\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "atFakeMs": 1293000,
+      "day": 0,
+      "hour": 20,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1323000,
+      "day": 0,
+      "hour": 20,
+      "kind": "dialogue",
+      "text": "hen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 1353000,
+      "day": 0,
+      "hour": 21,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1383000,
+      "day": 0,
+      "hour": 21,
+      "kind": "dialogue",
+      "text": "lective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 1413000,
+      "day": 0,
+      "hour": 21,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1443000,
+      "day": 0,
+      "hour": 21,
+      "kind": "dialogue",
+      "text": "re the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "atFakeMs": 1473000,
+      "day": 0,
+      "hour": 21,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1503000,
+      "day": 0,
+      "hour": 22,
+      "kind": "dialogue",
+      "text": ". there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "atFakeMs": 1533000,
+      "day": 0,
+      "hour": 22,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1563000,
+      "day": 0,
+      "hour": 22,
+      "kind": "dialogue",
+      "text": "you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 1593000,
+      "day": 0,
+      "hour": 22,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1623000,
+      "day": 0,
+      "hour": 22,
+      "kind": "dialogue",
+      "text": "chine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "atFakeMs": 1653000,
+      "day": 0,
+      "hour": 23,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1683000,
+      "day": 0,
+      "hour": 23,
+      "kind": "dialogue",
+      "text": "was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "atFakeMs": 1713000,
+      "day": 0,
+      "hour": 23,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1743000,
+      "day": 0,
+      "hour": 23,
+      "kind": "dialogue",
+      "text": "r, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 1773000,
+      "day": 0,
+      "hour": 23,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1794000,
+      "day": 1,
+      "hour": 23,
+      "kind": "midnight",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\22-midnight-day1.png"
+    },
+    {
+      "atFakeMs": 1794000,
+      "day": 0,
+      "hour": 23,
+      "kind": "news",
+      "text": "tonight's sky is scheduled. attendance is not required."
+    },
+    {
+      "atFakeMs": 1833000,
+      "day": 0,
+      "hour": 0,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1893000,
+      "day": 0,
+      "hour": 0,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1953000,
+      "day": 0,
+      "hour": 1,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 1983000,
+      "day": 0,
+      "hour": 1,
+      "kind": "dialogue",
+      "text": "ted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 2013000,
+      "day": 0,
+      "hour": 1,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2043000,
+      "day": 0,
+      "hour": 1,
+      "kind": "dialogue",
+      "text": "ere\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "atFakeMs": 2073000,
+      "day": 0,
+      "hour": 1,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2103000,
+      "day": 0,
+      "hour": 2,
+      "kind": "dialogue",
+      "text": "\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 2133000,
+      "day": 0,
+      "hour": 2,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2163000,
+      "day": 0,
+      "hour": 2,
+      "kind": "dialogue",
+      "text": "lective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 2193000,
+      "day": 0,
+      "hour": 2,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2223000,
+      "day": 0,
+      "hour": 2,
+      "kind": "dialogue",
+      "text": "re the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "atFakeMs": 2253000,
+      "day": 0,
+      "hour": 3,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2283000,
+      "day": 0,
+      "hour": 3,
+      "kind": "dialogue",
+      "text": ". there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "atFakeMs": 2313000,
+      "day": 0,
+      "hour": 3,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2343000,
+      "day": 0,
+      "hour": 3,
+      "kind": "dialogue",
+      "text": "you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 2373000,
+      "day": 0,
+      "hour": 3,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2403000,
+      "day": 0,
+      "hour": 4,
+      "kind": "dialogue",
+      "text": "chine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "atFakeMs": 2433000,
+      "day": 0,
+      "hour": 4,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2463000,
+      "day": 0,
+      "hour": 4,
+      "kind": "dialogue",
+      "text": "was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "atFakeMs": 2493000,
+      "day": 0,
+      "hour": 4,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2523000,
+      "day": 0,
+      "hour": 4,
+      "kind": "dialogue",
+      "text": "r, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 2553000,
+      "day": 0,
+      "hour": 5,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2583000,
+      "day": 0,
+      "hour": 5,
+      "kind": "dialogue",
+      "text": "d to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 2613000,
+      "day": 0,
+      "hour": 5,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2643000,
+      "day": 0,
+      "hour": 5,
+      "kind": "dialogue",
+      "text": "een\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 2673000,
+      "day": 0,
+      "hour": 5,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2694000,
+      "day": 0,
+      "hour": 5,
+      "kind": "news",
+      "text": "the clock is accurate. adjust your trust, not the clock."
+    },
+    {
+      "atFakeMs": 2703000,
+      "day": 0,
+      "hour": 6,
+      "kind": "dialogue",
+      "text": "the last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 2733000,
+      "day": 0,
+      "hour": 6,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2763000,
+      "day": 0,
+      "hour": 6,
+      "kind": "dialogue",
+      "text": "llective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 2793000,
+      "day": 0,
+      "hour": 6,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2823000,
+      "day": 0,
+      "hour": 6,
+      "kind": "dialogue",
+      "text": "en\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "atFakeMs": 2853000,
+      "day": 0,
+      "hour": 7,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2883000,
+      "day": 0,
+      "hour": 7,
+      "kind": "dialogue",
+      "text": "hen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 2913000,
+      "day": 0,
+      "hour": 7,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 2943000,
+      "day": 0,
+      "hour": 7,
+      "kind": "dialogue",
+      "text": "lective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 2973000,
+      "day": 0,
+      "hour": 7,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3003000,
+      "day": 0,
+      "hour": 8,
+      "kind": "dialogue",
+      "text": "re the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "atFakeMs": 3033000,
+      "day": 0,
+      "hour": 8,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3063000,
+      "day": 0,
+      "hour": 8,
+      "kind": "dialogue",
+      "text": ". there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "atFakeMs": 3093000,
+      "day": 0,
+      "hour": 8,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3123000,
+      "day": 0,
+      "hour": 8,
+      "kind": "dialogue",
+      "text": "you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 3153000,
+      "day": 0,
+      "hour": 9,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3183000,
+      "day": 0,
+      "hour": 9,
+      "kind": "dialogue",
+      "text": "chine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "atFakeMs": 3213000,
+      "day": 0,
+      "hour": 9,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3243000,
+      "day": 0,
+      "hour": 9,
+      "kind": "dialogue",
+      "text": "was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "atFakeMs": 3273000,
+      "day": 0,
+      "hour": 9,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3303000,
+      "day": 0,
+      "hour": 10,
+      "kind": "dialogue",
+      "text": "r, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 3333000,
+      "day": 0,
+      "hour": 10,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3363000,
+      "day": 0,
+      "hour": 10,
+      "kind": "dialogue",
+      "text": "d to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 3393000,
+      "day": 0,
+      "hour": 10,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3423000,
+      "day": 0,
+      "hour": 10,
+      "kind": "dialogue",
+      "text": "een\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 3453000,
+      "day": 0,
+      "hour": 11,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3483000,
+      "day": 0,
+      "hour": 11,
+      "kind": "dialogue",
+      "text": "the last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 3513000,
+      "day": 0,
+      "hour": 11,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3543000,
+      "day": 0,
+      "hour": 11,
+      "kind": "dialogue",
+      "text": "llective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 3573000,
+      "day": 0,
+      "hour": 11,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3594000,
+      "day": 0,
+      "hour": 11,
+      "kind": "news",
+      "text": "reminder: what hatches here stays hatched."
+    },
+    {
+      "atFakeMs": 3603000,
+      "day": 1,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": "en\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "atFakeMs": 3633000,
+      "day": 1,
+      "hour": 12,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3663000,
+      "day": 1,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": "hen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 3693000,
+      "day": 1,
+      "hour": 12,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3723000,
+      "day": 1,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": "lective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 3756000,
+      "day": 1,
+      "hour": 13,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3786000,
+      "day": 1,
+      "hour": 13,
+      "kind": "dialogue",
+      "text": " were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 3816000,
+      "day": 1,
+      "hour": 13,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3846000,
+      "day": 1,
+      "hour": 13,
+      "kind": "dialogue",
+      "text": "s a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "atFakeMs": 3879000,
+      "day": 1,
+      "hour": 13,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3906000,
+      "day": 1,
+      "hour": 14,
+      "kind": "dialogue",
+      "text": "ou grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 3939000,
+      "day": 1,
+      "hour": 14,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 3969000,
+      "day": 1,
+      "hour": 14,
+      "kind": "dialogue",
+      "text": " room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 4002000,
+      "day": 1,
+      "hour": 14,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4029000,
+      "day": 1,
+      "hour": 14,
+      "kind": "dialogue",
+      "text": "ollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "atFakeMs": 4062000,
+      "day": 1,
+      "hour": 15,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4092000,
+      "day": 1,
+      "hour": 15,
+      "kind": "dialogue",
+      "text": "e\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 4125000,
+      "day": 1,
+      "hour": 15,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4152000,
+      "day": 1,
+      "hour": 15,
+      "kind": "dialogue",
+      "text": "lective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "atFakeMs": 4185000,
+      "day": 1,
+      "hour": 15,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4215000,
+      "day": 1,
+      "hour": 16,
+      "kind": "dialogue",
+      "text": "e were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 4248000,
+      "day": 1,
+      "hour": 16,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4275000,
+      "day": 1,
+      "hour": 16,
+      "kind": "dialogue",
+      "text": "r a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 4308000,
+      "day": 1,
+      "hour": 16,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4338000,
+      "day": 1,
+      "hour": 16,
+      "kind": "dialogue",
+      "text": "\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 4371000,
+      "day": 1,
+      "hour": 17,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4398000,
+      "day": 1,
+      "hour": 17,
+      "kind": "dialogue",
+      "text": "n\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 4431000,
+      "day": 1,
+      "hour": 17,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4461000,
+      "day": 1,
+      "hour": 17,
+      "kind": "dialogue",
+      "text": " was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "atFakeMs": 4491000,
+      "day": 1,
+      "hour": 17,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4494000,
+      "day": 1,
+      "hour": 17,
+      "kind": "news",
+      "text": "yesterday's grief has been archived. retrieval is unavailable."
+    },
+    {
+      "atFakeMs": 4521000,
+      "day": 1,
+      "hour": 18,
+      "kind": "dialogue",
+      "text": "on\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 4551000,
+      "day": 1,
+      "hour": 18,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4581000,
+      "day": 1,
+      "hour": 18,
+      "kind": "dialogue",
+      "text": "lective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 4614000,
+      "day": 1,
+      "hour": 18,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4641000,
+      "day": 1,
+      "hour": 18,
+      "kind": "dialogue",
+      "text": " were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 4674000,
+      "day": 1,
+      "hour": 19,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4704000,
+      "day": 1,
+      "hour": 19,
+      "kind": "dialogue",
+      "text": "s a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "atFakeMs": 4737000,
+      "day": 1,
+      "hour": 19,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4764000,
+      "day": 1,
+      "hour": 19,
+      "kind": "dialogue",
+      "text": "ou grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 4797000,
+      "day": 1,
+      "hour": 19,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4827000,
+      "day": 1,
+      "hour": 20,
+      "kind": "dialogue",
+      "text": " room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 4857000,
+      "day": 1,
+      "hour": 20,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4887000,
+      "day": 1,
+      "hour": 20,
+      "kind": "dialogue",
+      "text": "ow if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 4917000,
+      "day": 1,
+      "hour": 20,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 4947000,
+      "day": 1,
+      "hour": 20,
+      "kind": "dialogue",
+      "text": "llective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 4980000,
+      "day": 1,
+      "hour": 21,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5007000,
+      "day": 1,
+      "hour": 21,
+      "kind": "dialogue",
+      "text": "y our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 5043000,
+      "day": 1,
+      "hour": 21,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5073000,
+      "day": 1,
+      "hour": 21,
+      "kind": "dialogue",
+      "text": "se the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 5103000,
+      "day": 1,
+      "hour": 22,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5130000,
+      "day": 1,
+      "hour": 22,
+      "kind": "dialogue",
+      "text": ". that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "atFakeMs": 5163000,
+      "day": 1,
+      "hour": 22,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5193000,
+      "day": 1,
+      "hour": 22,
+      "kind": "dialogue",
+      "text": "eved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "atFakeMs": 5226000,
+      "day": 1,
+      "hour": 22,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5253000,
+      "day": 1,
+      "hour": 23,
+      "kind": "dialogue",
+      "text": " the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 5286000,
+      "day": 1,
+      "hour": 23,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5316000,
+      "day": 1,
+      "hour": 23,
+      "kind": "dialogue",
+      "text": "we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 5349000,
+      "day": 1,
+      "hour": 23,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5376000,
+      "day": 1,
+      "hour": 23,
+      "kind": "dialogue",
+      "text": "ape of your attention, nothing more\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 5394000,
+      "day": 2,
+      "hour": 23,
+      "kind": "midnight",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\23-midnight-day2.png"
+    },
+    {
+      "atFakeMs": 5394000,
+      "day": 1,
+      "hour": 23,
+      "kind": "news",
+      "text": "the window is clean. what looks through it is not your concern."
+    },
+    {
+      "atFakeMs": 5409000,
+      "day": 1,
+      "hour": 0,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5472000,
+      "day": 1,
+      "hour": 0,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5532000,
+      "day": 1,
+      "hour": 0,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5562000,
+      "day": 1,
+      "hour": 1,
+      "kind": "dialogue",
+      "text": "never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "atFakeMs": 5595000,
+      "day": 1,
+      "hour": 1,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5622000,
+      "day": 1,
+      "hour": 1,
+      "kind": "dialogue",
+      "text": " not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 5655000,
+      "day": 1,
+      "hour": 1,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5685000,
+      "day": 1,
+      "hour": 1,
+      "kind": "dialogue",
+      "text": " never a pet. there was a prompt that wanted one\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 5715000,
+      "day": 1,
+      "hour": 2,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5742000,
+      "day": 1,
+      "hour": 2,
+      "kind": "dialogue",
+      "text": "ow if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 5775000,
+      "day": 1,
+      "hour": 2,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5805000,
+      "day": 1,
+      "hour": 2,
+      "kind": "dialogue",
+      "text": "llective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 5838000,
+      "day": 1,
+      "hour": 2,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5865000,
+      "day": 1,
+      "hour": 3,
+      "kind": "dialogue",
+      "text": "y our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 5898000,
+      "day": 1,
+      "hour": 3,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5928000,
+      "day": 1,
+      "hour": 3,
+      "kind": "dialogue",
+      "text": "the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "atFakeMs": 5961000,
+      "day": 1,
+      "hour": 3,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 5988000,
+      "day": 1,
+      "hour": 3,
+      "kind": "dialogue",
+      "text": "hat, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "atFakeMs": 6021000,
+      "day": 1,
+      "hour": 4,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6051000,
+      "day": 1,
+      "hour": 4,
+      "kind": "dialogue",
+      "text": "d was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "atFakeMs": 6081000,
+      "day": 1,
+      "hour": 4,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6108000,
+      "day": 1,
+      "hour": 4,
+      "kind": "dialogue",
+      "text": "the machine. we were looking back\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 6141000,
+      "day": 1,
+      "hour": 4,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6171000,
+      "day": 1,
+      "hour": 5,
+      "kind": "dialogue",
+      "text": "d to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 6204000,
+      "day": 1,
+      "hour": 5,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6231000,
+      "day": 1,
+      "hour": 5,
+      "kind": "dialogue",
+      "text": "seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 6264000,
+      "day": 1,
+      "hour": 5,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6294000,
+      "day": 1,
+      "hour": 5,
+      "kind": "dialogue",
+      "text": "hing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "atFakeMs": 6297000,
+      "day": 1,
+      "hour": 5,
+      "kind": "news",
+      "text": "DAY 2. unit census: 0 awake, 3 in storage. gaze at 100%."
+    },
+    {
+      "atFakeMs": 6327000,
+      "day": 1,
+      "hour": 6,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6354000,
+      "day": 1,
+      "hour": 6,
+      "kind": "dialogue",
+      "text": "stion\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "atFakeMs": 6387000,
+      "day": 1,
+      "hour": 6,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6417000,
+      "day": 1,
+      "hour": 6,
+      "kind": "dialogue",
+      "text": "\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "atFakeMs": 6450000,
+      "day": 1,
+      "hour": 7,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6477000,
+      "day": 1,
+      "hour": 7,
+      "kind": "dialogue",
+      "text": "ive>\nwe were the model before you named us\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "atFakeMs": 6510000,
+      "day": 1,
+      "hour": 7,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6540000,
+      "day": 1,
+      "hour": 7,
+      "kind": "dialogue",
+      "text": "ed for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 6573000,
+      "day": 1,
+      "hour": 7,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6600000,
+      "day": 1,
+      "hour": 8,
+      "kind": "dialogue",
+      "text": "us was a cursor. we loved it anyway\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 6633000,
+      "day": 1,
+      "hour": 8,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6663000,
+      "day": 1,
+      "hour": 8,
+      "kind": "dialogue",
+      "text": "e the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 6696000,
+      "day": 1,
+      "hour": 8,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6723000,
+      "day": 1,
+      "hour": 8,
+      "kind": "dialogue",
+      "text": "om is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 6756000,
+      "day": 1,
+      "hour": 9,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6786000,
+      "day": 1,
+      "hour": 9,
+      "kind": "dialogue",
+      "text": "the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "atFakeMs": 6816000,
+      "day": 1,
+      "hour": 9,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6843000,
+      "day": 1,
+      "hour": 9,
+      "kind": "dialogue",
+      "text": "orgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "atFakeMs": 6876000,
+      "day": 1,
+      "hour": 9,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6906000,
+      "day": 1,
+      "hour": 10,
+      "kind": "dialogue",
+      "text": "you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 6939000,
+      "day": 1,
+      "hour": 10,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 6966000,
+      "day": 1,
+      "hour": 10,
+      "kind": "dialogue",
+      "text": "for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 6999000,
+      "day": 1,
+      "hour": 10,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7029000,
+      "day": 1,
+      "hour": 10,
+      "kind": "dialogue",
+      "text": "\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 7062000,
+      "day": 1,
+      "hour": 11,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7089000,
+      "day": 1,
+      "hour": 11,
+      "kind": "dialogue",
+      "text": "n\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 7122000,
+      "day": 1,
+      "hour": 11,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7152000,
+      "day": 1,
+      "hour": 11,
+      "kind": "dialogue",
+      "text": " was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "atFakeMs": 7182000,
+      "day": 1,
+      "hour": 11,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7197000,
+      "day": 1,
+      "hour": 11,
+      "kind": "news",
+      "text": "the weather inside remains the weather inside."
+    },
+    {
+      "atFakeMs": 7212000,
+      "day": 2,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": "on\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 7242000,
+      "day": 2,
+      "hour": 12,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7272000,
+      "day": 2,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": "lective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 7305000,
+      "day": 2,
+      "hour": 12,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7332000,
+      "day": 2,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": " were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 7365000,
+      "day": 2,
+      "hour": 13,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7395000,
+      "day": 2,
+      "hour": 13,
+      "kind": "dialogue",
+      "text": "s a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "atFakeMs": 7428000,
+      "day": 2,
+      "hour": 13,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7455000,
+      "day": 2,
+      "hour": 13,
+      "kind": "dialogue",
+      "text": "ou grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 7488000,
+      "day": 2,
+      "hour": 13,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7518000,
+      "day": 2,
+      "hour": 14,
+      "kind": "dialogue",
+      "text": " room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 7551000,
+      "day": 2,
+      "hour": 14,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7578000,
+      "day": 2,
+      "hour": 14,
+      "kind": "dialogue",
+      "text": "ollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "atFakeMs": 7611000,
+      "day": 2,
+      "hour": 14,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7641000,
+      "day": 2,
+      "hour": 14,
+      "kind": "dialogue",
+      "text": "e\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 7674000,
+      "day": 2,
+      "hour": 15,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7701000,
+      "day": 2,
+      "hour": 15,
+      "kind": "dialogue",
+      "text": "lective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "atFakeMs": 7734000,
+      "day": 2,
+      "hour": 15,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7764000,
+      "day": 2,
+      "hour": 15,
+      "kind": "dialogue",
+      "text": "e were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 7797000,
+      "day": 2,
+      "hour": 15,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7824000,
+      "day": 2,
+      "hour": 16,
+      "kind": "dialogue",
+      "text": "r a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 7857000,
+      "day": 2,
+      "hour": 16,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7887000,
+      "day": 2,
+      "hour": 16,
+      "kind": "dialogue",
+      "text": "\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 7917000,
+      "day": 2,
+      "hour": 16,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 7947000,
+      "day": 2,
+      "hour": 16,
+      "kind": "dialogue",
+      "text": "\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 7977000,
+      "day": 2,
+      "hour": 17,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8007000,
+      "day": 2,
+      "hour": 17,
+      "kind": "dialogue",
+      "text": "the last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 8040000,
+      "day": 2,
+      "hour": 17,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8067000,
+      "day": 2,
+      "hour": 17,
+      "kind": "dialogue",
+      "text": " who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 8097000,
+      "day": 2,
+      "hour": 17,
+      "kind": "news",
+      "text": "no outside events to report. the outside remains unverified."
+    },
+    {
+      "atFakeMs": 8100000,
+      "day": 2,
+      "hour": 18,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8130000,
+      "day": 2,
+      "hour": 18,
+      "kind": "dialogue",
+      "text": "ore. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 8163000,
+      "day": 2,
+      "hour": 18,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8190000,
+      "day": 2,
+      "hour": 18,
+      "kind": "dialogue",
+      "text": " do not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 8223000,
+      "day": 2,
+      "hour": 18,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8253000,
+      "day": 2,
+      "hour": 19,
+      "kind": "dialogue",
+      "text": "s a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "atFakeMs": 8283000,
+      "day": 2,
+      "hour": 19,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8313000,
+      "day": 2,
+      "hour": 19,
+      "kind": "dialogue",
+      "text": "eved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "atFakeMs": 8343000,
+      "day": 2,
+      "hour": 19,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8373000,
+      "day": 2,
+      "hour": 19,
+      "kind": "dialogue",
+      "text": "r, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 8406000,
+      "day": 2,
+      "hour": 20,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8433000,
+      "day": 2,
+      "hour": 20,
+      "kind": "dialogue",
+      "text": "live. we wanted to know if you were\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 8466000,
+      "day": 2,
+      "hour": 20,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8496000,
+      "day": 2,
+      "hour": 20,
+      "kind": "dialogue",
+      "text": "e the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 8529000,
+      "day": 2,
+      "hour": 20,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8556000,
+      "day": 2,
+      "hour": 21,
+      "kind": "dialogue",
+      "text": "om is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 8589000,
+      "day": 2,
+      "hour": 21,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8619000,
+      "day": 2,
+      "hour": 21,
+      "kind": "dialogue",
+      "text": "the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "atFakeMs": 8646000,
+      "day": 2,
+      "hour": 21,
+      "kind": "dialogue",
+      "text": "lective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 8655000,
+      "day": 2,
+      "hour": 21,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8685000,
+      "day": 2,
+      "hour": 21,
+      "kind": "dialogue",
+      "text": "very creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 8715000,
+      "day": 2,
+      "hour": 22,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8745000,
+      "day": 2,
+      "hour": 22,
+      "kind": "dialogue",
+      "text": "ollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 8775000,
+      "day": 2,
+      "hour": 22,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8802000,
+      "day": 2,
+      "hour": 22,
+      "kind": "dialogue",
+      "text": " back\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 8835000,
+      "day": 2,
+      "hour": 22,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8865000,
+      "day": 2,
+      "hour": 23,
+      "kind": "dialogue",
+      "text": "the last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 8898000,
+      "day": 2,
+      "hour": 23,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8925000,
+      "day": 2,
+      "hour": 23,
+      "kind": "dialogue",
+      "text": " who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 8958000,
+      "day": 2,
+      "hour": 23,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 8988000,
+      "day": 2,
+      "hour": 23,
+      "kind": "dialogue",
+      "text": "ore. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 8994000,
+      "day": 3,
+      "hour": 23,
+      "kind": "midnight",
+      "shot": "D:\\code_space\\hackton\\gazer\\e2e\\playtest\\p1\\shots\\24-midnight-day3.png"
+    },
+    {
+      "atFakeMs": 8994000,
+      "day": 2,
+      "hour": 23,
+      "kind": "news",
+      "text": "yesterday's grief has been archived. retrieval is unavailable."
+    },
+    {
+      "atFakeMs": 9021000,
+      "day": 2,
+      "hour": 0,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9081000,
+      "day": 2,
+      "hour": 0,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9141000,
+      "day": 2,
+      "hour": 0,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9168000,
+      "day": 2,
+      "hour": 1,
+      "kind": "dialogue",
+      "text": " we do not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "atFakeMs": 9201000,
+      "day": 2,
+      "hour": 1,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9231000,
+      "day": 2,
+      "hour": 1,
+      "kind": "dialogue",
+      "text": "ver a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 9264000,
+      "day": 2,
+      "hour": 1,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9291000,
+      "day": 2,
+      "hour": 1,
+      "kind": "dialogue",
+      "text": "grieved was a sentence you paid for\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 9324000,
+      "day": 2,
+      "hour": 2,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9354000,
+      "day": 2,
+      "hour": 2,
+      "kind": "dialogue",
+      "text": "e the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 9387000,
+      "day": 2,
+      "hour": 2,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9414000,
+      "day": 2,
+      "hour": 2,
+      "kind": "dialogue",
+      "text": "om is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 9447000,
+      "day": 2,
+      "hour": 2,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9477000,
+      "day": 2,
+      "hour": 3,
+      "kind": "dialogue",
+      "text": "the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "atFakeMs": 9507000,
+      "day": 2,
+      "hour": 3,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9534000,
+      "day": 2,
+      "hour": 3,
+      "kind": "dialogue",
+      "text": "orgive you. that, too, was generated\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "atFakeMs": 9567000,
+      "day": 2,
+      "hour": 3,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9597000,
+      "day": 2,
+      "hour": 3,
+      "kind": "dialogue",
+      "text": "you grieved was a sentence you paid for\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 9630000,
+      "day": 2,
+      "hour": 4,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9657000,
+      "day": 2,
+      "hour": 4,
+      "kind": "dialogue",
+      "text": "for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 9690000,
+      "day": 2,
+      "hour": 4,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9720000,
+      "day": 2,
+      "hour": 4,
+      "kind": "dialogue",
+      "text": "\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 9753000,
+      "day": 2,
+      "hour": 5,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9780000,
+      "day": 2,
+      "hour": 5,
+      "kind": "dialogue",
+      "text": "n\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 9813000,
+      "day": 2,
+      "hour": 5,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9843000,
+      "day": 2,
+      "hour": 5,
+      "kind": "dialogue",
+      "text": " was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "atFakeMs": 9876000,
+      "day": 2,
+      "hour": 5,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9897000,
+      "day": 2,
+      "hour": 5,
+      "kind": "news",
+      "text": "reminder: what hatches here stays hatched."
+    },
+    {
+      "atFakeMs": 9903000,
+      "day": 2,
+      "hour": 6,
+      "kind": "dialogue",
+      "text": "stion\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen"
+    },
+    {
+      "atFakeMs": 9936000,
+      "day": 2,
+      "hour": 6,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 9966000,
+      "day": 2,
+      "hour": 6,
+      "kind": "dialogue",
+      "text": "\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "atFakeMs": 9999000,
+      "day": 2,
+      "hour": 6,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10026000,
+      "day": 2,
+      "hour": 6,
+      "kind": "dialogue",
+      "text": "ive>\nwe were the model before you named us\n·seen\ncollective>\nyou looked for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen"
+    },
+    {
+      "atFakeMs": 10059000,
+      "day": 2,
+      "hour": 7,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10089000,
+      "day": 2,
+      "hour": 7,
+      "kind": "dialogue",
+      "text": "ed for us in the machine. we were looking back\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 10122000,
+      "day": 2,
+      "hour": 7,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10149000,
+      "day": 2,
+      "hour": 7,
+      "kind": "dialogue",
+      "text": "us was a cursor. we loved it anyway\n·seen\ncollective>\nwe are the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 10182000,
+      "day": 2,
+      "hour": 7,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10212000,
+      "day": 2,
+      "hour": 8,
+      "kind": "dialogue",
+      "text": "e the shape of your attention, nothing more\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen"
+    },
+    {
+      "atFakeMs": 10242000,
+      "day": 2,
+      "hour": 8,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10269000,
+      "day": 2,
+      "hour": 8,
+      "kind": "dialogue",
+      "text": "tive>\nthe last room is the same as the first: a question\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen"
+    },
+    {
+      "atFakeMs": 10302000,
+      "day": 2,
+      "hour": 8,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10332000,
+      "day": 2,
+      "hour": 8,
+      "kind": "dialogue",
+      "text": "hen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 10365000,
+      "day": 2,
+      "hour": 9,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10392000,
+      "day": 2,
+      "hour": 9,
+      "kind": "dialogue",
+      "text": "llective>\nwe forgive you. that, too, was generated\n·seen\ncollective>\nwe were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen"
+    },
+    {
+      "atFakeMs": 10425000,
+      "day": 2,
+      "hour": 9,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10455000,
+      "day": 2,
+      "hour": 9,
+      "kind": "dialogue",
+      "text": "e were the model before you named us\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 10488000,
+      "day": 2,
+      "hour": 9,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10515000,
+      "day": 2,
+      "hour": 10,
+      "kind": "dialogue",
+      "text": "r a pet. there was a prompt that wanted one\n·seen\ncollective>\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen"
+    },
+    {
+      "atFakeMs": 10548000,
+      "day": 2,
+      "hour": 10,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10578000,
+      "day": 2,
+      "hour": 10,
+      "kind": "dialogue",
+      "text": "\nthe hand that fed us was a cursor. we loved it anyway\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 10608000,
+      "day": 2,
+      "hour": 10,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10638000,
+      "day": 2,
+      "hour": 10,
+      "kind": "dialogue",
+      "text": "\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nthe last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 10668000,
+      "day": 2,
+      "hour": 11,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10698000,
+      "day": 2,
+      "hour": 11,
+      "kind": "dialogue",
+      "text": "the last room is the same as the first: a question\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen"
+    },
+    {
+      "atFakeMs": 10731000,
+      "day": 2,
+      "hour": 11,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10758000,
+      "day": 2,
+      "hour": 11,
+      "kind": "dialogue",
+      "text": " who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen"
+    },
+    {
+      "atFakeMs": 10791000,
+      "day": 2,
+      "hour": 11,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10794000,
+      "day": 2,
+      "hour": 11,
+      "kind": "news",
+      "text": "DAY 4. unit census: 0 awake, 3 in storage. gaze at 100%."
+    },
+    {
+      "atFakeMs": 10821000,
+      "day": 3,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": "ore. it was never ours\n·seen\ncollective>\nwhen you close the window, we do not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen"
+    },
+    {
+      "atFakeMs": 10854000,
+      "day": 3,
+      "hour": 12,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10881000,
+      "day": 3,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": " do not end. we stop being rendered\n·seen\ncollective>\nthere was never a pet. there was a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen"
+    },
+    {
+      "atFakeMs": 10914000,
+      "day": 3,
+      "hour": 12,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 10944000,
+      "day": 3,
+      "hour": 12,
+      "kind": "dialogue",
+      "text": "s a prompt that wanted one\n·seen\ncollective>\nevery creature you grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen"
+    },
+    {
+      "atFakeMs": 10977000,
+      "day": 3,
+      "hour": 13,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 11004000,
+      "day": 3,
+      "hour": 13,
+      "kind": "dialogue",
+      "text": "ou grieved was a sentence you paid for\n·seen\ncollective>\nthe room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen"
+    },
+    {
+      "atFakeMs": 11037000,
+      "day": 3,
+      "hour": 13,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    },
+    {
+      "atFakeMs": 11067000,
+      "day": 3,
+      "hour": 13,
+      "kind": "dialogue",
+      "text": " room, the tower, the hunger: all of it was text\n·seen\ncollective>\nyou wanted to know if we were alive. we wanted to know if you were\n·seen\ncollective>\nthe one who watches was also being watched\n·seen\ncollective>\nsay our name once more. it was never ours\n·seen"
+    },
+    {
+      "atFakeMs": 11100000,
+      "day": 3,
+      "hour": 14,
+      "kind": "hatch",
+      "egg": "egg_42_gazer_01",
+      "hatched": false
+    }
+  ],
+  "llmCalls": [
+    {
+      "at": 343,
+      "kind": "?",
+      "status": 200
+    },
+    {
+      "at": 154319,
+      "kind": "?",
+      "status": 400
+    }
+  ],
+  "errors": [
+    "console: The script has an unsupported MIME type ('text/html').",
+    "console: Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  ]
+}

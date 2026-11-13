@@ -1,0 +1,26 @@
+[
+  {
+    "case": "bad-locale",
+    "errors": 0
+  },
+  {
+    "case": "huge-locale",
+    "errors": 0
+  },
+  {
+    "case": "quota-full",
+    "errors": 0
+  },
+  {
+    "case": "no-storage",
+    "errors": 0
+  },
+  {
+    "case": "seed-matrix",
+    "errors": 0
+  },
+  {
+    "case": "persistence",
+    "errors": 0
+  }
+]

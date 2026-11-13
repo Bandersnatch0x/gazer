@@ -1,0 +1,82 @@
+{
+  "errors": [
+    {
+      "t": 1794463096590,
+      "text": "The script has an unsupported MIME type ('text/html')."
+    },
+    {
+      "t": 1794463099213,
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    }
+  ],
+  "warnings": [
+    {
+      "t": 1794463096758,
+      "text": "The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://developer.chrome.com/blog/autoplay/#web_audio"
+    },
+    {
+      "t": 1794463096760,
+      "text": "The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://developer.chrome.com/blog/autoplay/#web_audio"
+    },
+    {
+      "t": 1794463096762,
+      "text": "The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://developer.chrome.com/blog/autoplay/#web_audio"
+    },
+    {
+      "t": 1794463096774,
+      "text": "[.WebGL-0x79c40060e200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "t": 1794463096920,
+      "text": "[.WebGL-0x79c40060e200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "t": 1794463096923,
+      "text": "[.WebGL-0x79c40060e200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "t": 1794463096931,
+      "text": "[.WebGL-0x79c40060e200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+    }
+  ],
+  "tickRateForeground": 0.4283878337855205,
+  "end": {
+    "tick": 20,
+    "gv": 26.000000000000004,
+    "stage": 1,
+    "seed": 1997,
+    "eggs": 2,
+    "creats": [
+      {
+        "id": "gazer_01",
+        "tile": {
+          "x": 5,
+          "y": 6
+        },
+        "behavior": "mating",
+        "hunger": 94.67999999999998,
+        "hygiene": 95.99999999999994
+      },
+      {
+        "id": "gazer_02",
+        "tile": {
+          "x": 5,
+          "y": 6
+        },
+        "behavior": "mating",
+        "hunger": 74.39999999999998,
+        "hygiene": 85.99999999999994
+      },
+      {
+        "id": "gazer_03",
+        "tile": {
+          "x": 5,
+          "y": 11
+        },
+        "behavior": "idle",
+        "hunger": 74.39999999999998,
+        "hygiene": 85.99999999999994
+      }
+    ]
+  }
+}

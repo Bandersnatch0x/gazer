@@ -33,7 +33,17 @@ export interface WhisperInput {
   readonly receiver: CreatureState;
   readonly entry: MemoryEntry;
   readonly worldSeed: number;
+  /**
+   * True when sender and receiver sit in different factions (stream F, ticket
+   * 0006). Rumours crossing a faction boundary keep less of themselves: the
+   * wiring layer computes this from the two creatures' memory slices; absent
+   * means "no faction information" and the base retention applies unchanged.
+   */
+  readonly crossFaction?: boolean;
 }
+
+/** F-owned value (stream F chose it; stream B may re-home): cross-faction whispers lose this much retention. */
+export const CROSS_FACTION_RETENTION_PENALTY = 0.25;
 
 function chebyshev(a: CreatureState, b: CreatureState): number {
   return Math.max(Math.abs(a.position.x - b.position.x), Math.abs(a.position.y - b.position.y));
@@ -84,7 +94,8 @@ export function resolveWhisper(input: WhisperInput): MemoryEntry | null {
   }
 
   const bias = receiver.genome?.distortionBias ?? 0;
-  const retention = Math.min(1, Math.max(0, BASE_RETENTION - bias));
+  const penalty = input.crossFaction === true ? CROSS_FACTION_RETENTION_PENALTY : 0;
+  const retention = Math.min(1, Math.max(0, BASE_RETENTION - bias - penalty));
   const roll = createRng(worldSeed, `${entry.id}:${receiver.id}`).next();
 
   if (roll < retention) {

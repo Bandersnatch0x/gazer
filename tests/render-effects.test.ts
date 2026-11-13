@@ -80,6 +80,16 @@ const SAMPLES: Readonly<Record<RenderEffectKind, RenderEffect>> = {
   ui_shake: { kind: "ui_shake", intensity: 0.5, ms: 400 },
   creature_wink: { kind: "creature_wink", creatureId: "gazer_01" },
   cursor_pull: { kind: "cursor_pull", creatureId: "gazer_01", strength: 0.7 },
+  // --- Ticket 0025: the canvas-layer FX kinds (FX-LIB-01a) ---
+  palette_pollution: { kind: "palette_pollution", degrees: 15 },
+  sprite_corrupt: { kind: "sprite_corrupt", target: "all", mode: "eye_only" },
+  collective_gaze: { kind: "collective_gaze", ms: 800 },
+  replay_player_action: { kind: "replay_player_action", window: "last_10", fidelity: 0.8 },
+  map_wither: { kind: "map_wither", radius: 3, around: "death_site" },
+  afterimage: { kind: "afterimage", creatureId: "gazer_01", tailMs: 500 },
+  lineage_blacken: { kind: "lineage_blacken", deadIds: ["gazer_02"], leanTo: "tower" },
+  egg_pulse: { kind: "egg_pulse", eggId: "egg_01", rhythm: "player_click" },
+  gaze_at_tower: { kind: "gaze_at_tower", creatureId: "gazer_01", ms: 2000 },
   favicon_eye: { kind: "favicon_eye", intensity: 0.8 },
   title_mutate: { kind: "title_mutate", text: "GAZER is watching" },
   outside_eyes: { kind: "outside_eyes", opacity: 0.5 },
@@ -140,7 +150,9 @@ const arbitraryEffect: fc.Arbitrary<RenderEffect> = fc.oneof(
 describe("effect plans", () => {
   it("covers every kind with a sample", () => {
     expect(Object.keys(SAMPLES).sort()).toEqual([...EFFECT_KINDS].sort());
-    expect(CANVAS_EFFECT_KINDS).toHaveLength(16);
+    // 16 legacy kinds + 8 canvas-layer FX kinds (ticket 0025) + E4's tower
+    // gaze (ticket 0033).
+    expect(CANVAS_EFFECT_KINDS).toHaveLength(25);
     expect(SHELL_EFFECT_KINDS).toHaveLength(3);
   });
 

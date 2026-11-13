@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "template": "collector",
+  "title": "GAZER 自测壳",
+  "slots": {
+    "background": {
+      "file": "assets/background.svg",
+      "label": "Background",
+      "size": [
+        512,
+        512
+      ],
+      "transparent": false,
+      "tile": true
+    }
+  },
+  "rules": {
+    "duration": 60,
+    "hearts": 3,
+    "heroSpeed": 320,
+    "enemySpeed": 120,
+    "enemySpeedGrowth": 3,
+    "enemySpawnEvery": 4,
+    "maxEnemies": 8,
+    "maxPickups": 5,
+    "heroSize": 76,
+    "enemySize": 68,
+    "pickupSize": 44,
+    "shield": {
+      "enabled": false,
+      "every": 3,
+      "seconds": 4
+    }
+  },
+  "style": "utility wrapper, no own art",
+  "orientation": "landscape"
+}

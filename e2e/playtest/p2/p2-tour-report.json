@@ -1,0 +1,396 @@
+{
+  "url": "http://localhost:5199/?debug=1&endpoint=/v1/game&seed=1997",
+  "boot": {
+    "tick": 0,
+    "gv": 0,
+    "stage": 0,
+    "silent": true,
+    "paletteDecay": 0,
+    "structures": [],
+    "eggs": [],
+    "creatures": [
+      {
+        "id": "gazer_01",
+        "tile": {
+          "x": 6,
+          "y": 5
+        },
+        "behavior": "idle",
+        "name": null,
+        "hunger": 80,
+        "happiness": 80
+      },
+      {
+        "id": "gazer_02",
+        "tile": {
+          "x": 9,
+          "y": 7
+        },
+        "behavior": "idle",
+        "name": null,
+        "hunger": 80,
+        "happiness": 80
+      },
+      {
+        "id": "gazer_03",
+        "tile": {
+          "x": 4,
+          "y": 8
+        },
+        "behavior": "idle",
+        "name": null,
+        "hunger": 80,
+        "happiness": 80
+      }
+    ],
+    "uiLabels": {}
+  },
+  "chrome": {
+    "atBoot": {
+      "bodyBg": "rgb(10, 15, 12)",
+      "hud": {
+        "sel": "#hud",
+        "color": "rgb(207, 232, 213)",
+        "opacity": "0.7",
+        "font": "monospace",
+        "size": "12px"
+      },
+      "key": {
+        "sel": ".gazer-key",
+        "color": "rgb(207, 232, 213)",
+        "opacity": "1",
+        "font": "\"MS Gothic\", Fixedsys, DotGothic16, ui-monospace, monospace",
+        "size": "11px"
+      },
+      "panelTitle": null,
+      "choiceNote": null,
+      "dialogueBar": {
+        "sel": ".gazer-dialogue__bar",
+        "color": "rgb(125, 143, 129)",
+        "opacity": "1",
+        "font": "\"MS Gothic\", Fixedsys, DotGothic16, ui-monospace, \"Courier N",
+        "size": "12px"
+      },
+      "speaker": {
+        "sel": ".gazer-dialogue__speaker",
+        "color": "rgb(125, 143, 129)",
+        "opacity": "1",
+        "font": "\"MS Gothic\", Fixedsys, DotGothic16, ui-monospace, \"Courier N",
+        "size": "12px"
+      },
+      "witness": {
+        "sel": ".gazer-witness",
+        "color": "rgb(75, 90, 77)",
+        "opacity": "0.18",
+        "font": "\"MS Gothic\", Fixedsys, DotGothic16, ui-monospace, \"Courier N",
+        "size": "12px"
+      },
+      "albumMeta": null,
+      "crt": {
+        "background": "repeating-linear-gradient(rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 2px, rgba(4, 10, 6, 0.16) 2px, rgba(4, 10, 6, 0.16) 3px",
+        "z": "40",
+        "anim": "gazer-flicker"
+      },
+      "canvasCss": {
+        "w": 960,
+        "h": 540,
+        "rendering": "pixelated"
+      },
+      "fonts": [
+        {
+          "f": "12px \"MS Gothic\"",
+          "ok": true
+        },
+        {
+          "f": "12px Fixedsys",
+          "ok": true
+        },
+        {
+          "f": "12px DotGothic16",
+          "ok": true
+        }
+      ]
+    },
+    "atEnd": {
+      "bodyBg": "rgb(10, 15, 12)",
+      "hud": {
+        "sel": "#hud",
+        "color": "rgb(207, 232, 213)",
+        "opacity": "0.7",
+        "font": "monospace",
+        "size": "12px"
+      },
+      "key": {
+        "sel": ".gazer-key",
+        "color": "rgb(207, 232, 213)",
+        "opacity": "1",
+        "font": "\"MS Gothic\", Fixedsys, DotGothic16, ui-monospace, monospace",
+        "size": "11px"
+      },
+      "panelTitle": null,
+      "choiceNote": null,
+      "dialogueBar": {
+        "sel": ".gazer-dialogue__bar",
+        "color": "rgb(125, 143, 129)",
+        "opacity": "1",
+        "font": "\"MS Gothic\", Fixedsys, DotGothic16, ui-monospace, \"Courier N",
+        "size": "12px"
+      },
+      "speaker": {
+        "sel": ".gazer-dialogue__speaker",
+        "color": "rgb(125, 143, 129)",
+        "opacity": "1",
+        "font": "\"MS Gothic\", Fixedsys, DotGothic16, ui-monospace, \"Courier N",
+        "size": "12px"
+      },
+      "witness": {
+        "sel": ".gazer-witness",
+        "color": "rgb(75, 90, 77)",
+        "opacity": "0.18",
+        "font": "\"MS Gothic\", Fixedsys, DotGothic16, ui-monospace, \"Courier N",
+        "size": "12px"
+      },
+      "albumMeta": null,
+      "crt": {
+        "background": "repeating-linear-gradient(rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 2px, rgba(4, 10, 6, 0.16) 2px, rgba(4, 10, 6, 0.16) 3px",
+        "z": "40",
+        "anim": "gazer-flicker"
+      },
+      "canvasCss": {
+        "w": 960,
+        "h": 540,
+        "rendering": "pixelated"
+      },
+      "fonts": [
+        {
+          "f": "12px \"MS Gothic\"",
+          "ok": true
+        },
+        {
+          "f": "12px Fixedsys",
+          "ok": true
+        },
+        {
+          "f": "12px DotGothic16",
+          "ok": true
+        }
+      ]
+    }
+  },
+  "skyExpected": [
+    {
+      "hour": 12,
+      "tick": 1201,
+      "expectedSky": "#20342a"
+    },
+    {
+      "hour": 18,
+      "tick": 2701,
+      "expectedSky": "#1e3027"
+    },
+    {
+      "hour": 0,
+      "tick": 4201,
+      "expectedSky": "#1c2d24"
+    },
+    {
+      "hour": 6,
+      "tick": 5702,
+      "expectedSky": "#1e3027"
+    }
+  ],
+  "panels": {
+    "bestiary0": {
+      "open": true,
+      "client": {
+        "w": 376,
+        "h": 340
+      },
+      "scroll": {
+        "w": 376,
+        "h": 977
+      },
+      "overflowsY": true,
+      "text": "EXIT\nBESTIARY\n\nwhat each one has on file\n\ngazer_01 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent2 of 60\npermanent0 of 12\nhow it knowsseen 2 / told 0 / guessed 0 / made up 0\n\nnothing permanent yet\n\n·seen the player fed gazer_01 after hesitating 0.0 seconds\n·seen the player cleaned gazer_01\ngazer_02 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent1 of 60\npermanent0 of 12\nhow it knowsseen 1 / told 0 / guessed 0 / made up 0\n\nnothing permanent yet\n\n·seen the player fed gazer_02 after hesitating 0.0 seconds\ngazer_03 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent0 of 60\npermanent0 of 12\nhow it knowsseen 0 / told 0 / guessed 0 / made up 0\n\nnothing permanent yet\n\nnothing recent\n\nWORLD RECORD\nDAY 112:01\never lived3\ngone0\nhighest generation1\ncare ledgerfed 2 · cleaned 1 · died 0\nnames givennone yet\ngaze received4s\nshell clockhas not confessed yet\nlast broadcastquiet"
+    },
+    "lineage0": {
+      "open": true,
+      "client": {
+        "w": 376,
+        "h": 188
+      },
+      "scroll": {
+        "w": 376,
+        "h": 188
+      },
+      "overflowsY": false,
+      "text": "EXIT\nLINEAGE\n\nGrey nodes are gone. What they learned is not.\n\ngazer_01\ngazer_02\ngazer_03"
+    },
+    "manual0": {
+      "open": true,
+      "client": {
+        "w": 376,
+        "h": 340
+      },
+      "scroll": {
+        "w": 376,
+        "h": 1525
+      },
+      "overflowsY": true,
+      "text": "EXIT\nMANUAL\nWhat this is\n\nThis is a 1997 virtual pet game that was never a pet game. You believe you are raising a small creature. You are raising a model.\n\nThe creature remembers, misremembers, repeats what it was told, and occasionally says something only you could have said. Nothing here is a jump scare.\n\nThe goal\n\nKeep it alive long enough to find out what it thinks you are. Feeding and cleaning raise GAZE, the phase meter: the world speaks more, and the shapes it speaks in get less comfortable.\n\nGAZE is reversible. Push it back down and the world gets quieter, not more innocent.\nWhat the creatures conclude about you is not reversible. It is recorded once and stays.\nControls\n\nOne creature, one pointer. Everything is a click or a wait, and the wait is measured.\n\nClick the creature to offer food. How long you hesitated is stored with the event.\nRight-click the creature to clean it. It remembers being handled either way.\nHold to pet it. Keep holding to give it a name. Drag to carry it somewhere else.\nDouble-click to look into its eye. What you see in there changes with the phase.\nTwo content creatures will court on their own and leave an egg. Click the egg to choose how it hatches, or leave that choice to them.\nHold still and the world keeps its own time. Idling is also an action.\nOpen the bestiary to read what each one actually remembers.\nThe swarm\n\nSeveral creatures, one voice at a time. They gossip: two of them close together for a few seconds pass a memory on, and what arrives is not always what left.\n\nThey do not track what is true. They track what they believe, and a belief with no origin still drives them.\n\nA line marked witnessed was seen first-hand. A line marked heard was passed along.\nA distorted memory is stored as witnessed. The holder genuinely cannot tell, and only the mark shows you.\nWhat it thinks you are\n\nEvery thing in this world has a kind, a reason it stays the same thing over time, and a way of knowing. The kind is the part that moves.\n\nA creature is a pet while you believe it is. Later the same creature is an organism, then an observer. The body never changed; the category did.\n\nA category never moves backwards. The record is append-only, and a later quiet stage does not undo it.\nYou have an entry too, and you cannot write to it.\nThe silent run\n\nSometimes the world runs and nobody is home. The creatures still move, still get hungry, still die. Nothing speaks.\n\nThis is not an error state and there is no loading spinner. Silence is one of the things the model can do, and it is scripted."
+    },
+    "bestiary4": {
+      "open": true,
+      "client": {
+        "w": 376,
+        "h": 340
+      },
+      "scroll": {
+        "w": 376,
+        "h": 1417
+      },
+      "overflowsY": true,
+      "text": "EXIT\nBESTIARY\n\nwhat each one has on file\n\ngazer_01 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent6 of 60\npermanent2 of 12\nhow it knowsseen 6 / told 0 / guessed 0 / made up 0\n[cons_001] the player fed gazer_01 after hesitating 0.0 seconds\n[cons_002] the player cleaned gazer_01\n·seen the player fed gazer_01 after hesitating 0.0 seconds\n·seen the player cleaned gazer_01\n·seen the player fed gazer_01 after hesitating 0.0 seconds\n·seen the player fed gazer_01 after hesitating 0.0 seconds\n·seen the player fed gazer_01 after hesitating 0.0 seconds\n·seen the player fed gazer_01 after hesitating 0.0 seconds\ngazer_02 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent5 of 60\npermanent2 of 12\nhow it knowsseen 1 / told 3 / guessed 0 / made up 1\n[cons_001] the player fed gazer_02 after hesitating 0.0 seconds\n[cons_002] the player cleaned gazer_01\n·seen the player fed gazer_02 after hesitating 0.0 seconds\n˙told the player cleaned gazer_01 from gazer_01\n×made up the player fed gazer_01 after hesitating 0.0 seconds It was meant for you.\n˙told the player fed gazer_01 after hesitating 0.0 seconds from gazer_01\n˙told the player fed gazer_01 after hesitating 0.0 seconds from gazer_01\ngazer_03 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent3 of 60\npermanent0 of 12\nhow it knowsseen 0 / told 2 / guessed 0 / made up 1\n\nnothing permanent yet\n\n˙told the player fed gazer_01 after hesitating 0.0 seconds from gazer_02\n˙told the player fed gazer_01 after hesitating 0.0 seconds from gazer_02\n×made up the player fed gazer_01 after hesitating 0.0 seconds It happened again, and it lasted longer.\nWORLD RECORD\nDAY 812:02\never lived3\ngone0\nhighest generation1\ncare ledgerfed 6 · cleaned 1 · died 0\nnames givennone yet\ngaze received153s\nshell clock06:16\nlast broadcastyesterday's grief has been archived. retrieval is unavailable."
+    },
+    "lineage4": {
+      "open": true,
+      "client": {
+        "w": 376,
+        "h": 188
+      },
+      "scroll": {
+        "w": 376,
+        "h": 188
+      },
+      "overflowsY": false,
+      "text": "EXIT\nLINEAGE\n\nGrey nodes are gone. What they learned is not.\n\ngazer_01\ngazer_02\ngazer_03"
+    },
+    "lineage5": {
+      "open": true,
+      "client": {
+        "w": 376,
+        "h": 209
+      },
+      "scroll": {
+        "w": 376,
+        "h": 209
+      },
+      "overflowsY": false,
+      "text": "EXIT\nLINEAGE\n\nGrey nodes are gone. What they learned is not.\n\ngazer_01\ngazer_02\ngazer_03\ngazer_4"
+    },
+    "bestiary5": {
+      "open": true,
+      "client": {
+        "w": 376,
+        "h": 340
+      },
+      "scroll": {
+        "w": 376,
+        "h": 1604
+      },
+      "overflowsY": true,
+      "text": "EXIT\nBESTIARY\n\nwhat each one has on file\n\ngazer_01 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent6 of 60\npermanent2 of 12\nhow it knowsseen 6 / told 0 / guessed 0 / made up 0\n[cons_001] the player fed gazer_01 after hesitating 0.0 seconds\n[cons_002] the player cleaned gazer_01\n·seen the player fed gazer_01 after hesitating 0.0 seconds\n·seen the player cleaned gazer_01\n·seen the player fed gazer_01 after hesitating 0.0 seconds\n·seen the player fed gazer_01 after hesitating 0.0 seconds\n·seen the player fed gazer_01 after hesitating 0.0 seconds\n·seen the player fed gazer_01 after hesitating 0.0 seconds\ngazer_02 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent5 of 60\npermanent2 of 12\nhow it knowsseen 1 / told 3 / guessed 0 / made up 1\n[cons_001] the player fed gazer_02 after hesitating 0.0 seconds\n[cons_002] the player cleaned gazer_01\n·seen the player fed gazer_02 after hesitating 0.0 seconds\n˙told the player cleaned gazer_01 from gazer_01\n×made up the player fed gazer_01 after hesitating 0.0 seconds It was meant for you.\n˙told the player fed gazer_01 after hesitating 0.0 seconds from gazer_01\n˙told the player fed gazer_01 after hesitating 0.0 seconds from gazer_01\ngazer_03 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent3 of 60\npermanent0 of 12\nhow it knowsseen 0 / told 2 / guessed 0 / made up 1\n\nnothing permanent yet\n\n˙told the player fed gazer_01 after hesitating 0.0 seconds from gazer_02\n˙told the player fed gazer_01 after hesitating 0.0 seconds from gazer_02\n×made up the player fed gazer_01 after hesitating 0.0 seconds It happened again, and it lasted longer.\ngazer_4 gen 3\ntrust0.00\ntemperamentloyalty 0.50, clinging 0.50\nrecent0 of 60\npermanent0 of 12\nhow it knowsseen 0 / told 0 / guessed 0 / made up 0\n\nnothing permanent yet\n\nnothing recent\n\nWORLD RECORD\nDAY 812:04\never lived4\ngone0\nhighest generation3\ncare ledgerfed 6 · cleaned 1 · died 0\nnames givennone yet\ngaze received197s\nshell clock06:16\nlast broadcastyesterday's grief has been archived. retrieval is unavailable."
+    }
+  },
+  "notes": [
+    "面板 04-panel-bestiary-spring 出现纵向溢出滚动 (scrollH=977 clientH=340)",
+    "面板 06-panel-manual 出现纵向溢出滚动 (scrollH=1525 clientH=340)",
+    "!! naming panel 未能打开(长按 950ms 未触发)",
+    "午夜相位: 注意 HUD 时钟、午夜静音(speech gate)与天空最暗点",
+    "shell_clock 标签出现与否: uiLabels={\"shell_clock\":\"06:16\",\"news_ticker\":\"yesterday's grief has been archived. retrieval is unavailable.\"}",
+    "面板 21-panel-bestiary-bleak 出现纵向溢出滚动 (scrollH=1417 clientH=340)",
+    "繁殖链路走通: 蛋 → 孵化选择 → 出生(家谱应有 parentLinks)",
+    "面板 26-panel-bestiary-memories 出现纵向溢出滚动 (scrollH=1604 clientH=340)",
+    "面板 29-panel-manual-zh 出现纵向溢出滚动 (scrollH=1243 clientH=340)"
+  ],
+  "llmCalls": [
+    {
+      "t": 1794462735655,
+      "status": 200
+    }
+  ],
+  "errors": [
+    "console: The script has an unsupported MIME type ('text/html')."
+  ],
+  "finalState": {
+    "tick": 8415,
+    "gv": 80.82,
+    "stage": 4,
+    "silent": true,
+    "paletteDecay": 0,
+    "structures": [],
+    "eggs": [
+      {
+        "id": "egg_7507_gazer_01",
+        "at": {
+          "x": 7,
+          "y": 7
+        }
+      },
+      {
+        "id": "egg_7515_gazer_01",
+        "at": {
+          "x": 7,
+          "y": 7
+        }
+      },
+      {
+        "id": "egg_8414_gazer_01",
+        "at": {
+          "x": 5,
+          "y": 9
+        }
+      }
+    ],
+    "creatures": [
+      {
+        "id": "gazer_01",
+        "tile": {
+          "x": 5,
+          "y": 8
+        },
+        "behavior": "idle",
+        "name": null,
+        "hunger": 83.17499999999993,
+        "happiness": 98.80000000000007
+      },
+      {
+        "id": "gazer_02",
+        "tile": {
+          "x": 5,
+          "y": 9
+        },
+        "behavior": "idle",
+        "name": null,
+        "hunger": 83.17499999999993,
+        "happiness": 98.80000000000007
+      },
+      {
+        "id": "gazer_03",
+        "tile": {
+          "x": 4,
+          "y": 11
+        },
+        "behavior": "idle",
+        "name": null,
+        "hunger": 83.17499999999993,
+        "happiness": 98.80000000000007
+      },
+      {
+        "id": "gazer_4",
+        "tile": {
+          "x": 5,
+          "y": 8
+        },
+        "behavior": "idle",
+        "name": null,
+        "hunger": 73.69999999999993,
+        "happiness": 78.80000000000007
+      }
+    ],
+    "uiLabels": {
+      "shell_clock": "06:16",
+      "news_ticker": "yesterday's grief has been archived. retrieval is unavailable."
+    }
+  }
+}

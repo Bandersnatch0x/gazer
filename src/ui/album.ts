@@ -6,14 +6,18 @@
  * 所以每只生物都带一个来源计数，且工作记忆逐条标出来源。
  */
 
-import type { CreatureId } from "../sim/types";
+import type { CreatureId, WorldState } from "../sim/types";
 import type { ConsolidatedEntry, MemoryEntry, MemorySlice } from "../sim/memory";
 import { CONSOLIDATED_CAPACITY, WORKING_CAPACITY } from "../sim/memory";
 import type { GenomeTraits } from "../sim/genome";
 import { topTraits } from "../sim/genome";
+import type { Telemetry } from "../director/telemetry";
+import { worldCalendarAt } from "../sim/clock";
+import { NEWS_TICKER_LABEL } from "../sim/news";
+import { beliefAboutPlayer, factionOf } from "../sim/social";
 import type { Locale, Text } from "./i18n";
 import { t, tf } from "./i18n";
-import { COPY } from "./copy";
+import { COPY, localizeFact } from "./copy";
 import { countByStatus, displayStatus, witnessElement, type WitnessCounts } from "./witness";
 import type { Doc } from "./shell";
 import { el } from "./shell";
@@ -96,6 +100,91 @@ export function albumRows(creatures: readonly AlbumCreature[], locale: Locale): 
   return creatures.map((creature) => albumRow(creature, locale));
 }
 
+// ---------------------------------------------------------------------------
+// 世界纪念(shell 壳层段,票 0011;决策 0001 边界)
+//
+// 纪念条目是壳层数据:render 时刻从 (world, telemetry) 只读推导,不存进
+// WorldState、不新增任何 sim 写入。世界记住的是这次周目本身——来过的每一
+// 只、给过的每个名字、养护账、收到过的注视,以及壳自己坦白的漂移和播报。
+// ---------------------------------------------------------------------------
+
+export interface WorldMemorial {
+  /** 第几日(1 起)。 */
+  readonly day: number;
+  /** 世界钟面 HH:MM(诚实面,非壳层漂移面)。 */
+  readonly clock: string;
+  /** 在册总数(死去的仍在册,家谱同规)。 */
+  readonly everLived: number;
+  /** 其中不在了的。 */
+  readonly gone: number;
+  /** 达到过的最高世代。 */
+  readonly maxGeneration: number;
+  readonly feeds: number;
+  readonly cleans: number;
+  readonly deaths: number;
+  /** 玩家给过的名字,按给出顺序。 */
+  readonly names: readonly string[];
+  /** 收到的注视,取整秒。 */
+  readonly gazeSeconds: number;
+  /** 壳层钟最后一次坦白的面(W4);未坦白为 null。 */
+  readonly shellClock: string | null;
+  /** 最近一次壳层播报(伪新闻);还没有为 null。 */
+  readonly news: string | null;
+  /** 群内并存的派系数(tender/wrong);少于两派为 0——派系句只在两派并存时可见。 */
+  readonly factions: number;
+}
+
+function pad2(value: number): string {
+  return value < 10 ? `0${value}` : `${value}`;
+}
+
+/** 只读推导:同一 (world, telemetry) 永远推出同一份纪念。 */
+export function worldMemorialFor(world: WorldState, telemetry: Telemetry): WorldMemorial {
+  const creatures = Object.values(world.creatures);
+  const calendar = worldCalendarAt(world.tick);
+  let gone = 0;
+  let maxGeneration = 1;
+  for (const creature of creatures) {
+    if (creature.behavior === "dead") {
+      gone += 1;
+    }
+    const generation = creature.genome?.generation ?? 1;
+    if (generation > maxGeneration) {
+      maxGeneration = generation;
+    }
+  }
+  return {
+    day: calendar.day + 1,
+    clock: `${pad2(calendar.hour)}:${pad2(calendar.minute)}`,
+    everLived: creatures.length,
+    gone,
+    maxGeneration,
+    feeds: telemetry.feeds,
+    cleans: telemetry.cleans,
+    deaths: telemetry.deaths,
+    names: [...telemetry.namedNames],
+    gazeSeconds: Number.isFinite(telemetry.stareMs) ? Math.max(0, Math.round(telemetry.stareMs / 1000)) : 0,
+    shellClock: world.uiLabels["shell_clock"] ?? null,
+    news: world.uiLabels[NEWS_TICKER_LABEL] ?? null,
+    factions: countFactions(world),
+  };
+}
+
+/** 派系数(票 0006 §6):按各生物对玩家的信念聚类,两派并存时图鉴才说那句话。 */
+function countFactions(world: WorldState): number {
+  const seen = new Set<string>();
+  for (const creature of Object.values(world.creatures)) {
+    if (creature.behavior === "dead") {
+      continue;
+    }
+    const faction = factionOf(beliefAboutPlayer(world.memories?.[creature.id]));
+    if (faction !== null) {
+      seen.add(faction);
+    }
+  }
+  return seen.size;
+}
+
 function field(doc: Doc, className: string, label: string, value: string): HTMLElement {
   return el(doc, "div", {
     className,
@@ -114,7 +203,7 @@ function memoryLine(doc: Doc, entry: MemoryEntry, locale: Locale): HTMLElement {
   return el(doc, "li", {
     className: "gazer-album__memory",
     attrs: { "data-memory-id": entry.id, "data-status": status },
-    children: [witness, doc.createTextNode(` ${entry.fact}${source}`)],
+    children: [witness, doc.createTextNode(` ${localizeFact(entry.fact, locale)}${source}`)],
   });
 }
 
@@ -192,7 +281,76 @@ function rowNode(doc: Doc, row: AlbumRow, locale: Locale): HTMLElement {
 
 export interface AlbumView {
   readonly root: HTMLElement;
-  render(creatures: readonly AlbumCreature[], locale: Locale): void;
+  render(creatures: readonly AlbumCreature[], memorial: WorldMemorial, locale: Locale): void;
+}
+
+/** 纪念段:一段标题 + 一列只读字段。双语全部走 COPY 池,零裸英文。 */
+function memorialNode(doc: Doc, memorial: WorldMemorial, locale: Locale): HTMLElement {
+  const careValue = tf(locale, COPY.album.memorialCareValue, {
+    feeds: memorial.feeds,
+    cleans: memorial.cleans,
+    deaths: memorial.deaths,
+  });
+  const namesValue =
+    memorial.names.length === 0
+      ? t(locale, COPY.album.memorialNoNames)
+      : memorial.names.join(", ");
+  const shellValue =
+    memorial.shellClock === null
+      ? t(locale, COPY.album.memorialShellSilent)
+      : memorial.shellClock;
+  const newsValue =
+    memorial.news === null ? t(locale, COPY.album.memorialNoNews) : memorial.news;
+  const fields = el(doc, "div", {
+    className: "gazer-album__meta",
+    children: [
+      field(
+        doc,
+        "gazer-album__field",
+        tf(locale, COPY.hud.dayLabel, { n: memorial.day }),
+        memorial.clock,
+      ),
+      field(doc, "gazer-album__field", t(locale, COPY.album.memorialEverLived), `${memorial.everLived}`),
+      field(doc, "gazer-album__field", t(locale, COPY.album.memorialGone), `${memorial.gone}`),
+      field(
+        doc,
+        "gazer-album__field",
+        t(locale, COPY.album.memorialGeneration),
+        `${memorial.maxGeneration}`,
+      ),
+      field(doc, "gazer-album__field", t(locale, COPY.album.memorialCare), careValue),
+      field(doc, "gazer-album__field", t(locale, COPY.album.memorialNames), namesValue),
+      field(
+        doc,
+        "gazer-album__field",
+        t(locale, COPY.album.memorialGaze),
+        tf(locale, COPY.album.memorialGazeValue, { seconds: memorial.gazeSeconds }),
+      ),
+      field(doc, "gazer-album__field", t(locale, COPY.album.memorialShellClock), shellValue),
+      field(doc, "gazer-album__field", t(locale, COPY.album.memorialNews), newsValue),
+    ],
+  });
+  // 派系句(票 0017 死键接线):两派并存时图鉴才说这句话。
+  const factionLine =
+    memorial.factions >= 2 ? el(doc, "p", { text: t(locale, COPY.album.factions) }) : null;
+  // 塔条目(票 0017 死键接线):全图鉴唯一永远空着的条目。
+  const towerEntry = el(doc, "section", {
+    className: "gazer-album__memorial-tower",
+    children: [
+      el(doc, "h3", { className: "gazer-album__memorial-title", text: t(locale, COPY.album.towerTitle) }),
+      el(doc, "p", { text: t(locale, COPY.album.towerEntry) }),
+    ],
+  });
+  return el(doc, "div", {
+    className: "gazer-album__memorial",
+    attrs: { "data-memorial": "world" },
+    children: [
+      el(doc, "h2", { className: "gazer-album__memorial-title", text: t(locale, COPY.album.memorialTitle) }),
+      fields,
+      ...(factionLine === null ? [] : [factionLine]),
+      towerEntry,
+    ],
+  });
 }
 
 export function createAlbum(doc: Doc, locale: Locale): AlbumView {
@@ -210,7 +368,7 @@ export function createAlbum(doc: Doc, locale: Locale): AlbumView {
 
   return {
     root,
-    render(creatures, active) {
+    render(creatures, memorial, active) {
       title.textContent = t(active, COPY.album.title);
       subtitle.textContent = t(active, COPY.album.subtitle);
       root.setAttribute("aria-label", t(active, COPY.album.title));
@@ -219,11 +377,12 @@ export function createAlbum(doc: Doc, locale: Locale): AlbumView {
         list.append(
           el(doc, "p", { className: "gazer-album__empty", text: t(active, COPY.album.empty) }),
         );
-        return;
+      } else {
+        for (const row of albumRows(creatures, active)) {
+          list.append(rowNode(doc, row, active));
+        }
       }
-      for (const row of albumRows(creatures, active)) {
-        list.append(rowNode(doc, row, active));
-      }
+      list.append(memorialNode(doc, memorial, active));
     },
   };
 }

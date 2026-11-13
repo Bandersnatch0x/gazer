@@ -30,6 +30,12 @@ export interface ContextInput {
    * newest remembered tick, which keeps assembly deterministic.
    */
   readonly tick?: number;
+  /**
+   * The reader's locale (playtest p3 finding §2): emitted as a LANGUAGE
+   * directive so the model writes the turns' text in the player's voice.
+   * Optional; absent means English.
+   */
+  readonly locale?: string;
 }
 
 export const TOKEN_BUDGET = 600;
@@ -310,6 +316,10 @@ function assembleContext(
   sections.push(
     `BUDGET\n2..4 turns | cite only your own memoryRef | mood from: ${MOODS.join(",")}`,
   );
+
+  if (input.locale !== undefined) {
+    sections.push(`LANGUAGE\nwrite every turn's text in ${input.locale}`);
+  }
 
   return sections.join("\n\n");
 }

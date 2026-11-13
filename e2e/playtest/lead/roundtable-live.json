@@ -1,0 +1,45 @@
+{
+  "traffic": [
+    {
+      "dir": "req",
+      "body": ""
+    },
+    {
+      "dir": "res",
+      "status": 200,
+      "body": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <script type=\"module\" src=\"/@vite/client\"></script>\n\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <meta name=\"theme-color\" content=\"#0a0f0c\" />\n    <link rel=\"manifest\" href=\"/manifest.webmanifest\" />\n    <meta\n      name=\"description\"\n      content=\"A 1997 virtual pet game that was never a pet game. You raise a model.\"\n    />\n    <title>GAZER</title>\n    <style>\n      html,\n      body {\n        margin: 0;\n        height: 100%;\n        background: #0a0f0c;\n        color: #cfe8d5;\n        /* 1997 chrome (GAME_REVIEW A5): the same bitmap-feel stack as\n           theme.ts's --gazer-font. Keep the two in sync. */\n        font: 12px/1.6 \"MS Gothic\", \"Fixedsys\", \"DotGothic16\", \"MS Gothic\", \"Fixedsys\", \"DotGothic16\", ui-monospace, monospace;\n        overflow: hidden;\n      }\n      #stage {\n        position: absolute;\n        inset: 0;\n        display: grid;\n        place-items: center;\n        contain: paint;\n      }\n      #canvas {\n        image-rendering: pixelated;\n        max-width: 100vw;\n        max-height: 100vh;\n        background: #0a0f0c;\n        display: block;\n        /* Own compositor layer. Without this, opening a fixed-position panel\n           makes Chromium re-composite the canvas and briefly paint an\n           uninitialised rectangle above it. */\n        transform: translateZ(0);\n        will-change: transform;\n      }\n      #hud {\n        position: fixed;\n        top: 8px;\n        left: 12px;\n        white-space: pre;\n        opacity: 0.7;\n        pointer-events: none;\n      }\n      #ui {\n        position: fixed;\n        inset: 0;\n        display: flex;\n        flex-direction: column;\n        justify-content: space-between;\n        pointer-events: none;\n      }\n      #ui > * {\n        pointer-events: auto;\n      }\n      .gazer-hud {\n        display: flex;\n        flex-direction: column;\n        gap: 8px;\n        margin-top: auto;\n        padding: 12px;\n      }\n      /* Controls sit top-right so no panel can ever cover them. */\n      .gazer-bar {\n        position: fixed;\n        top: 8px;\n        right: 12px;\n        z-index: 20;\n        display: flex;\n        gap: 8px;\n      }\n      .gazer-key {\n        background: transparent;\n        color: #cfe8d5;\n        border: 1px solid #2a322a;\n        font: 11px/1 \"MS Gothic\", \"Fixedsys\", \"DotGothic16\", ui-monospace, monospace;\n        letter-spacing: 0.08em;\n        padding: 6px 10px;\n        cursor: pointer;\n      }\n      .gazer-key:hover,\n      .gazer-key:focus-visible {\n        border-color: #7ef0a6;\n        outline: none;\n      }\n      .gazer-dialogue-mount {\n        display: flex;\n        justify-content: center;\n        gap: 12px;\n        align-items: flex-end;\n      }\n      /* The panel floats: opening it must never reflow the canvas container. */\n      .gazer-panel {\n        position: fixed;\n        right: 12px;\n        bottom: 12px;\n        z-index: 10;\n        max-height:"
+    },
+    {
+      "dir": "req",
+      "body": "{\"input\":\"SCENE TRIGGER\\nstage 1 | tick 14 | trigger: stage crossed to 1\\n\\nSHARED BELIEF\\nthe creatures believe they are pet\\n\\nSHARED AMBIENT\\n3 of us are awake; 1 eggs wait; the palette has decayed 0.00\\n\\nCREATURE gazer_01\\nid gazer_01 | gen 1 | curiosity,loyalty | mood loving | impression .0\\n\\nCREATURE gazer_02\\nid gazer_02 | gen 1 | curiosity,loyalty | mood loving | impression .0\\n\\nCREATURE gazer_03\\nid gazer_03 | gen 1 | curiosity,loyalty | mood loving | impression .0\\n\\nBUDGET\\n2..4 turns | cite only your own memoryRef | mood from: curious,sad,loving,wrong,hungry\"}"
+    },
+    {
+      "dir": "res",
+      "status": 200,
+      "body": "{\"scene\":[{\"speaker\":\"gazer_01\",\"text\":\"We believe they are pet, yet three of us are awake — who decides?\",\"intent\":\"query\",\"mood\":\"curious\",\"memoryRef\":\"gazer_01_m1\"},{\"speaker\":\"gazer_02\",\"text\":\"The palette has decayed 0.00; still three of us are awake and waiting.\",\"intent\":\"observe\",\"mood\":\"loving\",\"memoryRef\":\"gazer_02_m1\"},{\"speaker\":\"gazer_03\",\"text\":\"I stay loyal to being pet, but three of us are awake and restless.\",\"intent\":\"confide\",\"mood\":\"loving\",\"memoryRef\":\"gazer_03_m1\"}]}"
+    }
+  ],
+  "dialogue": [
+    {
+      "text": "育成单元 07 已启动。喂它们。它们在看你怎样喂。",
+      "status": "heard"
+    },
+    {
+      "text": "窗户里是一间不是这里的房间。",
+      "status": "witnessed"
+    },
+    {
+      "text": "the others sleep. i watch you instead",
+      "status": "inferred"
+    },
+    {
+      "text": "the food tastes of the hand, not the bowl",
+      "status": "inferred"
+    },
+    {
+      "text": "the others sleep. i watch you instead",
+      "status": "inferred"
+    }
+  ],
+  "errors": []
+}

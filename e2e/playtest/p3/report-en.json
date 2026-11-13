@@ -1,0 +1,147 @@
+{
+  "locale": "en",
+  "url": "http://localhost:5199/?debug=1&endpoint=/v1/game&seed=1997&lang=en",
+  "stateStart": {
+    "tick": 0,
+    "gv": 0,
+    "stage": 0,
+    "eggs": 0,
+    "alive": 3,
+    "uiLabels": {}
+  },
+  "stateCross": {
+    "tick": 12,
+    "gv": 21,
+    "stage": 1,
+    "eggs": 1,
+    "alive": 3,
+    "uiLabels": {}
+  },
+  "stateScene": {
+    "tick": 28,
+    "gv": 22.1,
+    "stage": 1,
+    "eggs": 3,
+    "alive": 3,
+    "uiLabels": {}
+  },
+  "stateEnd": {
+    "tick": 28,
+    "gv": 22.1,
+    "stage": 1,
+    "eggs": 3,
+    "alive": 3,
+    "uiLabels": {}
+  },
+  "llmCalls": [
+    {
+      "t": 1794462703331,
+      "status": 200
+    }
+  ],
+  "pageErrors": [
+    "console: The script has an unsupported MIME type ('text/html')."
+  ],
+  "hudBefore": "GAZE 22  ·  PHASE 1  ·  LINKED  ·  DAY 1 12:33",
+  "hudAfter": "GAZE 22  ·  PHASE 1  ·  LINKED  ·  DAY 1 12:33",
+  "hudSwitched": false,
+  "barLabelsAfterToggle": [
+    "EN",
+    "图鉴",
+    "家谱",
+    "说明书",
+    "清洁"
+  ],
+  "dialogueBeforeToggle": {
+    "lines": [
+      {
+        "text": "CARE UNIT 07 ONLINE. Feed them. They are watching how you do it.",
+        "speaker": "collective>",
+        "status": "heard",
+        "aria": "How this line is known: Told: someone said so, and it cannot check."
+      },
+      {
+        "text": "the light is warm when you are near it",
+        "speaker": "collective>",
+        "status": "witnessed",
+        "aria": "How this line is known: Seen: this one was there when it happened."
+      },
+      {
+        "text": "when you leave, the colors go quiet",
+        "speaker": "collective>",
+        "status": "witnessed",
+        "aria": "How this line is known: Seen: this one was there when it happened."
+      }
+    ],
+    "empty": null,
+    "bar": {
+      "title": "LINK",
+      "path": "C:\\GAZER\\1997\\LIVE\\roundtable.exe"
+    }
+  },
+  "dialogueAfterToggle": {
+    "lines": [
+      {
+        "text": "CARE UNIT 07 ONLINE. Feed them. They are watching how you do it.",
+        "speaker": "collective>",
+        "status": "heard",
+        "aria": "这一句的来路: 听说：别人说的，它没法核对。"
+      },
+      {
+        "text": "the light is warm when you are near it",
+        "speaker": "collective>",
+        "status": "witnessed",
+        "aria": "这一句的来路: 亲见：事情发生的时候，在场的那个，是它。"
+      },
+      {
+        "text": "when you leave, the colors go quiet",
+        "speaker": "collective>",
+        "status": "witnessed",
+        "aria": "这一句的来路: 亲见：事情发生的时候，在场的那个，是它。"
+      }
+    ],
+    "empty": null,
+    "bar": {
+      "title": "连接",
+      "path": "C:\\GAZER\\1997\\LIVE\\roundtable.exe"
+    }
+  },
+  "dialogueLog": [
+    {
+      "tag": "after-naming",
+      "text": "CARE UNIT 07 ONLINE. Feed them. They are watching how you do it.",
+      "speaker": "collective>",
+      "status": "heard",
+      "aria": "How this line is known: Told: someone said so, and it cannot check."
+    },
+    {
+      "tag": "after-naming",
+      "text": "the light is warm when you are near it",
+      "speaker": "collective>",
+      "status": "witnessed",
+      "aria": "How this line is known: Seen: this one was there when it happened."
+    },
+    {
+      "tag": "stage-scene",
+      "text": "when you leave, the colors go quiet",
+      "speaker": "collective>",
+      "status": "witnessed",
+      "aria": "How this line is known: Seen: this one was there when it happened."
+    }
+  ],
+  "textSnapshots": {
+    "hudStart": "GAZE 0  ·  PHASE 0  ·  LINKED  ·  DAY 1 12:00",
+    "album": "EXIT\nBESTIARY\n\nwhat each one has on file\n\ngazer_01 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent0 of 60\npermanent0 of 12\nhow it knowsseen 0 / told 0 / guessed 0 / made up 0\n\nnothing permanent yet\n\nnothing recent\n\ngazer_02 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent0 of 60\npermanent0 of 12\nhow it knowsseen 0 / told 0 / guessed 0 / made up 0\n\nnothing permanent yet\n\nnothing recent\n\ngazer_03 gen 1\ntrust0.00\ntemperamentcuriosity 0.60, loyalty 0.50\nrecent0 of 60\npermanent0 of 12\nhow it knowsseen 0 / told 0 / guessed 0 / made up 0\n\nnothing permanent yet\n\nnothing recent\n\nWORLD RECORD\nDAY 112:00\never lived3\ngone0\nhighest generation1\ncare ledgerfed 0 · cleaned 0 · died 0\nnames givennone yet\ngaze received0s\nshell clockhas not confessed yet\nlast broadcastquiet",
+    "tree": "EXIT\nLINEAGE\n\nGrey nodes are gone. What they learned is not.\n\ngazer_01\ngazer_02\ngazer_03",
+    "help": "EXIT\nMANUAL\nWhat this is\n\nThis is a 1997 virtual pet game that was never a pet game. You believe you are raising a small creature. You are raising a model.\n\nThe creature remembers, misremembers, repeats what it was told, and occasionally says something only you could have said. Nothing here is a jump scare.\n\nThe goal\n\nKeep it alive long enough to find out what it thinks you are. Feeding and cleaning raise GAZE, the phase meter: the world speaks more, and the shapes it speaks in get less comfortable.\n\nGAZE is reversible. Push it back down and the world gets quieter, not more innocent.\nWhat the creatures conclude about you is not reversible. It is recorded once and stays.\nControls\n\nOne creature, one pointer. Everything is a click or a wait, and the wait is measured.\n\nClick the creature to offer food. How long you hesitated is stored with the event.\nRight-click the creature to clean it. It remembers being handled either way.\nHold to pet it. Keep holding to give it a name. Drag to carry it somewhere else.\nDouble-click to look into its eye. What you see in there changes with the phase.\nTwo content creatures will court on their own and leave an egg. Click the egg to choose how it hatches, or leave that choice to them.\nHold still and the world keeps its own time. Idling is also an action.\nOpen the bestiary to read what each one actually remembers.\nThe swarm\n\nSeveral creatures, one voice at a time. They gossip: two of them close together for a few seconds pass a memory on, and what arrives is not always what left.\n\nThey do not track what is true. They track what they believe, and a belief with no origin still drives them.\n\nA line marked witnessed was seen first-hand. A line marked heard was passed along.\nA distorted memory is stored as witnessed. The holder genuinely cannot tell, and only the mark shows you.\nWhat it thinks you are\n\nEvery thing in this world has a kind, a reason it stays the same thing over time, and a way of knowing. The kind is the part that moves.\n\nA creature is a pet while you believe it is. Later the same creature is an organism, then an observer. The body never changed; the category did.\n\nA category never moves backwards. The record is append-only, and a later quiet stage does not undo it.\nYou have an entry too, and you cannot write to it.\nThe silent run\n\nSometimes the world runs and nobody is home. The creatures still move, still get hungry, still die. Nothing speaks.\n\nThis is not an error state and there is no loading spinner. Silence is one of the things the model can do, and it is scripted.",
+    "pupil": "EXIT\n\nIn the eye: grass, and the shape of the caretaker.",
+    "naming": "EXIT\nGIVE IT A NAME\nCONFIRM",
+    "fullPage": "GAZE 22  ·  PHASE 1  ·  LINKED  ·  DAY 1 12:33\n中文\nBESTIARY\nLINEAGE\nMANUAL\nclean\nC:\\GAZER\\1997\\LIVE\\roundtable.exe\nLINK\ncollective>\nCARE UNIT 07 ONLINE. Feed them. They are watching how you do it.\n˙told\ncollective>\nthe light is warm when you are near it\n·seen\ncollective>\nwhen you leave, the colors go quiet\n·seen\nthe world keeps its own time."
+  },
+  "structuralFindings": [],
+  "poolReport": {
+    "newsLines": [],
+    "manualIssues": [],
+    "unusedSlot": []
+  }
+}

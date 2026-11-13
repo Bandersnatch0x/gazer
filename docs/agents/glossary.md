@@ -22,3 +22,12 @@
 | 圆桌(roundtable) | 一次调用生成 2..4 句剧本;单模型扮演多角色 | `docs/design/ARCHITECTURE.md` |
 | Silent Run | 无模型时的静默运行:世界照常,无人说话,第 40 分钟一句脚本台词 | `docs/design/ARCHITECTURE.md` |
 | 效应原语(effect primitive) | 引擎唯一接受的演出词汇;导演只能组合,不能发渲染调用 | `src/sim/effects.ts` |
+| 眼块(eye block) | 个体 8×8 sprite 内 rows1–4 × cols2–5 的 4×4 区域;瞳孔与高光的运动域 | `docs/design/art/ART-CORE-01-sprite.md` |
+| 锚位(anchor) | 瞳孔 P 的 5 个合法落位:CENTER/TL/TR/BL/BR;400ms 评估、1px 步进无插值 | `docs/design/art/ART-CORE-01-sprite.md` |
+| 微帧(micro-frame) | 姿势内两帧交替(呼吸/进食/睡眠下沉);眼四行不动 | `docs/design/art/ART-CORE-01-sprite.md` |
+| 特写(closeup) | 点击个体眼睛触发的 16×16 全屏覆盖层,V1–V4 四变体;独立 UI 层 | `docs/design/art/ART-CORE-01-sprite.md` |
+| 终端(terminal) | 阶段 3 起常驻的 DOS 风对话窗;独立 UI 层,自有 864×156 逻辑画布;只显示回合不参与生成 | `docs/design/art/ART-CORE-02-terminal.md` |
+| 终端侵蚀(erosion) | GV 80–100 六次一次性事件序:漂移/历史自改/标题异变/光标自由/输入劫持/静默帧 | `docs/design/art/ART-CORE-02-terminal.md` |
+| 黑塔正典位 | 塔恒在世界西缘(屏幕左侧)南北中线;坐标入档永不变更 | `docs/design/art/ART-CORE-03-tower.md` |
+| 错向阴影 | 塔影恒指向当前光源(与万物相反);渲染断言 dot(shadow, light) > 0 | `docs/design/art/ART-CORE-03-tower.md` |
+| 框定(framing) | CRT 外壳 + 扫描线/畸变/眩光等效果层;游戏永远发生在一台 LS-97 显示器里 | `docs/design/art/ART-CORE-04-crt.md` |

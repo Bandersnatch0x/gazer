@@ -191,10 +191,25 @@ describe("album panel", () => {
     },
     memory: slice(),
   };
+  const memorial = {
+    day: 1,
+    clock: "12:00",
+    everLived: 3,
+    gone: 0,
+    maxGeneration: 2,
+    feeds: 5,
+    cleans: 2,
+    deaths: 0,
+    names: ["铃"],
+    gazeSeconds: 30,
+    shellClock: null,
+    news: null,
+    factions: 2,
+  };
 
   it("renders the creature fields the player needs", () => {
     const view = createAlbum(doc(), "en");
-    view.render([creature], "en");
+    view.render([creature], memorial, "en");
     const rows = asStub(view.root).walk().filter((node) => node.className === "gazer-album__row");
     expect(rows).toHaveLength(1);
     const text = rows[0]?.textContent ?? "";
@@ -210,7 +225,7 @@ describe("album panel", () => {
 
   it("distinguishes witnessed from heard, including a distorted memory shown as fabricated", () => {
     const view = createAlbum(doc(), "en");
-    view.render([creature], "en");
+    view.render([creature], memorial, "en");
     const statuses = asStub(view.root)
       .walk()
       .filter((node) => node.className === "gazer-album__memory")
@@ -223,12 +238,66 @@ describe("album panel", () => {
 
   it("renders the empty state in both languages", () => {
     const en = createAlbum(doc(), "en");
-    en.render([], "en");
+    en.render([], memorial, "en");
     expect(asStub(en.root).textContent).toContain("Nothing hatched yet.");
 
     const zh = createAlbum(doc(), "zh");
-    zh.render([], "zh");
+    zh.render([], memorial, "zh");
     expect(asStub(zh.root).textContent).toContain("还没有孵出任何一只。");
+  });
+
+  it("carries the world memorial section after the creatures (ticket 0011)", () => {
+    const view = createAlbum(doc(), "en");
+    view.render([creature], memorial, "en");
+    const memorialNodes = asStub(view.root)
+      .walk()
+      .filter((node) => node.className === "gazer-album__memorial");
+    expect(memorialNodes).toHaveLength(1);
+    const text = memorialNodes[0]?.textContent ?? "";
+    expect(text).toContain("WORLD RECORD");
+    expect(text).toContain("DAY 1");
+    expect(text).toContain("12:00");
+    expect(text).toContain("ever lived");
+    expect(text).toContain("highest generation");
+    expect(text).toContain("fed 5 · cleaned 2 · died 0");
+    expect(text).toContain("铃");
+    expect(text).toContain("30s");
+    expect(text).toContain("has not confessed yet");
+    expect(text).toContain("quiet");
+  });
+
+  it("the memorial speaks both languages", () => {
+    const zh = createAlbum(doc(), "zh");
+    zh.render([], { ...memorial, names: [], shellClock: "00:32", news: "第 1 日。单元普查。" }, "zh");
+    const text = asStub(zh.root)
+      .walk()
+      .filter((node) => node.className === "gazer-album__memorial")[0]?.textContent ?? "";
+    expect(text).toContain("世界纪念");
+    expect(text).toContain("第 1 日");
+    expect(text).toContain("来过的");
+    expect(text).toContain("养护账");
+    expect(text).toContain("喂 5 · 清洁 2 · 死亡 0");
+    expect(text).toContain("还没有");
+    expect(text).toContain("00:32");
+    expect(text).toContain("第 1 日。单元普查。");
+  });
+
+  it("the tower entry and the faction line render only when earned (ticket 0017)", () => {
+    // Two factions: the line and the always-empty tower entry both show.
+    const both = createAlbum(doc(), "en");
+    both.render([creature], memorial, "en");
+    const withText = asStub(both.root).textContent;
+    expect(withText).toContain("Right now, they are two factions.");
+    expect(withText).toContain("THE TOWER");
+    expect(withText).toContain("It has always been empty");
+
+    // No factions: the line stays silent; the tower entry remains (it is the
+    // one entry that is empty forever).
+    const none = createAlbum(doc(), "en");
+    none.render([], { ...memorial, factions: 0 }, "en");
+    const text = asStub(none.root).textContent;
+    expect(text).not.toContain("Right now, they are two factions.");
+    expect(text).toContain("THE TOWER");
   });
 });
 
