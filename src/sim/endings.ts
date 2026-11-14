@@ -86,12 +86,14 @@ export function meanImpression(world: Pick<WorldState, "creatures" | "memories">
 }
 
 /**
- * 触发判据(地图 0048 默认,可逆默认):GV≥100 前提下,判据序
- * 真 > C > B > A——
- *   真·凝视:8/8 碎片读走(isGazeTower,最高优先,达成即覆盖其余)
- *   C 遗忘:存活个体数 = 0,世界继续跑
- *   B 审判:群体敌对信念权重 > 温和
- *   A 融合:群体平均 impression ≥ +0.5
+ * 触发判据(地图 0048 默认,可逆默认):判据序 真 > C > B > A——
+ *   真·凝视:8/8 碎片读走(isGazeTower,最高优先,达成即覆盖其余)。
+ *     §7 真 行「碎片全部读走后塔自己变黑」:8/8 是唯一真源,**不受
+ *     GV≥100 门约束**;与 recordingUnlocked 同口径(票 0072 统一)。
+ *   C/B/A:GV≥100 前提下(地图 0048 默认判据)
+ *     C 遗忘:存活个体数 = 0,世界继续跑
+ *     B 审判:群体敌对信念权重 > 温和
+ *     A 融合:群体平均 impression ≥ +0.5
  * 写入后不可逆:已有 ending 不重评(null)。纯:同 world 同 ghost 同判。
  */
 export function evaluateEnding(
@@ -101,12 +103,17 @@ export function evaluateEnding(
   if (world.ending !== undefined) {
     return null;
   }
+  // 8/8 read is the single source of truth for 真·凝视: the tower turns black
+  // the moment the last glyph is read (§7), and `recordingUnlocked` derives
+  // from the same predicate. Keep the two calibers unified — no GV gate in
+  // front of the gaze verdict (ticket 0072). canon 语义(8/8 = 真)不变,
+  // GLYPHS_TOTAL 与 isGazeTower 不变。
+  if (isGazeTower(world.glyphsRead)) {
+    return "gaze";
+  }
   const gv = Number.isFinite(world.gv) ? world.gv : 0;
   if (gv < 100) {
     return null;
-  }
-  if (isGazeTower(world.glyphsRead)) {
-    return "gaze";
   }
   if (livingOf(world).length === 0) {
     return "forgetting";

@@ -93,12 +93,14 @@ function world(opts: {
 // 触发判据全表(地图 0048 默认,判据序 真 > C > B > A)。
 // ---------------------------------------------------------------------------
 
-describe("evaluateEnding: the trigger table (ticket 0049, map 0048)", () => {
-  it("requires GV≥100: below the gate the world has not ended, whatever else holds", () => {
+describe("evaluateEnding: the trigger table (ticket 0049, map 0048; gaze 口径票 0072)", () => {
+  it("GV≥100 gates the A/B/C verdicts; the 8/8 gaze verdict is GV-independent", () => {
     expect(evaluateEnding(world({ gv: 99, creatures: { a: creatureAt("a", { x: 3, y: 3 }) } }))).toBeNull();
     expect(evaluateEnding(world({ gv: 0 }))).toBeNull();
-    // 8/8 already read, census zero — still nothing before GV100.
-    expect(evaluateEnding(world({ gv: 99, glyphsRead: READ_ALL }))).toBeNull();
+    // 7/8 is not gaze: the GV gate still holds for the remaining rows.
+    expect(evaluateEnding(world({ gv: 99, glyphsRead: READ_ALL.slice(0, 7) }))).toBeNull();
+    // 8/8 read is the single source of truth (票 0072): gaze wins below GV100.
+    expect(evaluateEnding(world({ gv: 99, glyphsRead: READ_ALL }))).toBe("gaze");
   });
 
   it("真·凝视: 8/8 read wins over everything else on the table", () => {
@@ -232,6 +234,24 @@ describe("recording entry flag (ticket 0049, consumed by 0050)", () => {
     expect(
       recordingUnlocked(world({ glyphsRead: READ_ALL }).glyphsRead === undefined ? {} : world({ glyphsRead: READ_ALL })),
     ).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 票 0072:gaze 口径统一 —— 8/8 read 是唯一真源,与 recordingUnlocked 同口径,
+// 不受 GV≥100 门约束(§7 真 行「碎片全部读走后塔自己变黑」)。
+// ---------------------------------------------------------------------------
+
+describe("gaze verdict / recording flag share one caliber (ticket 0072)", () => {
+  it("8/8 read wins below GV100: evaluateEnding agrees with recordingUnlocked", () => {
+    for (const gv of [0, 42, 99]) {
+      const early = world({ gv, glyphsRead: READ_ALL });
+      expect(recordingUnlocked(early)).toBe(true);
+      expect(evaluateEnding(early)).toBe("gaze");
+    }
+    const partial = world({ gv: 99, glyphsRead: READ_ALL.slice(0, 7) });
+    expect(recordingUnlocked(partial)).toBe(false);
+    expect(evaluateEnding(partial)).toBeNull();
   });
 });
 

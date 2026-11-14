@@ -467,13 +467,68 @@ describe("juvenile care", () => {
       position: { x: 7, y: 7 },
     });
     // j2 is hungrier and listed first; the adult's own child still wins.
+    // parentLinks lives on the CHILD (it records the child's two parents),
+    // so j1's link points back at the adult — not the other way round.
     const j2 = creature("j2", { hatchedAtTick: 0, stats: { hunger: 5, hygiene: 80, happiness: 80, energy: 80 }, position: { x: 5, y: 7 } });
-    const j1 = creature("j1", { hatchedAtTick: 0, stats: { hunger: 25, hygiene: 80, happiness: 80, energy: 80 }, position: { x: 9, y: 7 } });
+    const j1 = creature("j1", { hatchedAtTick: 0, stats: { hunger: 25, hygiene: 80, happiness: 80, energy: 80 }, position: { x: 9, y: 7 }, parentLinks: { parentA: "a" } });
     const state = world({
-      creatures: { j2, a: { ...gentleAdult, parentLinks: { parentA: "j1" } }, j1 },
+      creatures: { j2, a: gentleAdult, j1 },
     });
     const intent = movementIntent(state, state.social ?? emptySocial(), state.creatures["a"] as CreatureState, 1);
     expect(intent).toEqual({ kind: "toward", target: { x: 9, y: 7 } });
+  });
+
+  // Ticket 0072 — `parentLinks` records a creature's OWN two parents (frozen
+  // shape, ticket 0005). An adult's child is therefore the juvenile whose
+  // parentLinks point back at the adult; comparing the ADULT's links against
+  // the juvenile's id got the direction backwards (② 高危 #9).
+  it("recognizes its own child by the child's parentLinks, not the adult's", () => {
+    const gentleAdult = creature("a", {
+      learning: {
+        observations: [...Array(8)].map((_, index) => ({
+          verb: "feed" as const,
+          atTick: index,
+          hesitationTicks: 4,
+          targetTile: { x: 7, y: 7 },
+        })),
+        converged: true,
+      },
+      position: { x: 7, y: 7 },
+    });
+    const hungrier = creature("j2", { hatchedAtTick: 0, stats: { hunger: 5, hygiene: 80, happiness: 80, energy: 80 }, position: { x: 5, y: 7 } });
+    const ownChild = creature("j1", {
+      hatchedAtTick: 0,
+      stats: { hunger: 25, hygiene: 80, happiness: 80, energy: 80 },
+      position: { x: 9, y: 7 },
+      parentLinks: { parentA: "a" },
+    });
+    const state = world({ creatures: { j2: hungrier, a: gentleAdult, j1: ownChild } });
+    const intent = movementIntent(state, state.social ?? emptySocial(), state.creatures["a"] as CreatureState, 1);
+    expect(intent).toEqual({ kind: "toward", target: { x: 9, y: 7 } });
+  });
+
+  it("never mistakes the adult's own parent link for an own-child link", () => {
+    const gentleAdult = creature("a", {
+      learning: {
+        observations: [...Array(8)].map((_, index) => ({
+          verb: "feed" as const,
+          atTick: index,
+          hesitationTicks: 4,
+          targetTile: { x: 7, y: 7 },
+        })),
+        converged: true,
+      },
+      position: { x: 7, y: 7 },
+      // j1 is `a`'s PARENT here. Under the old reversed comparison this made
+      // j1 look like `a`'s own child; it must not.
+      parentLinks: { parentA: "j1" },
+    });
+    const hungrier = creature("j2", { hatchedAtTick: 0, stats: { hunger: 5, hygiene: 80, happiness: 80, energy: 80 }, position: { x: 5, y: 7 } });
+    const notChild = creature("j1", { hatchedAtTick: 0, stats: { hunger: 25, hygiene: 80, happiness: 80, energy: 80 }, position: { x: 9, y: 7 } });
+    const state = world({ creatures: { j2: hungrier, a: gentleAdult, j1: notChild } });
+    const intent = movementIntent(state, state.social ?? emptySocial(), state.creatures["a"] as CreatureState, 1);
+    // No candidate is an own child → the hungrier j2 wins.
+    expect(intent).toEqual({ kind: "toward", target: { x: 5, y: 7 } });
   });
 
   it("a starving adult or a hurried keeper model shepherds nobody", () => {

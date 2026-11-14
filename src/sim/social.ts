@@ -925,6 +925,14 @@ function nearestJuvenileToShepherd(
     // A starving adult cannot spare attention for anyone else's stomach.
     return undefined;
   }
+  // `parentLinks` is the frozen shape of THIS creature's two parents
+  // (`types.ts`, ticket 0005). A candidate is `adult`'s own child iff the
+  // candidate's links point back at `adult.id` — not the other way round.
+  // The old comparison read `adult.parentLinks` against `other.id`, i.e. it
+  // asked "is this candidate my parent" (② 高危 #9 / ticket 0072).
+  const isOwnChildOf = (candidate: CreatureState): boolean =>
+    candidate.parentLinks !== undefined &&
+    (candidate.parentLinks.parentA === adult.id || candidate.parentLinks.parentB === adult.id);
   let best: CreatureState | undefined;
   for (const other of Object.values(world.creatures)) {
     if (
@@ -938,13 +946,8 @@ function nearestJuvenileToShepherd(
     if (chebyshevOf(adult.position, other.position) > ESCORT_SEEK_RANGE) {
       continue;
     }
-    const ownChild =
-      adult.parentLinks !== undefined &&
-      (adult.parentLinks.parentA === other.id || adult.parentLinks.parentB === other.id);
-    const bestOwnChild =
-      best !== undefined &&
-      adult.parentLinks !== undefined &&
-      (adult.parentLinks.parentA === best.id || adult.parentLinks.parentB === best.id);
+    const ownChild = isOwnChildOf(other);
+    const bestOwnChild = best !== undefined && isOwnChildOf(best);
     if (best === undefined || (ownChild && !bestOwnChild) || (ownChild === bestOwnChild && other.stats.hunger < best.stats.hunger)) {
       best = other;
     }

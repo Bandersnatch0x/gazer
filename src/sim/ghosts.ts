@@ -29,6 +29,27 @@ import type { GenomeTraits } from "./genome";
 import type { MemorySlice } from "./memory";
 
 // ---------------------------------------------------------------------------
+// 0065: opt-out of the ghost archive (red line 5, ARCHITECTURE.md:350).
+// The player can decline the archive entirely; no profile is written and no
+// ghost face is reported into NG+ / the recording. Three read-only signals are
+// honoured (the UI to set them is out of this ticket's scope).
+// ---------------------------------------------------------------------------
+
+const OPT_OUT_KEY_PARTS = ["gazer", "ghost", "optout"] as const;
+export const GHOST_OPT_OUT_STORAGE_KEY = OPT_OUT_KEY_PARTS.join("-");
+export const GHOST_OPT_OUT_URL_PARAM = "ghosts";
+
+export interface GhostOptOutSignals {
+  readonly option?: boolean;
+  readonly urlFlag?: string | null;
+  readonly storageFlag?: string | null;
+}
+
+export function isGhostArchiveOptedOut(signals: GhostOptOutSignals): boolean {
+  return signals.option === true || signals.urlFlag === "off" || signals.storageFlag === "1";
+}
+
+// ---------------------------------------------------------------------------
 // The ghost profile — the anonymized archive face
 // ---------------------------------------------------------------------------
 
@@ -164,6 +185,39 @@ export function buildGhostArchive(world: WorldState): readonly GhostProfile[] {
     }
   }
   return profiles;
+}
+
+/**
+ * 0065: carry the dead into `world.ghosts` at death time. The archive is
+ * append-only and idempotent by profile id, so a restored save (0064) keeps
+ * its carried faces and only newly dead creatures are added. The caller
+ * supplies the *live* memory slices: the game keeps them in a closure, so
+ * reading `world.memories` at death time could be one tick stale.
+ *
+ * Opt-out writes nothing. Profiles stay anonymized (buildGhostProfile keeps
+ * only the traits snapshot, one signature-moment face and kept-memory ids) —
+ * no raw logs ever enter the persisted world.
+ */
+export function appendGhostProfiles(
+  world: WorldState,
+  memories: Readonly<Record<CreatureId, MemorySlice>>,
+  optOut: boolean,
+): WorldState {
+  if (optOut) {
+    return world;
+  }
+  const carried = world.ghosts ?? [];
+  const known = new Set(carried.map((profile) => profile.id));
+  const fresh = buildGhostArchive({ ...world, memories }).filter(
+    (profile) => !known.has(profile.id),
+  );
+  if (fresh.length === 0) {
+    return world;
+  }
+  const merged = [...carried, ...fresh].sort((a, b) =>
+    a.id < b.id ? -1 : a.id > b.id ? 1 : 0,
+  );
+  return { ...world, ghosts: merged };
 }
 
 // ---------------------------------------------------------------------------
@@ -312,8 +366,11 @@ export function deathAccountWeight(world: WorldState, creature: CreatureState): 
 
 /**
  * The {id} slot resolution: the dead creature with the highest death-account
- * weight in the save; ties break toward the smaller id; an save with no
- * death (or no account at all) resolves to null. Deterministic.
+ * weight in the save; ties break toward the smaller id. 0065: when the
+ * restored world carries a persistent ghost archive but no dead body (e.g.
+ * an NG+ save whose creatures were rebuilt), the carried archive is the NG+
+ * face and its smallest id wins. A world with neither resolves to null.
+ * Deterministic.
  */
 export function resolveDramaticId(world: WorldState): CreatureId | null {
   const ranked = Object.values(world.creatures)
@@ -321,5 +378,11 @@ export function resolveDramaticId(world: WorldState): CreatureId | null {
     .map((creature) => ({ id: creature.id, weight: deathAccountWeight(world, creature) }))
     .sort((a, b) => b.weight - a.weight || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   const picked = ranked[0];
-  return picked === undefined ? null : picked.id;
+  if (picked !== undefined) {
+    return picked.id;
+  }
+  const carried = [...(world.ghosts ?? [])].sort((a, b) =>
+    a.id < b.id ? -1 : a.id > b.id ? 1 : 0,
+  );
+  return carried[0]?.id ?? null;
 }

@@ -46,6 +46,23 @@ export const DEFAULT_INTENSITY = 0.5;
 /** Per-game-day anomaly budget (master §0): S0:2 / S1:5 / S2:10 / S3:20 / S4:30. */
 const BUDGET_BY_STAGE: Readonly<Record<Stage, number>> = { 0: 2, 1: 5, 2: 10, 3: 20, 4: 30 };
 
+/**
+ * Clamp a possibly-corrupt runtime `stage` to a legal 0..4 tier before it is
+ * used as a budget index (G10). A stage outside the five tiers must not make
+ * `BUDGET_BY_STAGE[stage]` resolve to `undefined` — `spent + cost > undefined`
+ * is always false, which silently disabled the whole budget gate (ticket 0072,
+ * ② 高危 #8 / ③ Top10 #10). Finite out-of-range values saturate to the nearest
+ * legal tier; non-finite garbage fails closed to S0 (the strictest budget).
+ * The five frozen S0..S4 values themselves are untouched.
+ */
+export function budgetForStage(stage: number): number {
+  if (!Number.isFinite(stage)) {
+    return BUDGET_BY_STAGE[0];
+  }
+  const clamped = Math.min(4, Math.max(0, Math.trunc(stage))) as Stage;
+  return BUDGET_BY_STAGE[clamped] ?? BUDGET_BY_STAGE[0];
+}
+
 /** C-03a: cumulative permanent hue pollution, hard-counted by the executor, ≤45°, save-persistent. */
 export const PALETTE_POLLUTION_MAX_DEGREES = 45;
 /** C-04 full mode: at most 3 per save. */
@@ -1181,8 +1198,10 @@ export function executeFx(state: FxState, request: FxRequest, world: WorldState)
   const degraded = applied < requested;
 
   // 5. Budget (G10). Canonical events (GV12/30/60/80) are prepaid and exempt.
+  // `budgetForStage` clamps a corrupt world.stage to a legal tier: without it
+  // an out-of-range stage made the lookup undefined and the gate never fired.
   const cost = canonical ? 0 : primitive.cost ?? 0;
-  if (!canonical && s.spentToday + cost > BUDGET_BY_STAGE[world.stage]) {
+  if (!canonical && s.spentToday + cost > budgetForStage(world.stage)) {
     return refused(s, request, primitive, "fx_budget_reject", "budget_reject", tick);
   }
 

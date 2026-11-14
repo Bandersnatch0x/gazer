@@ -28,6 +28,7 @@ import {
   assertNoSyntheticInput,
   assertSameFrameBlink,
   blinkClosedAt,
+  budgetForStage,
   cancelFx,
   capOutsideEyesOpacity,
   cursorMirrorPaused,
@@ -401,6 +402,50 @@ describe("master §4 item 3 / G10 — per-game-day anomaly budget", () => {
       return JSON.stringify(state.ledger);
     };
     expect(run()).toBe(run());
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 票 0072:越界 stage 的预算门不得静默失效(fail-open)。`BUDGET_BY_STAGE` 只
+// 有 0..4 五档;运行时 world.stage 若被损坏(如坏档),旧代码取到 undefined,
+// `spent + cost > undefined` 恒 false → 预算门永久放行。
+// ---------------------------------------------------------------------------
+
+describe("G10 budget stage clamp (ticket 0072)", () => {
+  it("a corrupt out-of-range stage still enforces a legal budget tier", () => {
+    const corrupt: WorldState = { ...makeWorld({ stage: 4, tick: 100 }), stage: 99 as Stage };
+    let state = initialFxState(100);
+    // S4 = 30 points; 31 different all_freeze params (cost 1 each) stay distinct
+    // under the idempotency window.
+    for (let i = 0; i < 30; i += 1) {
+      const outcome = executeFx(state, { kind: "all_freeze", params: { duration_ms: 800 + i * 100, pose: "keep" } }, corrupt);
+      expect(outcome.result.status).toBe("executed");
+      state = outcome.state;
+    }
+    expect(state.spentToday).toBe(30);
+    const thirtyFirst = executeFx(state, { kind: "all_freeze", params: { duration_ms: 4000, pose: "keep" } }, corrupt);
+    expect(thirtyFirst.result.status).toBe("budget_reject");
+    expect(thirtyFirst.result.reason).toBe("fx_budget_reject");
+    expect(thirtyFirst.result.costCharged).toBe(0);
+    expect(thirtyFirst.state.spentToday).toBe(30);
+  });
+
+  it("maps every legal stage to its frozen S0..S4 budget (no value drift)", () => {
+    expect(budgetForStage(0)).toBe(2);
+    expect(budgetForStage(1)).toBe(5);
+    expect(budgetForStage(2)).toBe(10);
+    expect(budgetForStage(3)).toBe(20);
+    expect(budgetForStage(4)).toBe(30);
+  });
+
+  it("saturates finite out-of-range stages and fails closed on non-finite garbage", () => {
+    expect(budgetForStage(-7)).toBe(2);
+    expect(budgetForStage(1.9)).toBe(5);
+    expect(budgetForStage(5)).toBe(30);
+    expect(budgetForStage(99)).toBe(30);
+    expect(budgetForStage(Number.NaN)).toBe(2);
+    expect(budgetForStage(Number.POSITIVE_INFINITY)).toBe(2);
+    expect(budgetForStage(Number.NEGATIVE_INFINITY)).toBe(2);
   });
 });
 
