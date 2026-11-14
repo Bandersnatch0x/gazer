@@ -171,12 +171,13 @@ describe("memory scoring", () => {
     expect(atOneDay - atTwoDays).toBeCloseTo(1.5 * 0.25, 10);
   });
 
-  it("penalises inferred sources by half a weight unit", () => {
+  it("penalises inferred sources by the documented 0.5 weight", () => {
+    // CONTEXT.md §4: `- 0.5 * source_penalty`, source_penalty = 1 for inferred.
     const witnessed = memoryEntry("mem_2", "the tower grew", { witnessed: "witnessed" });
     const inferred = memoryEntry("mem_2", "the tower grew", { witnessed: "inferred" });
 
     expect(scoreMemory(witnessed, "tower", 0) - scoreMemory(inferred, "tower", 0)).toBeCloseTo(
-      0.25,
+      0.5,
       10,
     );
   });
@@ -200,13 +201,14 @@ describe("context assembly", () => {
     expect(text).toContain("CREATURE 01\nid 01 | gen 2 | curiosity,watchfulness | mood loving | impression -.9");
   });
 
-  it("keeps at most four candidate memories before any trimming", () => {
+  it("keeps at most three candidate memories before any trimming", () => {
+    // CONTEXT.md §4/§8: top three go into the block; ladder starts at 3.
     const working = Array.from({ length: 6 }, (_, index) =>
       memoryEntry(`mem_${index + 1}`, `the tower moved at night ${index}`),
     );
     const { text } = buildContext(baseInput([buildCreature("01", working, [], [])]));
 
-    expect(text.match(/^\[mem_/gm)?.length).toBe(4);
+    expect(text.match(/^\[mem_/gm)?.length).toBe(3);
   });
 
   it("truncates an over-long fact at a word boundary and keeps its id", () => {

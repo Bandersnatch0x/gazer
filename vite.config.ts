@@ -1,4 +1,5 @@
 import { defineConfig, type Plugin } from "vitest/config";
+import { createBudgetAdmission } from "./src/bridge/budget";
 
 /**
  * LLM protocol adapter (jam acceptance: "接入 LLM").
@@ -13,11 +14,15 @@ import { defineConfig, type Plugin } from "vitest/config";
  *
  * The jam model endpoint is OpenAI-compatible
  * (`http://127.0.0.1:18086/v1`, key `magpie`, model `auto/deepseek-v4.1-flash`).
- * Credentials never enter the bundle. A soft budget guard (15 successful
- * upstream calls per sliding 30 minutes, GAME_REVIEW §11.4) lives here at the
- * only point every dialect crosses; exhaustion answers 429 and the game
- * silently takes its manual-pool fallback. Dev-server only — production stays
- * offline-complete by design (决策 0002).
+ * Credentials never enter the bundle. A HARD budget (15 successful upstream
+ * calls per sliding 30 minutes, `ARCHITECTURE.md` §Cost / decision 0018 ③)
+ * lives here at the only point every dialect crosses; `llm:budget` refuses the
+ * call at the ceiling with 429 and the game silently takes its manual-pool
+ * fallback. Only a successful, validated response spends a slot — failures,
+ * timeouts and 429s do not (ticket 0066, 先成功后扣). The admission object is
+ * shared with `src/bridge/runtime.ts` so game-side and middleware budgets
+ * cannot drift. Dev-server only — production stays offline-complete by design
+ * (决策 0002).
  */
 const RT_SYSTEM = [
   "You are the roundtable director of a creature-observer game.",
@@ -60,21 +65,16 @@ function llmAdapter(): Plugin {
     roundtable: 600,
   };
 
-  // Soft budget: at most 15 successful upstream calls inside any sliding 30
-  // minutes. Exhaustion is not an error for the player — the page falls back.
-  const BUDGET_MAX = 15;
-  const BUDGET_WINDOW_MS = 30 * 60 * 1000;
-  const spendStamps: number[] = [];
+  // Hard budget (ARCHITECTURE.md §Cost / decision 0018 ③): at most 15
+  // SUCCESSFUL upstream calls inside any sliding 30 minutes. `llm:budget`
+  // refuses at the ceiling; only a validated success spends a slot —
+  // failures/timeouts/429s never do (ticket 0066, 先成功后扣).
+  const budgetAdmission = createBudgetAdmission();
   function budgetAllows(now: number): boolean {
-    const cutoff = now - BUDGET_WINDOW_MS;
-    while (spendStamps.length > 0 && spendStamps[0]! <= cutoff) {
-      spendStamps.shift();
-    }
-    if (spendStamps.length >= BUDGET_MAX) {
-      return false;
-    }
-    spendStamps.push(now);
-    return true;
+    return budgetAdmission.allows(now);
+  }
+  function settleBudget(now: number, success: boolean): void {
+    budgetAdmission.settle(now, success);
   }
 
   /** The shared middleware: identical on the dev server and `vite preview`. */
@@ -129,6 +129,8 @@ function llmAdapter(): Plugin {
         res.end(JSON.stringify({ error: "budget exhausted" }));
         return;
       }
+      // Slot reserved above; it is spent only after a validated success.
+      let succeeded = false;
       try {
         const upstream = await fetch(UPSTREAM, {
           method: "POST",
@@ -175,12 +177,17 @@ function llmAdapter(): Plugin {
             return;
           }
           res.end(JSON.stringify(scene));
+          succeeded = true;
         } else {
           res.end(JSON.stringify({ text }));
+          succeeded = true;
         }
       } catch {
         res.statusCode = 502;
         res.end(JSON.stringify({ error: "upstream unreachable" }));
+      } finally {
+        // 先成功后扣: 429 / 502 / thrown timeouts never consume quota.
+        settleBudget(Date.now(), succeeded);
       }
     });
   };

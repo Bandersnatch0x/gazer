@@ -35,10 +35,12 @@ describe("director routing", () => {
   });
 
   it("pins the scene deadlines from the harness", () => {
-    // The jam endpoint needs seconds per scene (playtest 0014: 2.7s measured
-    // against the 800ms design budget, which aborted every real call).
-    expect(routeTask("roundtable").timeoutMs).toBe(20000);
-    expect(routeTask("level_b").timeoutMs).toBe(1500);
+    // HARNESS §5 is authoritative (ticket 0069). Note: playtest 0014 measured
+    // 2.7s per full scene against the 800ms design budget; 800ms therefore
+    // aborts real jam-endpoint calls and they fall back to manualPool. The
+    // tradeoff is recorded in ticket 0069 Log for an HARNESS §5 amendment / ADR.
+    expect(routeTask("roundtable").timeoutMs).toBe(800);
+    expect(routeTask("level_b").timeoutMs).toBe(600);
   });
 
   it("marks ontology staging and consolidation as off the critical path", () => {

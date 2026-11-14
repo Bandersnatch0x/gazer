@@ -50,8 +50,8 @@ const CHARS_PER_TOKEN = 4;
 /** One in-game day, in ticks. Recency decays to 0.5 over this span. */
 const HALF_LIFE_TICKS = 1440;
 
-/** Score weight table. A tuning change is one edit here. */
-const WEIGHTS = Object.freeze({
+/** Score weight table (CONTEXT.md §4). A tuning change is one edit here. Exported for the doc-alignment CI lock. */
+export const WEIGHTS = Object.freeze({
   relevance: 2.0,
   recency: 1.5,
   isCore: 1.0,
@@ -59,8 +59,8 @@ const WEIGHTS = Object.freeze({
   sourcePenalty: 0.5,
 });
 
-/** `witnessed === "inferred"` halves the source penalty term (0.5, not 1). */
-const INFERRED_SOURCE_PENALTY = 0.5;
+/** CONTEXT.md §4: `source_penalty` is 1 for inferred memories, 0 otherwise. The full deduction is `-0.5 * 1 = -0.5`. */
+export const INFERRED_SOURCE_PENALTY = 1;
 
 /**
  * `core_memory_mark` flags a consolidation candidate by prefixing its id with
@@ -209,7 +209,7 @@ interface Seat {
   readonly ranked: readonly ScoredEntry[];
 }
 
-interface BudgetLevel {
+export interface BudgetLevel {
   readonly memories: number;
   readonly drift: number;
   readonly actions: number;
@@ -217,16 +217,17 @@ interface BudgetLevel {
 }
 
 /**
- * Degradation ladder, applied in order until the assembled string fits:
- * memories 4 -> 3 -> 2, drift 2 -> 1, recent actions 10 -> 5, traits top-2 -> top-1.
+ * Degradation ladder (CONTEXT.md §8), applied in order until the assembled
+ * string fits: memories 3 -> 2 -> 1, drift 2 -> 1, actions 10 -> 5,
+ * traits top-2 -> top-1. Exported for the doc-alignment CI lock.
  */
-const DEGRADATION_LADDER: readonly BudgetLevel[] = Object.freeze([
-  { memories: 4, drift: 2, actions: 10, traits: 2 },
+export const DEGRADATION_LADDER: readonly BudgetLevel[] = Object.freeze([
   { memories: 3, drift: 2, actions: 10, traits: 2 },
   { memories: 2, drift: 2, actions: 10, traits: 2 },
-  { memories: 2, drift: 1, actions: 10, traits: 2 },
-  { memories: 2, drift: 1, actions: 5, traits: 2 },
-  { memories: 2, drift: 1, actions: 5, traits: 1 },
+  { memories: 1, drift: 2, actions: 10, traits: 2 },
+  { memories: 1, drift: 1, actions: 10, traits: 2 },
+  { memories: 1, drift: 1, actions: 5, traits: 2 },
+  { memories: 1, drift: 1, actions: 5, traits: 1 },
 ]);
 
 function resolveTick(input: ContextInput): number {

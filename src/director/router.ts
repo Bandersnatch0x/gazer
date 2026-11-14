@@ -27,16 +27,18 @@ export interface Route {
  */
 const OFF_CRITICAL_PATH: ReadonlySet<TaskKind> = new Set(["ontology_staging", "consolidation"]);
 
+/** Latency budgets are transcribed from `HARNESS.md` §5 (ticket 0069). */
 const ROUTES: Readonly<Record<TaskKind, Route>> = Object.freeze({
   roundtable: Object.freeze({
     primary: "primary_hosted",
     secondary: "smaller_hosted",
     fallback: "manual_pool",
-    // HARNESS §5 budgeted 800ms against an assumed co-located hosted model; the
-    // real jam endpoint needs several seconds for a full scene. speakScene is
-    // fire-and-forget (a slow reply delays dialogue start, never gameplay), and
-    // overruns already fall back to the manual pool, so the ceiling is generous.
-    timeoutMs: 20000,
+    // HARNESS §5 budgets 800ms for the roundtable call. Ticket 0069 aligns the
+    // code with the design doc (authoritative); playtest 0014 measured ~2.7s per
+    // scene against that budget, so a real call can abort into the manualPool
+    // fallback. Amending HARNESS §5 needs a separate ADR (docs are out of this
+    // ticket's scope) — the tradeoff is recorded in ticket 0069 Log.
+    timeoutMs: 800,
   }),
   ontology_staging: Object.freeze({
     primary: "primary_hosted_effect_schema",
@@ -54,7 +56,8 @@ const ROUTES: Readonly<Record<TaskKind, Route>> = Object.freeze({
     primary: "primary_hosted_single_creature",
     secondary: "smaller_hosted",
     fallback: "keep_original_turn",
-    timeoutMs: 1500,
+    // HARNESS §5: 600 ms for the single-creature verification call.
+    timeoutMs: 600,
   }),
   tts: Object.freeze({
     primary: "browser_speech_synthesis",

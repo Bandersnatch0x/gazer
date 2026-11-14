@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  createBudgetAdmission,
   createBudgetGuard,
   DEFAULT_BUDGET_CONFIG,
 } from "../src/bridge/budget";
@@ -67,5 +68,66 @@ describe("budget guard", () => {
     expect(guard.trySpend(T0 + 1)).toBe(false);
     guard.reset();
     expect(guard.trySpend(T0 + 2)).toBe(true);
+  });
+});
+
+// Ticket 0066 / decision 0018 ③: hard budget, 先成功后扣.
+describe("budget admission (two-phase hard budget)", () => {
+  it("only a successful response spends a slot; failures and timeouts never do", () => {
+    const admission = createBudgetAdmission({ maxCalls: 2, windowMs: 1000 });
+    expect(admission.allows(T0)).toBe(true);
+    admission.settle(T0, false); // 400 / 502 / timeout
+    expect(admission.snapshot(T0).used).toBe(0);
+
+    expect(admission.allows(T0 + 1)).toBe(true);
+    admission.settle(T0 + 1, true);
+    expect(admission.snapshot(T0 + 1).used).toBe(1);
+
+    expect(admission.allows(T0 + 2)).toBe(true);
+    admission.settle(T0 + 2, false);
+    expect(admission.snapshot(T0 + 2).used).toBe(1);
+
+    expect(admission.allows(T0 + 3)).toBe(true);
+    admission.settle(T0 + 3, true);
+    expect(admission.snapshot(T0 + 3).used).toBe(2);
+    expect(admission.allows(T0 + 4)).toBe(false); // hard ceiling reached
+  });
+
+  it("reserves in-flight slots so concurrent calls cannot over-admit", () => {
+    const admission = createBudgetAdmission({ maxCalls: 2, windowMs: 1000 });
+    expect(admission.allows(T0)).toBe(true);
+    expect(admission.allows(T0 + 1)).toBe(true);
+    expect(admission.allows(T0 + 2)).toBe(false); // both still in flight
+    admission.settle(T0 + 1, true);
+    admission.settle(T0, true);
+    expect(admission.snapshot(T0 + 3).used).toBe(2);
+    expect(admission.allows(T0 + 4)).toBe(false);
+  });
+
+  it("defaults to the frozen 15 calls / 30 minutes hard budget", () => {
+    const admission = createBudgetAdmission();
+    expect(admission.snapshot(T0)).toEqual({ used: 0, limit: 15, resetsInMs: 0 });
+    expect(DEFAULT_BUDGET_CONFIG.windowMs).toBe(30 * 60 * 1000);
+    for (let call = 0; call < 15; call += 1) {
+      expect(admission.allows(T0 + call)).toBe(true);
+      admission.settle(T0 + call, true);
+    }
+    expect(admission.allows(T0 + 15)).toBe(false);
+    expect(admission.snapshot(T0 + 15).used).toBe(15);
+  });
+
+  it("refuses a non-finite timestamp without reserving or spending", () => {
+    const admission = createBudgetAdmission();
+    expect(admission.allows(Number.NaN)).toBe(false);
+    expect(admission.snapshot(T0).used).toBe(0);
+  });
+
+  it("reset clears both spends and reservations", () => {
+    const admission = createBudgetAdmission({ maxCalls: 1 });
+    expect(admission.allows(T0)).toBe(true);
+    admission.settle(T0, true);
+    expect(admission.allows(T0 + 1)).toBe(false);
+    admission.reset();
+    expect(admission.allows(T0 + 2)).toBe(true);
   });
 });
