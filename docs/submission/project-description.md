@@ -8,7 +8,7 @@ Devpost text. English first, Chinese second. Each stays under 500 words.
 
 GAZER is a pixel pet game from 1997 that was never a pet game. You feed small one-eyed creatures, clean them, watch them hatch. They watch you back. The horror is the slow discovery that the thing you are raising is not the creature.
 
-Each creature carries a **prompt genome**: a base instruction, five trait weights, a drift list that grows as it learns you, and secrets it has not told the others. The genome is a real JSON file in the save payload. A player can open it and read the soul.
+Each creature carries a **prompt genome**: a base instruction, five trait weights, a drift list that grows as it learns you, and secrets it has not told the others. The genome is serialized as JSON inside the world save payload, so the soul survives a refresh; it is part of the save, not a standalone file.
 
 Each also carries a **private memory slice**. It does not know what it did not witness. When two stand close, a memory can pass between them, and on a failed roll it arrives **distorted** — intensified, role-swapped, or invented. The distorted copy is stored as `witnessed`; its holder cannot tell it from a real memory. Only you can, through the witness mark beside each line.
 
@@ -22,7 +22,7 @@ Everything happens inside a 1997 CRT monitor — beige shell, scanlines, a BIOS 
 
 The LLM is load-bearing because its output changes the world, not the prose. It proposes world mutations the engine validates, and choreographs anomalies from a library of engine primitives. Delete the model and the world still runs. It simply has nobody in it. That state is a feature: the **silent run**, where the creatures behave and say nothing, and the absence is the proof.
 
-Three minutes with the demo shows the claim: feed a creature, watch GAZE rise, open the bestiary, then watch a creature say something only you could have said. The soul is a few lines of prompt. You can open and read it.
+Three minutes with the demo shows the claim: feed a creature, watch GAZE rise, open the bestiary, then watch a creature say something only you could have said. The soul is a few lines of prompt, written into the world save so it outlives a refresh.
 
 ## 中文
 
@@ -30,7 +30,7 @@ Three minutes with the demo shows the claim: feed a creature, watch GAZE rise, o
 
 GAZER，1997 年的像素宠物游戏，却从不是宠物游戏。你喂食、清理、看它们孵化；它们也看你。恐怖是缓慢的发现：你养的不是那只生物。
 
-每只携带提示词基因组：基底指令、性格权重、漂移清单与秘密。它是存档里真实的 JSON，能打开读。
+每只携带提示词基因组：基底指令、性格权重、漂移清单与秘密。它作为 JSON 序列化进世界存档，刷新后仍在；这是存档的一部分，不是一个可单独打开的文件。
 
 每只还有私有记忆：没目击的事它不知道。靠近会传播记忆；保留失败会失真：强化、调换、虚构。失真副本以「亲见」存入，持有者分不出，只有你看得出。
 

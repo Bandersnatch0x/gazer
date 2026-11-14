@@ -82,13 +82,16 @@ Three consequences the engine enforces: an entity's kind never regresses; a dist
 ```ts
 interface CreatureState {
   readonly id: CreatureId;
-  readonly genome: PromptGenome;
-  readonly memory: MemorySlice;
-  readonly impression: number;              // -1..1, personal trust of the player
+  readonly genome?: PromptGenome;
   readonly stats: CreatureStats;
   readonly behavior: CreatureBehavior;
+  readonly trait: CreatureTrait | null;
   readonly position: TilePos;
   readonly hatchedAtTick: number;
+  readonly name: string | null;
+  readonly willingness: number;
+  readonly courtshipTicks: number;
+  // Further optional layers: parentLinks, learning, atavistic, twinOf, grief.
 }
 
 interface WorldState {
@@ -97,13 +100,23 @@ interface WorldState {
   readonly stage: Stage;
   readonly creatures: Readonly<Record<CreatureId, CreatureState>>;
   readonly structures: readonly Structure[];
+  readonly eggs: readonly Egg[];
   readonly uiLabels: Readonly<Record<string, string>>;
   readonly paletteDecay: number;
   readonly seed: number;
   readonly silent: boolean;
-  readonly belief: SwarmBelief;
+  // Six optional extension layers (jam slice + projection hidden line).
+  // Absent on legacy worlds and tests; the engine never requires them.
+  readonly memories?: Readonly<Record<CreatureId, MemorySlice>>;
+  readonly social?: SocialState;
+  readonly glyphsRead?: readonly string[];
+  readonly ending?: EndingState;
+  readonly ghosts?: readonly GhostProfile[];
+  readonly projection?: ProjectionState;
 }
 ```
+
+The runtime shape is authoritative in `src/sim/types.ts`; the block above is the design-level view. Two deliberate differences from earlier drafts: `SwarmBelief` is a design concept (see Ontology), **not** a `WorldState` field; and a creature's private memory / impression are not stored on `CreatureState` — two-layer memory lives in `WorldState.memories[id]` (a `MemorySlice`) and trust of the player is derived by `src/sim/social.ts` (`beliefAboutPlayer`). The six optional extension layers were added as the jam slice and the projection hidden line landed; all are optional so legacy saves and tests stay valid.
 
 ### Prompt genome
 
@@ -142,7 +155,7 @@ interface MemoryEntry {
   readonly atTick: number;
   readonly wallClock: string;
   readonly fact: string;                    // short, model-readable
-  readonly witnessed: "direct" | "heard" | "inferred";
+  readonly witnessed: "witnessed" | "heard" | "inferred";
   readonly source: CreatureId | null;       // who told it, when heard
   readonly distortion: DistortionKind | null;
   readonly salience: number;                // 0..1, how hard this memory pulls on speech
@@ -224,30 +237,9 @@ The review line that follows from this: our multi-agent design is layered. Every
 
 The engine's vocabulary. The director composes; it never emits rendering calls.
 
-```ts
-type Effect =
-  | { kind: "freeze_all"; ms: number }
-  | { kind: "gaze_at_player"; creatureId: CreatureId; ms: number }
-  | { kind: "mirror_click_rhythm"; creatureId: CreatureId }
-  | { kind: "palette_shift"; amount: number; ms: number }
-  | { kind: "desaturate"; amount: number }
-  | { kind: "audio_drop_track"; track: string }
-  | { kind: "spawn_structure"; structure: "black_tower"; at: TilePos }
-  | { kind: "relabel_ui"; target: string; text: string }
-  | { kind: "set_trait"; creatureId: CreatureId; trait: CreatureTrait }
-  | { kind: "rewrite_sprite"; creatureId: CreatureId; palette: readonly string[]; mask: readonly string[] }
-  | { kind: "glyph_corrupt"; amount: number }
-  | { kind: "creature_speech"; creatureId: CreatureId; text: string; mood: Mood }
-  | { kind: "collective_speech"; text: string; mood: Mood }
-  | { kind: "ui_shake"; intensity: number; ms: number }
-  | { kind: "creature_wink"; creatureId: CreatureId }
-  | { kind: "cursor_pull"; creatureId: CreatureId; strength: number }
-  | { kind: "favicon_eye"; intensity: number }
-  | { kind: "title_mutate"; text: string }
-  | { kind: "outside_eyes"; opacity: number };
-```
+The authoritative catalogue is `docs/design/fx/FX-LIB-MASTER.md` §1: **30 primitives** (Canvas 12 / DOM 8 / WebAPI 4 / Audio 6), each with a `gate`, `cost`, `cap` and a parameter whitelist, plus the canon guards G1–G10 (§2) and the per-game-day anomaly budget S0:2 / S1:5 / S2:10 / S3:20 / S4:30 (§0). The five repo sub-documents (01a–01e) and the review rulings F1–F7 are recorded in `docs/design/fx/README.md`; the master table is the single CI cross-check truth.
 
-The executable catalogue is `src/sim/effects.ts`. The engine accepts only these kinds; an unknown kind leaves the world unchanged.
+The single executor is `src/sim/fx.ts`: it validates the whitelist, gate, cap and budget, enforces G1–G10, books `fx_exec` ledger entries, and only then translates a primitive into a simulation `Effect` kind (`src/sim/effects.ts`) or a render-side shell kind (`src/render/effects.ts`). `src/sim/effects.ts` is a transport enumeration (16 legacy kinds, the canvas-layer kinds added with the FX library, and the E4 `gaze_at_tower` exception), **not** the primitive catalogue: an FX id such as `all_freeze` maps to `freeze_all`, and the union is intentionally smaller than 30 because several primitives share a kind or are render-side. An unknown kind is rejected by the executor before it reaches the reducer; the world does not change. There is no second executor.
 
 ### Director output
 
@@ -320,9 +312,11 @@ No loading spinner ever appears. Horror does not wait on a network call.
 
 Text bubbles at Stages 0 to 2. Streaming TTS from Stage 3, single speaker only. Pacing follows the token stream, so a generation stall reads as hesitation. Latency is performance.
 
+Two distinct layers, not one claim, so they do not conflict. From Stage 3 the browser `SpeechSynthesis` path speaks **one creature's line at a time** — a single dialogue voice, token-paced, with no STT (speech recognition is out of scope). At Stage 4 the FX primitive A-06 `whisper_bed` (`docs/design/fx/FX-LIB-MASTER.md` §1 audio layer, `voices 2–5`) is a **low-frequency procedural audio bed**, not multi-speaker dialogue: it layers whisper textures under a scene in the WebAudio render layer (`src/render/audio.ts`), independent of `SpeechSynthesis`. "Single speaker only" therefore constrains TTS dialogue, not the audio-layer bed. Note that the current build wires the audio beats but keeps them silent (`src/main.ts`); voice scheduling belongs to the sound spec.
+
 ## Cost
 
-One roundtable call per scene at Level A. Level B adds at most one verification call per scene, so the worst case is two calls and the average increase stays under 20 percent. Speaker pre-selection when more than five creatures are present. Drift, consolidation, and breeding are batched at session end into one call. Cache key `stage + trigger + hash(state)`, target hit rate above 60 percent. Hard budget about 15 calls per 30 minutes; beyond it, `llm:budget` refuses the call and the route falls back to manual pools.
+One roundtable call per scene at Level A. Level B adds at most one verification call per scene, so the worst case is two calls and the average increase stays under 20 percent. Speaker pre-selection when more than five creatures are present. Drift, consolidation, and breeding are batched at session end into one call. Cache key `stage + trigger + hash(serialised context)` (per `docs/design/CONTEXT.md` §9 and decision 0007), target hit rate above 60 percent. Hard budget about 15 calls per 30 minutes; beyond it, `llm:budget` refuses the call and the route falls back to manual pools.
 
 ## Tech stack
 
@@ -350,5 +344,6 @@ No React, no state library, no parser library, no provider SDK.
 5. Ghost profiles carry portraits only, never raw logs, and are opt-out.
 6. Swarm lying concerns in-game events only. The model never invents facts about the player's real life.
 7. Inversion Mode's AI keeper must never mock the player. It hesitates and errs, but it is gentle.
+8. Environment mirroring (weather) uses only aggregated data the player has **explicitly authorised**, over a same-origin proxy; it never carries device fingerprints, precise coordinates, or other identifiers, and silently degrades when unauthorised. (Decision 0005; not implemented in the jam slice — 0004.)
 
-Red line 7 is the emotional floor: **the endpoint of horror must be empathy, not humiliation.**
+Red line 7 is the emotional floor: **the endpoint of horror must be empathy, not humiliation.** Red line 8 is a data-boundary floor: no real-world ingestion enters the game without consent.

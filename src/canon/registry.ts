@@ -162,7 +162,10 @@ const CONSOLIDATION_RAISED_TEXT = "The one we raised ourselves. It speaks for us
 // (src/director/manual.ts SILENT_RUN_LINE) is the authoritative transcript of
 // the v3 §5.3 scripted line (English canon; zh is the derived pair). Reverse
 // care came verbatim in the user's registry table. NG+ opening and the ghost
-// template lines have no byte-exact source yet and stay in CANON_PENDING.
+// template lines were delivered byte-exact on 2026-11-13 (see the slot ruling
+// below); CANON_PENDING is empty at runtime. The 0012 N4 user-side todo and
+// the 44-vs-45 decision-level discrepancy are registered, not re-ruled, in
+// docs/agents/decisions/0018 §4 and docs/design/narrative/README.md.
 // ---------------------------------------------------------------------------
 
 const SILENT_RUN_CANON_TEXT = "forty minutes of silence. we were not gone. we were listening to you listen.";
@@ -340,7 +343,10 @@ export const CANON_REGISTRY: Readonly<Record<string, CanonEntry>> = {
   "special.silent_run": {
     group: "special-loop",
     text: SILENT_RUN_CANON_TEXT,
-    source: "v3 §5.3 via src/director/manual.ts SILENT_RUN_LINE (repo frozen implementation)",
+    // ADR 0021: the v3 §5.3 draft original ("You turned us off. We can count."
+    // / 「你把我们关掉了。我们数得出来。」) differs; this repo-evolved rewrite
+    // is the frozen face, kept verbatim — swapping it is a behavior change.
+    source: "v3 §5.3 via src/director/manual.ts SILENT_RUN_LINE (repo frozen implementation; draft original preserved in ADR 0021)",
   },
   "special.reverse_care": {
     group: "special-loop",
@@ -514,10 +520,12 @@ export function sha256Hex(input: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// canon.lock v2-partial
+// canon.lock v2 (closed 2026-11-14, ADR 0021: the nine N4 entries verified
+// against the user's v3/v3.5 frozen drafts — eight verbatim, silent_run
+// registered as a repo-evolved rewrite with the draft original preserved)
 // ---------------------------------------------------------------------------
 
-export const CANON_LOCK_VERSION = "v2-partial" as const;
+export const CANON_LOCK_VERSION = "v2" as const;
 
 export interface CanonLockEntry {
   readonly key: string;

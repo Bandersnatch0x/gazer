@@ -162,9 +162,9 @@ describe("canon.lock integrity (CORE-02 §3.6 / CORE-01 §7.1)", () => {
     expect(first).toBe(readFileSync(LOCK_PATH, "utf8"));
   });
 
-  it("keeps lock entries in registry key order at version v2-partial", () => {
+  it("keeps lock entries in registry key order at version v2 (ADR 0021: N4 closed)", () => {
     const lock = computeCanonLock();
-    expect(lock.version).toBe("v2-partial");
+    expect(lock.version).toBe("v2");
     expect(lock.algorithm).toBe("sha256");
     expect(lock.entries.map((entry) => entry.key)).toEqual(REGISTRY_KEYS);
   });
