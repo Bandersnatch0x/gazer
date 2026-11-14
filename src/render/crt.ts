@@ -172,19 +172,17 @@ export function geometryFor(mobile: boolean): CrtGeometry {
 }
 
 /**
- * P5(票 0039):带框整数缩放档位。世界画布的整数缩放纪律不动——档位按
- * "视口减去框体边框带"重算,框体在最大可容纳的整数档下完整可见:
- *   s = floor(min((vw − 边框横带) / 320, (vh − 边框纵带) / 180)),下限 1。
- * 取舍:这会把满配视口的最大档位从"无框档"压低一档(1080p:6→5),换来
- * 外壳永不溢出——框是第四面墙,墙被裁掉比墙大一点更伤正典。视口小于
- * s=1 档的框体(桌面 376×242)时仍取 1 并裁切,声明为最小视口建议。
+ * P5(票 0039)/ 票 0074 修正:带框整数缩放档位。世界画布的整数缩放纪律
+ * 不动——档位按「整框尺寸」重算:框体边框带随画布一起缩放(框 = 逻辑画布
+ * + 边框,全部 × scale),所以 fit 必须除以完整框宽/框高。旧式「视口减去
+ * 不缩放边框带」在 1080p 算出 5 档,渲染侧整框 242×5 = 1210 > 1080,外壳
+ * 与硬件热点被裁(票 0074 实机探针复现)。取整档下限 1;视口小于 1 档框体
+ * (桌面 376×242)时仍取 1 并裁切,声明为最小视口建议。
  */
 export function fitScaleFor(viewportW: number, viewportH: number, geo: CrtGeometry): number {
   const vw = Number.isFinite(viewportW) ? Math.max(0, viewportW) : 0;
   const vh = Number.isFinite(viewportH) ? Math.max(0, viewportH) : 0;
-  const bx = geo.border.left + geo.border.right;
-  const by = geo.border.top + geo.border.bottom;
-  const fit = Math.floor(Math.min((vw - bx) / LOGICAL_WIDTH, (vh - by) / LOGICAL_HEIGHT));
+  const fit = Math.floor(Math.min(vw / geo.frameWidth, vh / geo.frameHeight));
   return Math.max(1, fit);
 }
 

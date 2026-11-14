@@ -252,6 +252,60 @@
         pointer-events: auto;
         z-index: 60;
       }
+      /* 票 0063 B1/B2:按钮条自身不吃点击,只有真按钮接输入;OSD 条挂到
+         #ui{z-index:50} 之上。窄视口把 HUD / OSD / 按钮条拆成互不重叠的三行。 */
+      .gazer-bar {
+        pointer-events: none;
+      }
+      .gazer-bar > * {
+        pointer-events: auto;
+      }
+      .gazer-osd-bar {
+        position: fixed;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 60; /* > #ui 50:elementFromPoint 命中 OSD 自身 */
+        display: flex;
+        pointer-events: none;
+      }
+      .gazer-osd-bar > * {
+        pointer-events: auto;
+      }
+      @media (max-width: 720px) {
+        /* 行 1(8..~32):OSD 钮;行 2(40..72):HUD;行 3(76+):7 个按钮折行。 */
+        .gazer-osd-bar {
+          top: 8px;
+          left: auto;
+          right: 12px;
+          transform: none;
+        }
+        #hud {
+          top: 40px;
+          left: 12px;
+          right: 12px;
+          max-width: calc(100vw - 24px);
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+          max-height: 32px;
+          overflow: hidden;
+        }
+        .gazer-hud > .gazer-bar {
+          top: 76px;
+          left: 12px;
+          right: 12px;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+          gap: 4px;
+          pointer-events: none;
+        }
+        .gazer-hud > .gazer-bar > .gazer-key {
+          pointer-events: auto;
+          padding: 4px 6px;
+          font-size: 10px;
+          letter-spacing: 0.04em;
+        }
+      }
     </style>
   </head>
   <body>

@@ -210,9 +210,21 @@ document.body.append(reflectionChannel.root);
 // 阶段≥3 回显白并转 WAIT。击键喂 G7 镜面律(`playerTyped`)。输入框聚焦时
 // 不劫持(命名面板等的正常打字优先)。
 let terminalInputLine = "";
+// 票 0063 D-4:缓冲逐字回显到 prompt 行 `C:\>` 之后,玩家能看到自己打了什么。
+const syncInputEcho = (): void => terminal.setInputEcho(terminalInputLine);
 document.addEventListener("keydown", (event: KeyboardEvent) => {
+  // 票 0063 D-4:按钮聚焦时 Enter/Space 不再被终端吞掉;输入法组字与已被
+  // 处理的事件不进入缓冲。
+  if (event.defaultPrevented || event.isComposing) {
+    return;
+  }
   const target = event.target;
-  if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
+  if (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLButtonElement ||
+    (target instanceof HTMLElement && target.isContentEditable)
+  ) {
     return;
   }
   if (event.key === "Enter") {
@@ -220,15 +232,18 @@ document.addEventListener("keydown", (event: KeyboardEvent) => {
       terminal.submitInput(terminalInputLine, performance.now());
       terminalInputLine = "";
     }
+    syncInputEcho();
     return;
   }
   if (event.key === "Backspace") {
     terminalInputLine = terminalInputLine.slice(0, -1);
+    syncInputEcho();
     terminal.playerTyped(performance.now());
     return;
   }
   if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
     terminalInputLine += event.key;
+    syncInputEcho();
     terminal.playerTyped(performance.now());
   }
 });
@@ -302,13 +317,17 @@ const osdToggle = document.createElement("button");
 osdToggle.type = "button";
 osdToggle.className = "gazer-key";
 osdToggle.textContent = "OSD";
+// 票 0063 B2:OSD 条提层到 #ui(z-index:50)之上,并落 `.gazer-osd-bar` 类,
+// 窄视口位移交给 index.html 的 @media 规则;条本身不吃点击,只有 OSD 钮 auto。
 const osdBar = document.createElement("div");
-osdBar.style.cssText =
-  "position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:20;display:flex;";
+osdBar.className = "gazer-osd-bar";
 osdBar.append(osdToggle);
 document.body.append(osdBar);
+osdToggle.setAttribute("aria-expanded", "false");
 osdToggle.addEventListener("click", () => {
-  osd.root.style.display = osd.root.style.display === "flex" ? "none" : "flex";
+  const open = osd.root.style.display === "none" || osd.root.style.display === "";
+  osd.root.style.display = open ? "flex" : "none";
+  osdToggle.setAttribute("aria-expanded", String(open));
 });
 
 // A-04 塔周低通:读塔位,区域绑定自动执行,非 LLM 触发。

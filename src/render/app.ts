@@ -14,7 +14,7 @@ import { TWIN_PHASE_EPSILON_MS } from "../sim/genome";
 import { createAudio } from "./audio";
 import type { AudioEngine } from "./audio";
 import type { CanvasInstruction, RenderHost, ShellHandler } from "./effects";
-import { CLOSEUP_DUCK_DB, WINK_MS, apply, dbToGain, plan, winkFaceFor } from "./effects";
+import { CLOSEUP_DUCK_DB, WINK_MS, apply, plan, winkFaceFor } from "./effects";
 import type { RenderEffect } from "./effects";
 import { TOWER_VOID_COLOR, applyPalettePollution, rotatePalette, skyAt } from "./palette";
 import { PALETTE_POLLUTION_MAX_DEGREES, paletteAt } from "./palette";
@@ -70,13 +70,14 @@ export interface RenderApp extends RenderHost {
   /**
    * V1 特写 BGM −4dB (sprite-core ruling ③): the close-up call site asks the
    * host to duck the soundtrack while the pupil fills the screen. The duck is
-   * a real master-gain change (−4 dB), rebuilt through the audio engine.
+   * a real master-gain change (−4 dB) applied to the EXISTING engine via
+   * duckAmbient/unduckAmbient ramps — the engine is never rebuilt (0068).
    */
   setCloseupDuck(active: boolean): void;
   /**
-   * The world's own audio engine handle (ticket 0026's merge seam). It is a
-   * live getter, not a captured instance: the close-up duck rebuilds the
-   * engine underneath, so callers must read through it every time.
+   * The world's own audio engine handle (ticket 0026's merge seam). The
+   * instance is stable for the app's lifetime; the close-up duck only changes
+   * its master gain, so callers may safely hold it.
    */
   readonly audio: AudioEngine;
   destroy(): void;
@@ -114,6 +115,46 @@ const REPLAY_STEP_MS = 260;
 const WITHER_COLOR = 0x8a7d3a;
 /** The audio engine's base master volume; the close-up duck scales it. */
 const BASE_VOLUME = 0.16;
+/** 0068: ramps for the parameterized close-up duck (no engine rebuild). */
+export const CLOSEUP_DUCK_RAMP_MS = 120;
+export const CLOSEUP_UNDUCK_RAMP_MS = 800;
+
+/**
+ * 0068 / T6 — parameterized close-up duck. The −4 dB change is applied to the
+ * EXISTING engine's master gain via `duckAmbient` / `unduckAmbient`; disposing
+ * and recreating the engine used to drop the day's FX audio bed. Idempotent:
+ * a repeated call with the same state is a no-op. Pure with an injected audio
+ * face, so it is testable without WebAudio.
+ */
+export interface DuckableAudio {
+  duckAmbient(db: number, rampMs: number): void;
+  unduckAmbient(rampMs: number): void;
+}
+
+export interface CloseupDuck {
+  readonly active: boolean;
+  set(next: boolean): void;
+}
+
+export function createCloseupDuck(audio: DuckableAudio): CloseupDuck {
+  let active = false;
+  return {
+    get active(): boolean {
+      return active;
+    },
+    set(next: boolean): void {
+      if (next === active) {
+        return;
+      }
+      active = next;
+      if (next) {
+        audio.duckAmbient(CLOSEUP_DUCK_DB, CLOSEUP_DUCK_RAMP_MS);
+      } else {
+        audio.unduckAmbient(CLOSEUP_UNDUCK_RAMP_MS);
+      }
+    },
+  };
+}
 
 interface SpeechBubble {
   readonly container: Container;
@@ -193,8 +234,6 @@ export async function createApp(canvas: HTMLCanvasElement, shell?: ShellHandler,
   let huePermanent = 0;
   /** C-03: the transient hue lean while a recoverable shift is mid-flight. */
   let hueTransient = 0;
-  /** V1 close-up duck (sprite-core ruling ③): the soundtrack sits −4 dB low while held. */
-  let closeupDuck = false;
   /**
    * The single animation clock (ticket 0042): microframes and the 400ms anchor
    * beat both read it, so every creature shares one phase source — no
@@ -220,23 +259,11 @@ export async function createApp(canvas: HTMLCanvasElement, shell?: ShellHandler,
   const ghostLayer = new Container();
   overlayLayer.addChild(ghostLayer, gazeRing, replayLayer, lineageLayer);
 
-  let audio: AudioEngine = createAudio();
-
-  /**
-   * The duck is a real master-gain change: the engine is rebuilt with its base
-   * volume scaled by the −4 dB factor, then retuned to the world's act. The
-   * next pointer press resumes the (possibly new) context, so nothing stays
-   * stuck silent.
-   */
-  function rebuildAudio(): void {
-    audio.dispose();
-    audio = createAudio({ volume: BASE_VOLUME * dbToGain(closeupDuck ? CLOSEUP_DUCK_DB : 0) });
-    if (world !== null) {
-      audio.setStage(world.stage);
-      audio.setSilent(world.silent);
-    }
-    audio.resume();
-  }
+  // 0068: one stable engine for the app's lifetime. The close-up duck only
+  // ramps its master gain — no dispose + createAudio rebuild, so the FX audio
+  // bed (room tone / whisper bed / lowpass) survives a close-up.
+  const audio: AudioEngine = createAudio({ volume: BASE_VOLUME });
+  const closeupDuck = createCloseupDuck(audio);
 
   /** Per-creature movement tween state (A1). Render-only; sim never knows. */
   const tweens = new Map<CreatureId, Tween>();
@@ -1201,11 +1228,7 @@ function drawTiles(tiles: ScenePlan["tiles"], seed: number): void {
       applyCanvas(instruction);
     },
     setCloseupDuck(active: boolean): void {
-      if (active === closeupDuck) {
-        return;
-      }
-      closeupDuck = active;
-      rebuildAudio();
+      closeupDuck.set(active);
     },
     get audio(): AudioEngine {
       return audio;

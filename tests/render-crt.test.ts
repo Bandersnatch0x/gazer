@@ -328,6 +328,51 @@ describe("crt: effect layer parameters (§2.2)", () => {
   });
 });
 
+describe("crt: R11 frame-time-budget acceptance — pre-baked static overlay (§9)", () => {
+  // R11 (docs/design/art/README.md:23, ART-CORE-04 §9) replaces the
+  // un-CI-assertable "GPU 合成 ≤2ms @1080p" with a frame-time-budget
+  // acceptance: composition = CSS/canvas overlay + pre-baked static layers.
+  // What CI can actually assert is the structure that makes that budget
+  // possible — a bounded, deterministic, pure-data recipe baked once, and no
+  // per-frame re-bake in the persistent animation loop. No wall-clock or GPU
+  // millisecond number is asserted here (that was the whole point of R11).
+  const source = readFileSync(
+    fileURLToPath(new URL("../src/render/crt.ts", import.meta.url)),
+    "utf8",
+  );
+
+  it("the effect layer is a bounded, deterministic, pure-data baked recipe with no per-frame re-bake", () => {
+    const recipe = fxPaintOps();
+
+    // 预烘焙静态层: identical input → identical recipe, so the layer is baked
+    // once at session start and reused every frame (no per-frame recompute).
+    expect(fxPaintOps()).toEqual(recipe);
+    // Bounded: a fixed, small op count keeps per-frame overlay work constant,
+    // independent of frame time or world state.
+    expect(recipe.length).toBeGreaterThan(0);
+    expect(recipe.length).toBeLessThanOrEqual(4);
+    // CSS/canvas overlay path: the recipe is pure serialisable data (no closures
+    // or GPU shader handles), so it can be handed to a one-shot overlay bake
+    // rather than a per-frame composite.
+    expect(JSON.parse(JSON.stringify(recipe))).toEqual(recipe);
+    // 逐帧合成期 shader 只留参数位,不进配方(R11 预留槽的帧预算后果)。
+    const kinds = recipe.map((op) => op.kind);
+    expect(kinds).not.toContain("distortion");
+    expect(kinds).not.toContain("breathing");
+
+    // §9 禁止逐帧重绘外壳/效果层:the only per-frame path is animLoop, and it
+    // must never call either bake. (drawWave/drawSpill paint separate overlay
+    // canvases, which is exactly the CSS/canvas overlay composition R11 allows.)
+    const loopStart = source.indexOf("function animLoop()");
+    const loopEnd = source.indexOf("const handle: CrtShellHandle", loopStart);
+    expect(loopStart).toBeGreaterThan(-1);
+    expect(loopEnd).toBeGreaterThan(loopStart);
+    const loop = source.slice(loopStart, loopEnd);
+    expect(loop).not.toContain("bakeShell(");
+    expect(loop).not.toContain("bakeFx(");
+  });
+});
+
 describe("crt: skip rule (§3)", () => {
   it("first boot can never skip", () => {
     expect(skipTarget(3000, { cold: true, firstBoot: true })).toBeNull();
@@ -763,14 +808,14 @@ describe("crt: the render-call counter (§10.10)", () => {
   });
 });
 
-describe("crt: viewport-fit integer scale (票 0039 P5)", () => {
-  it("reserves the frame chrome and keeps the scale a whole number", () => {
-    // 960×600:无框档是 3,但 3 档框体 1128×726 溢出 → 2 档框体 696×436 完整。
+describe("crt: viewport-fit integer scale (票 0039 P5 / 0074 修正)", () => {
+  it("reserves the SCALED frame chrome and keeps the scale a whole number", () => {
+    // 960×600:整框 376×242,2 档 752×484 完整(3 档 1128×726 溢出)。
     expect(fitScaleFor(960, 600, DESKTOP_GEOMETRY)).toBe(2);
-    // 1080p:无框档 6 的框体溢出 → 5 档(1600×900 + 框)完整。
-    expect(fitScaleFor(1920, 1080, DESKTOP_GEOMETRY)).toBe(5);
-    expect(fitScaleFor(1280, 720, DESKTOP_GEOMETRY)).toBe(3);
-    expect(fitScaleFor(800, 480, DESKTOP_GEOMETRY)).toBe(2);
+    // 1080p:整框 242 高,5 档 1210 > 1080(票 0074 实测)→ 4 档 1504×968 完整。
+    expect(fitScaleFor(1920, 1080, DESKTOP_GEOMETRY)).toBe(4);
+    expect(fitScaleFor(1280, 720, DESKTOP_GEOMETRY)).toBe(2);
+    expect(fitScaleFor(800, 480, DESKTOP_GEOMETRY)).toBe(1);
   });
 
   it("never drops below 1 and never returns a fraction", () => {
@@ -790,11 +835,12 @@ describe("crt: viewport-fit integer scale (票 0039 P5)", () => {
     expect(fitScaleFor(960, 600, MOBILE_GEOMETRY)).toBe(2);
   });
 
-  it("the fitted frame fits the viewport by construction", () => {
+  it("the fitted frame fits the viewport by construction (scaled chrome, 票 0074)", () => {
     for (const [w, h] of [[960, 600], [1920, 1080], [1280, 720], [800, 480]] as const) {
       const s = fitScaleFor(w, h, DESKTOP_GEOMETRY);
-      expect(LOGICAL_WIDTH * s + BORDER.left + BORDER.right).toBeLessThanOrEqual(w);
-      expect(LOGICAL_HEIGHT * s + BORDER.top + BORDER.bottom).toBeLessThanOrEqual(h);
+      // The frame renders at (logical + border) × scale — the chrome scales too.
+      expect((LOGICAL_WIDTH + BORDER.left + BORDER.right) * s).toBeLessThanOrEqual(w);
+      expect((LOGICAL_HEIGHT + BORDER.top + BORDER.bottom) * s).toBeLessThanOrEqual(h);
     }
   });
 });

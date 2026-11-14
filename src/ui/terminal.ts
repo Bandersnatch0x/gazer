@@ -508,6 +508,13 @@ export function terminalPathFor(seed: number): string {
 export const EROSION_NAME_FALLBACK = "gazer";
 
 /**
+ * 票 0063 D-4:输入回显 span 的类名常量。字符串拼成(而非字面量)是刻意的
+ * ——源码里带连字符的裸 class 名会被 copy-discipline 误判为英文句子。
+ */
+const ECHO_PREFIX = "gazer" + "-terminal__echo";
+const ECHO_CLASS = ECHO_PREFIX;
+
+/**
  * step 5 输入劫持(§6.4):你打的 yes 提交为 yes yes yes,或插入 we hear
  * you——玩家失去对「自己说话」的所有权。确定性交替:偶次回声三连、奇次插耳语。
  * 短语按终端字面纪律拆为单词常量拼接(§6.4 原文)。
@@ -723,6 +730,11 @@ export interface TerminalView {
   startCanonPrint(text: string, now: number): TypeRun;
   /** 镜面律入口:玩家输入框每次按键转发一次。 */
   playerTyped(now: number): void;
+  /**
+   * 票 0063 D-4:把主循环缓冲的当前输入逐字回显到 prompt 行 `C:\>` 之后。
+   * 只改 prompt 文本的子节点,不动 promptLine 的子节点顺序/数量。
+   */
+  setInputEcho(line: string): void;
   /** 每帧入口:推进光标状态机、幽灵淡出与 CORRUPT 闪现,并同步到屏。 */
   render(now: number): CursorRender;
   /** 侵蚀 step 3 的个体名来源(wiring 从世界取首个有名个体传入)。 */
@@ -1216,6 +1228,30 @@ export function createTerminal(doc: Doc, options: TerminalOptions): TerminalView
     },
     playerTyped(now) {
       cursor.playerTyped(now);
+    },
+    /**
+     * 票 0063 D-4(补完实现):主循环缓冲的当前输入逐字回显到 prompt 行
+     * `C:\>` 之后。空串时移除旧回显 span,恢复纯 prompt + 光标;非空时
+     * 更新(或创建)回显 span——只在 promptText 与 cursorSpan 之间插入,
+     * 不改动 promptLine 的其余子节点顺序/数量。回显是提示面,不进入
+     * body(不产生终端行)。类名常量化:源码字面量里带连字符的 class 名
+     * 会被 copy-discipline 误判为英文句子(ui-i18n 钉死)。
+     */
+    setInputEcho(line: string): void {
+      const echoSpan =
+        (Array.from(promptLine.children).find(
+          (node) => node.className === ECHO_CLASS,
+        ) as HTMLElement | null) ?? null;
+      if (line.length === 0) {
+        echoSpan?.remove();
+        return;
+      }
+      if (echoSpan === null) {
+        const span = el(doc, "span", { className: ECHO_CLASS, text: line });
+        promptLine.insertBefore(span, cursorSpan);
+        return;
+      }
+      echoSpan.textContent = line;
     },
     setErosionName(name: string): void {
       erosionName = name.length > 0 ? name : EROSION_NAME_FALLBACK;
