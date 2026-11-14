@@ -121,13 +121,13 @@ export function seasonForStage(stage: number): Season {
  * are multipliers on the engine's baseline constants.
  *
  * Consumers:
- * - `tickMs`: the wiring runs the loop at `TICK_MS` (the spring baseline) for
- *   now; per-season tick stretch is wired in when the loop timer can be
- *   restructured without touching stream A's frozen wiring calls.
- * - `hungerMultiplier` / `feedRestoreMultiplier`: consumed where the engine
- *   applies stats decay and feed restore — engine.ts belongs to stream F, so
- *   these presets are the parameter interface F reads (ticket 0006). Until
- *   F wires them, they are inert data, not behavior.
+ * - `tickMs`: consumed by `src/game.ts`'s single visibility-aware pump — the
+ *   interval is `seasonParamsForStage(world.stage).tickMs`, re-armed (never
+ *   stacked) whenever the stage/season changes (ticket 0073). It only maps
+ *   wall-clock time to tick count; `step` never sees it, so a replay stays
+ *   byte-identical for the same seed and event sequence.
+ * - `hungerMultiplier` / `feedRestoreMultiplier`: the parameter interface
+ *   stream F reads (ticket 0006); still data, not behavior.
  */
 export interface SeasonParams {
   /** Hunger decay multiplier per tick (spring baseline = 1). */

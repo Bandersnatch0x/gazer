@@ -38,7 +38,19 @@ import {
 import type { BloomPoint } from "./render/crt";
 import type { TowerEnding } from "./sim/endings";
 import { evaluateEnding, isGazeTower, livingOf } from "./sim/endings";
-import { buildGhostArchive, fillGhostTemplate, fillNgpOpening, ghostBlendRatio, keptMemoriesSufficient, keptMemoryCount, resolveDramaticId } from "./sim/ghosts";
+import {
+  appendGhostProfiles,
+  buildGhostArchive,
+  fillGhostTemplate,
+  fillNgpOpening,
+  GHOST_OPT_OUT_STORAGE_KEY,
+  GHOST_OPT_OUT_URL_PARAM,
+  ghostBlendRatio,
+  isGhostArchiveOptedOut,
+  keptMemoriesSufficient,
+  keptMemoryCount,
+  resolveDramaticId,
+} from "./sim/ghosts";
 import type { GhostProfile } from "./sim/ghosts";
 import { CANON_REGISTRY, canonGlyphs, canonLine } from "./canon";
 import { canonPrintDurationMs } from "./ui/terminal";
@@ -51,6 +63,11 @@ import {
   isUnlivedMemory,
   SILENT_RUN_LINE,
 } from "./director/manual";import { parseRoundtable, validateTurns } from "./director/roundtable";
+import { createBridgeRuntime } from "./bridge";
+import type { BridgeCallSource, BridgeRuntime, BudgetSnapshot } from "./bridge";
+import { askWithFallback, filterPayload } from "./director/filter";
+import type { DirectorLike } from "./director/filter";
+import type { LevelBVerdict } from "./director/verify";
 import { routeTask } from "./director/router";
 import { buildContext } from "./director/context";
 import type { AttendingCreature } from "./director/context";
@@ -67,7 +84,7 @@ import { crossFaction } from "./sim/social";
 import { applyConsolidation, fallbackConsolidate } from "./sim/consolidate";
 import { gvDeltaFor } from "./sim/ledger";
 import type { LedgerEvent } from "./sim/ledger";
-import { RHYTHM, TICK_MS } from "./sim/rhythm";
+import { RHYTHM, TICK_MS, seasonParamsForStage } from "./sim/rhythm";
 import { DEFAULT_WORLD_SEED, normalizeWorldSeed, worldCalendarAt, worldDay, worldHour } from "./sim/clock";
 import { midnightSilenceAt, shellPerformanceAt } from "./sim/shell";
 import {
@@ -90,7 +107,8 @@ import type { ReflectionSnapshot } from "./ui/projection";
 import { createRng, hashString } from "./sim/rng";
 import type { Stage, CreatureState, CreatureId, WorldState, Mood } from "./sim/types";
 import { INITIAL_GV } from "./sim/types";
-import type { RoundtableScript, TurnIntent } from "./sim/roundtable";
+import { loadWorld, saveWorld } from "./sim/save";
+import type { RoundtableScript, RoundtableTurn, TurnIntent } from "./sim/roundtable";
 import { courtshipStep, step, DEFAULT_MASK, GRID_MAX, GRID_MIN, towerSpawnDue } from "./sim/engine";
 import type { HatchChoice, TilePos } from "./sim/types";
 import { createRegistry } from "./sim/hooks";
@@ -151,11 +169,11 @@ import type { Locale } from "./ui/i18n";
 import { COPY } from "./ui/copy";
 
 /**
- * Tempo constants live in `sim/rhythm.ts` (stream B, ticket 0002); this file
- * only references them. The wall-clock tick is stretched to 3s so ten minutes
- * without feeding does not kill (§3) — the deterministic core is untouched.
+ * Tempo constants live in `sim/rhythm.ts` (stream B, ticket 0002). The wall
+ * clock is stretched to the season's `tickMs` (spring 3000ms baseline) so ten
+ * minutes without feeding does not kill (§3); the deterministic core is
+ * untouched — the interval only maps wall time to tick count (ticket 0073).
  */
-const TILE_MS = TICK_MS;
 const STARTER_IDS = ["gazer_01", "gazer_02", "gazer_03"] as const;
 const START_POSITIONS = [
   { x: 6, y: 5 },
@@ -230,6 +248,137 @@ export function towerClickFeedback(gv: number): "glyphs" | "terminal" | null {
  */
 export function debugWriteFaceEnabled(isDev: boolean, debugParam: string | null): boolean {
   return isDev && debugParam === "1";
+}
+
+// ---------------------------------------------------------------------------
+// 0068 / T6 — concurrency & robustness primitives. All pure: no clock, no I/O,
+// so the sim tick stays deterministic (ARCHITECTURE.md §Replay: the simulation
+// is a pure reducer with "No clock, no randomness beyond the stored seed").
+// ---------------------------------------------------------------------------
+
+/**
+ * Scene request epoch. A late LLM reply whose token is no longer the current
+ * one is dropped: it must not play a scene, speak a manual fallback, or mutate
+ * HUD/memory state over a newer request.
+ */
+export interface SceneEpoch {
+  readonly current: number;
+  next(): number;
+  isCurrent(token: number): boolean;
+}
+
+export function createSceneEpoch(): SceneEpoch {
+  let current = 0;
+  return {
+    get current(): number {
+      return current;
+    },
+    next(): number {
+      current += 1;
+      return current;
+    },
+    isCurrent(token: number): boolean {
+      return Number.isInteger(token) && token === current;
+    },
+  };
+}
+
+/** The `.then` decision for a scene reply; extracted so the drop rule is testable. */
+export type SceneDelivery<T> =
+  | { readonly status: "dropped" }
+  | { readonly status: "manual" }
+  | { readonly status: "deliver"; readonly scene: T };
+
+export function sceneDelivery<T>(epoch: SceneEpoch, token: number, scene: T | null): SceneDelivery<T> {
+  if (!epoch.isCurrent(token)) {
+    return { status: "dropped" };
+  }
+  if (scene === null) {
+    return { status: "manual" };
+  }
+  return { status: "deliver", scene };
+}
+
+/**
+ * Visibility driver. Hidden tabs stop the pump; returning only RE-ARMS it. It
+ * never backfills `world.tick` from wall-clock elapsed time and never reads a
+ * system clock into the sim — the only source of ticks is the interval callback.
+ * Interval handles are generic/injected so the rule is testable in Node.
+ *
+ * 0073: `intervalMs` may be a live provider (season tickMs). `rearm()` clears
+ * the single interval and re-arms with the current value; it is a no-op when
+ * unchanged, when stopped, or while hidden (the visibility resume path arms
+ * with the live value itself). At most one interval exists at any time.
+ */
+export interface VisibilityDriverDeps<Handle> {
+  readonly setInterval: (fn: () => void, ms: number) => Handle;
+  readonly clearInterval: (handle: Handle) => void;
+  /** Static ms, or a live provider re-read on every arm / rearm (0073). */
+  readonly intervalMs: number | (() => number);
+  readonly tick: () => void;
+}
+
+export interface VisibilityDriver {
+  start(): void;
+  /** Clear + re-arm with the current interval; no-op when unchanged/stopped. */
+  rearm(): void;
+  onVisibility(hidden: boolean): void;
+  stop(): void;
+  readonly running: boolean;
+  /** The interval currently armed, in ms. */
+  readonly interval: number;
+}
+
+export function createVisibilityDriver<Handle>(
+  deps: VisibilityDriverDeps<Handle>,
+): VisibilityDriver {
+  let handle: Handle | null = null;
+  const currentInterval = (): number =>
+    typeof deps.intervalMs === "function" ? deps.intervalMs() : deps.intervalMs;
+  let armedMs = currentInterval();
+  const arm = (): void => {
+    if (handle !== null) {
+      return;
+    }
+    armedMs = currentInterval();
+    handle = deps.setInterval(deps.tick, armedMs);
+  };
+  const clear = (): void => {
+    if (handle !== null) {
+      deps.clearInterval(handle);
+      handle = null;
+    }
+  };
+  return {
+    start: arm,
+    rearm(): void {
+      // Hidden / stopped: stay stopped — onVisibility(false) arms with the
+      // live interval. Only one timer is ever created here.
+      if (handle === null || currentInterval() === armedMs) {
+        return;
+      }
+      clear();
+      arm();
+    },
+    get running(): boolean {
+      return handle !== null;
+    },
+    get interval(): number {
+      return armedMs;
+    },
+    onVisibility(hidden: boolean): void {
+      if (hidden) {
+        clear();
+        return;
+      }
+      // Resume: re-arm ONLY. No `Date.now()` delta, no extra `tick()` calls —
+      // missed wall-clock time is never converted into world time.
+      arm();
+    },
+    stop(): void {
+      clear();
+    },
+  };
 }
 
 /**
@@ -1010,10 +1159,16 @@ function fillCanonSlot(skeleton: string, token: string, value: string): string {
  * byte-identical cues. Line order: header → F1…F7 verbatim (reconstructed
  * markers at the joints) → ② the NG+ ghost replay when the archive carries a
  * ghost → F8 (natural end) → +4s the unison line → the divergence tail.
+ *
+ * 0065: the {n}≥3 gate is a *reconstruction* gate, not a gate on the true
+ * ending. A deathless 8/8 `glyphsRead` run has no ghost archive, so it gets a
+ * degraded-but-valid sequence (n=0, d=0, frozen canon only) instead of being
+ * refused outright. Callers that omit `glyphsRead` keep the strict gate.
  */
 export function buildRecordingSequence(input: {
   readonly ngPlus: boolean;
   readonly archive: readonly GhostProfile[];
+  readonly glyphsRead?: readonly string[] | undefined;
 }): RecordingSequence {
   const refused: RecordingSequence = {
     ok: false,
@@ -1022,8 +1177,9 @@ export function buildRecordingSequence(input: {
     log: [],
     fx: { freezeMs: 0, trackRemoveMs: 0, roomToneGain: RECORDING_ROOM_TONE_GAIN, gazeMs: RECORDING_GAZE_MS },
   };
-  // {n}≥3 门(§5.1):低于此数,重构拒绝拼装。
-  if (!keptMemoriesSufficient(input.archive)) {
+  // {n}≥3 门(§5.1):低于此数,重构拒绝拼装;0065 例外:真·凝视 8/8 读走
+  // 时降级放行(零死亡周目也有录音演出)。
+  if (!keptMemoriesSufficient(input.archive) && !isGazeTower(input.glyphsRead)) {
     return refused;
   }
   const headerSkeleton = canonLine("recording.header");
@@ -1098,6 +1254,184 @@ export function buildRecordingSequence(input: {
       roomToneGain: RECORDING_ROOM_TONE_GAIN,
       gazeMs: RECORDING_GAZE_MS,
     },
+  };
+}
+
+/**
+ * 0065: NG+ opening from the persisted world. The {id} slot resolves through
+ * the carried ghost archive / death account; a deathless 8/8 gaze run has no
+ * ghost, so the smallest creature id becomes the "kept spot" face — always a
+ * valid id, never a leftover `{id}` token. Opt-out reports nothing.
+ * Pure: same world, same opening, byte for byte.
+ */
+export function ngpOpeningFor(
+  world: WorldState,
+  ngPlus: boolean,
+  optOut: boolean,
+): { readonly text: string; readonly ghostId: CreatureId } | null {
+  if (!ngPlus || optOut) {
+    return null;
+  }
+  const carried = resolveDramaticId(world);
+  const ids = Object.keys(world.creatures).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  const fallback = isGazeTower(world.glyphsRead) ? (ids[0] ?? null) : null;
+  const id = carried ?? fallback;
+  if (id === null) {
+    return null;
+  }
+  const text = fillNgpOpening(id);
+  return text === null ? null : { text, ghostId: id };
+}
+
+/**
+ * 0065: the recording latch. `fired` is armed ONLY when the sequence actually
+ * started; a refused sequence leaves `pending` so the tick loop can retry
+ * (e.g. once the 8th glyph is read). Pure, so the wiring is unit-testable.
+ */
+export function nextRecordingState(
+  fired: boolean,
+  sequenceOk: boolean,
+): { readonly fired: boolean; readonly pending: boolean } {
+  if (fired) {
+    return { fired: true, pending: false };
+  }
+  return sequenceOk ? { fired: true, pending: false } : { fired: false, pending: true };
+}
+
+// ---------------------------------------------------------------------------
+// 0066 + 0067: the single Level A / Level B LLM seam. Exported pure wiring so
+// the integration tests can inject a fake client and verifier (no DOM).
+// ---------------------------------------------------------------------------
+
+export interface SceneWiring {
+  readonly runtime: BridgeRuntime;
+  readonly client: DirectorLike;
+  readonly contextText: string;
+  readonly stage: Stage;
+  readonly trigger: string;
+  readonly now: number;
+  readonly manualLine: string;
+  readonly memories: Readonly<Record<CreatureId, MemorySlice>>;
+  readonly pools: Readonly<Record<CreatureId, readonly string[]>>;
+  readonly present: readonly CreatureId[];
+  /** Injected verifier; a thrown / timed-out call keeps the original line. */
+  readonly verifyTurn?: (turn: RoundtableTurn) => Promise<LevelBVerdict>;
+}
+
+export interface SceneInference {
+  readonly speaker: CreatureId;
+  readonly entry: MemoryEntry;
+}
+
+export type SceneOutcome =
+  | {
+      readonly kind: "scene";
+      readonly script: RoundtableScript;
+      readonly source: BridgeCallSource;
+      readonly budgetRefused: boolean;
+      readonly inferred: readonly SceneInference[];
+      readonly verified: number;
+    }
+  | {
+      readonly kind: "manual";
+      readonly line: string;
+      readonly source: "fallback";
+      readonly budgetRefused: boolean;
+      readonly inferred: readonly SceneInference[];
+      readonly verified: number;
+    };
+
+/**
+ * `runtime.call` owns the hard budget and the cache (cache hit -> budget
+ * refusal -> ask -> settle -> cache set). `ask` goes through `askWithFallback`
+ * so schema / blocklist / retry failures really degrade to the manual pool;
+ * `validate` filters both model text and cache hits. Level B is gated by
+ * `runtime.levelB.shouldVerify` (at most one per scene) and `applyVerdict`
+ * returns the inferred memory for the caller to append. Pure except the
+ * injected `ask` / `verifyTurn`.
+ */
+export async function resolveRoundtableScene(w: SceneWiring): Promise<SceneOutcome> {
+  const manual = (line: string, budgetRefused: boolean): SceneOutcome => ({
+    kind: "manual",
+    line,
+    source: "fallback",
+    budgetRefused,
+    inferred: [],
+    verified: 0,
+  });
+  const out = await w.runtime.call(
+    {
+      stage: w.stage,
+      trigger: w.trigger,
+      serialisedContext: w.contextText,
+      now: w.now,
+    },
+    {
+      ask: async () => {
+        const asked = await askWithFallback(w.client, w.contextText, w.manualLine);
+        if (!asked.ok) {
+          return null;
+        }
+        try {
+          // The upstream payload is a parsed scene object; a canonical string
+          // is what the cache stores and what we re-parse on a hit.
+          return JSON.stringify(asked.payload);
+        } catch {
+          return null;
+        }
+      },
+      validate: (text) => {
+        try {
+          const payload: unknown = JSON.parse(text);
+          return filterPayload(payload).ok && parseRoundtable(payload) !== null;
+        } catch {
+          return false;
+        }
+      },
+      fallback: () => w.manualLine,
+    },
+  );
+  if (out.source === "fallback") {
+    return manual(out.text, out.budgetRefused);
+  }
+  let parsed: unknown = null;
+  try {
+    parsed = JSON.parse(out.text);
+  } catch {
+    return manual(w.manualLine, false);
+  }
+  const raw = parseRoundtable(parsed);
+  const validated = raw === null ? null : validateTurns(raw, w.memories, w.pools);
+  if (validated === null) {
+    return manual(w.manualLine, false);
+  }
+  let verified = 0;
+  const inferred: SceneInference[] = [];
+  const scene: RoundtableTurn[] = [];
+  for (const turn of validated.scene) {
+    let settled = turn;
+    if (w.verifyTurn !== undefined && w.runtime.levelB.shouldVerify(turn, w.stage, w.present, verified)) {
+      verified += 1;
+      try {
+        const verdict = await w.verifyTurn(turn);
+        const applied = w.runtime.levelB.applyVerdict(turn, verdict, w.memories);
+        settled = applied.turn;
+        if (applied.inferred !== null) {
+          inferred.push({ speaker: turn.speaker, entry: applied.inferred });
+        }
+      } catch {
+        // A failed / timed-out verification keeps the original line.
+      }
+    }
+    scene.push(settled);
+  }
+  return {
+    kind: "scene",
+    script: { scene },
+    source: out.source,
+    budgetRefused: false,
+    inferred,
+    verified,
   };
 }
 
@@ -1235,6 +1569,14 @@ export interface GameHandle {
    * 派生自存档状态,非存储位——世界记不住的谎言这里说不出口。
    */
   readonly recordingUnlocked: () => boolean;
+  /**
+   * 0066/0067: last Level A outcome for the HUD. `source` is cache/model/
+   * fallback; `budgetRefused` means `llm:budget` refused the call. No error
+   * UI is ever shown — exhaustion stays inside the fiction.
+   */
+  readonly llmStatus: () => { readonly source: BridgeCallSource | null; readonly budgetRefused: boolean };
+  /** 0066: snapshot of the very admission object the llm:budget hook reads. */
+  readonly budgetSnapshot: () => BudgetSnapshot | null;
   destroy(): void;
 }
 
@@ -1248,6 +1590,12 @@ export interface GameOptions {
    * with no persistence at all — locale falls back, nothing is saved.
    */
   readonly storage?: Storage | null;
+  /**
+   * 0065 / red line 5: when true, no ghost profile is written or reported.
+   * `?ghosts=off` and the `gazer-ghost-optout` storage flag are honoured too,
+   * so a player can opt out without a UI change (the setter is out of scope).
+   */
+  readonly ghostOptOut?: boolean;
 }
 
 export async function createGame(options: GameOptions): Promise<GameHandle> {
@@ -1269,14 +1617,48 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   };
   let locale: Locale = detectLocale(location.search, storageGet(LOCALE_STORAGE_KEY));
   const silent = options.endpoint === null;
+  // 0065: ghost-archive opt-out (red line 5). Three read-only signals; a
+  // restored 0064 save may already carry profiles, so opt-out clears them.
+  const ghostOptOut = isGhostArchiveOptedOut({
+    option: options.ghostOptOut ?? false,
+    urlFlag: new URLSearchParams(location.search).get(GHOST_OPT_OUT_URL_PARAM),
+    storageFlag: storageGet(GHOST_OPT_OUT_STORAGE_KEY),
+  });
 
   // The world seed (ticket 0008): accepted from `?seed=` at boot, normalized,
   // falling back to the default when absent. Pure input — no wall clock.
   const rawSeed = new URLSearchParams(location.search).get("seed");
-  let world = initialWorld(rawSeed ?? DEFAULT_WORLD_SEED);
+  // 0064: restore the world body from the versioned save. An explicit ?seed=
+  // still wins (a fresh world with that seed), preserving the pre-0064 URL
+  // semantics; a bad/old archive resolves to null and falls back to a new one.
+  const restoredWorld = loadWorld(storage);
+  let world = rawSeed !== null || restoredWorld === null
+    ? initialWorld(rawSeed ?? DEFAULT_WORLD_SEED)
+    : restoredWorld;
+  if (ghostOptOut && (world.ghosts?.length ?? 0) > 0) {
+    world = { ...world, ghosts: [] };
+  }
+  // Boot-time save: a refresh inside the first throttle window still restores.
+  saveWorld(storage, world);
+  // 0068: the frame-session snapshot is written at boot, on each throttled
+  // world save (≤ once / 10s) and on clean destroy — NEVER per tick. It used
+  // to JSON.stringify on every tick, the last remaining per-tick stringify.
+  const writeSessionSnapshot = (clean: boolean): void => {
+    storageSet(
+      FRAME_SESSION_STORAGE_KEY,
+      JSON.stringify({ gv: Math.round(world.gv), clean }),
+    );
+  };
+  writeSessionSnapshot(false);
+  // Private slices live in the closure as well as in world.memories (the tick
+  // loop re-syncs them). Seed the closure from the restored world so a refresh
+  // does not wipe whispered/consolidated memories on the first tick.
   const memories: Record<string, MemorySlice> = {};
+  for (const [id, slice] of Object.entries(world.memories ?? {})) {
+    memories[id] = slice;
+  }
   for (const id of STARTER_IDS) {
-    memories[id] = emptySlice();
+    if (memories[id] === undefined) memories[id] = emptySlice();
   }
   let ontology: OntologyLedger = emptyOntology();
   let adjacency: AdjacencyState = {};
@@ -1394,7 +1776,8 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       ngPlus = true;
       storageSet(FRAME_NGPLUS_STORAGE_KEY, "1");
     }
-    // 真结局录音演出链(票 0050):评估链已判 8/8 + GV100,本票管演出。
+    // 真结局录音演出链(票 0050/0065):评估链已判 8/8 glyphsRead
+    // (0072 起与 GV 解耦),本票管演出。
     if (kind === "gaze") {
       startRecordingPerformance();
     }
@@ -1423,6 +1806,18 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   let latestNews: NewsSnapshot | null = null;
   const telemetry = createTelemetryRecorder();
   const registry = createRegistry();
+  // 0066: the single bridge import. game.ts keeps no second budget/cache;
+  // vite.config.ts middleware shares createBudgetAdmission with this runtime.
+  const runtime = createBridgeRuntime();
+  let lastLlmSource: BridgeCallSource | null = null;
+  let budgetRefusedForHud = false;
+  let lastBudgetSnapshot: BudgetSnapshot | null = null;
+  /**
+   * 0073: late-bound re-arm hook. No-op until the visibility driver exists, so
+   * an early onStageChange cannot touch a not-yet-created timer. The driver
+   * itself owns the single interval; this only asks it to re-read the season.
+   */
+  let rearmLoop: () => void = () => undefined;
   registry.register({
     point: "sim:tick",
     id: "gv_accumulator",
@@ -1437,6 +1832,17 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     priority: 10,
     sync: true,
     handler: () => undefined,
+    logged: false,
+  });
+  registry.register({
+    point: "llm:budget",
+    id: "bridge_budget_probe",
+    priority: 10,
+    sync: true,
+    // 0066: the hook point reads the SAME admission object runtime.call uses.
+    handler: () => {
+      lastBudgetSnapshot = runtime.budget.snapshot(Date.now());
+    },
     logged: false,
   });
 
@@ -1454,9 +1860,16 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     handleShellEffect(instruction);
   });
 
+  // 0067: red line 2 at runtime — one retry on malformed output plus the
+  // schema + keyword blocklist gate (both opt-in and owned by client/filter).
   const client = options.endpoint === null
     ? null
-    : createDirectorClient({ endpoint: options.endpoint, timeoutMs: routeTask("roundtable").timeoutMs });
+    : createDirectorClient({
+        endpoint: options.endpoint,
+        timeoutMs: routeTask("roundtable").timeoutMs,
+        retries: 1,
+        payloadFilter: filterPayload,
+      });
 
   const hud = doc.createElement("div");
   hud.className = "gazer-hud";
@@ -1654,8 +2067,31 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
    * and the terminal TYPE face derives its per-character intervals from it
    * (ticket 0044).
    */
+  /**
+   * 0066 Level B: the verifier sees ONLY the speaker's own slice (a separate
+   * single-creature context). The level_b route has no server-side dialect, so
+   * the verdict is derived engine-side; `resolveRoundtableScene` accepts an
+   * injected model-backed verifier through the very same seam. A failed or
+   * unavailable verifier keeps the original line ("yes").
+   */
+  async function verifyRoundtableTurn(turn: RoundtableTurn): Promise<LevelBVerdict> {
+    const own = memories[turn.speaker];
+    const cited = own?.working.find((entry) => entry.id === turn.memoryRef);
+    if (cited !== undefined && cited.witnessed === "witnessed") {
+      return { verdict: "yes", replacement: null };
+    }
+    return {
+      verdict: "no",
+      replacement: manualLine(world.stage, world.seed, telemetry.getTelemetry()),
+    };
+  }
+
+  // 0068: every scene request takes a token; a late reply is dropped.
+  const sceneEpoch = createSceneEpoch();
+
   async function directScene(
     trigger: string,
+    token: number,
   ): Promise<{ readonly script: RoundtableScript; readonly latencyMs: number } | null> {
     if (client === null) {
       return null;
@@ -1670,22 +2106,58 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       tick: world.tick,
       locale: locale === "zh" ? "Simplified Chinese" : "English",
     });
-    const askStartedAt = Date.now();
-    const result = await client.ask(context.text);
-    const latencyMs = Date.now() - askStartedAt;
-    if (!result.ok) {
-      return null;
-    }
-    const script = parseRoundtable(result.payload);
-    if (script === null) {
-      return null;
-    }
     const pools: Record<string, readonly string[]> = {};
     for (const creature of Object.values(world.creatures)) {
       pools[creature.id] = creature.genome?.manualPool ?? [];
     }
-    const validated = validateTurns(script, memories, pools);
-    return validated === null ? null : { script: validated, latencyMs };
+    const askStartedAt = Date.now();
+    // 0066: the llm:budget hook reads the SAME admission object runtime.call
+    // uses; game.ts holds no second budget or cache implementation.
+    registry.runPoint("llm:budget", {
+      point: "llm:budget",
+      tick: world.tick,
+      state: world,
+      event: null,
+      payload: { trigger, stage: world.stage },
+    });
+    const outcome = await resolveRoundtableScene({
+      runtime,
+      client,
+      contextText: context.text,
+      stage: world.stage,
+      trigger: "roundtable",
+      now: askStartedAt,
+      manualLine: manualLine(world.stage, world.seed, telemetry.getTelemetry()),
+      memories,
+      pools,
+      present: attendingCreatures().map((creature) => creature.state.id),
+      verifyTurn: verifyRoundtableTurn,
+    });
+    if (!sceneEpoch.isCurrent(token)) {
+      // A late reply from an older request: drop it before it touches HUD
+      // state or memories. The caller drops it before playScene as well.
+      return null;
+    }
+    const latencyMs = Date.now() - askStartedAt;
+    lastLlmSource = outcome.source;
+    budgetRefusedForHud = outcome.budgetRefused;
+    if (outcome.kind === "manual") {
+      // speakScene degrades to the manual pool; no error UI, no spinner.
+      return null;
+    }
+    // 0066 Level B: append the inferred memory to the speaker's own slice and
+    // keep world.memories in sync so the next scene and the save see it.
+    for (const item of outcome.inferred) {
+      const slice = memories[item.speaker] ?? emptySlice();
+      memories[item.speaker] = {
+        working: [...slice.working, item.entry].slice(-WORKING_CAPACITY),
+        consolidated: slice.consolidated,
+      };
+    }
+    if (outcome.inferred.length > 0) {
+      world = { ...world, memories: { ...memories } };
+    }
+    return { script: outcome.script, latencyMs };
   }
 
   // Timers for the in-flight scene playback. A new scene cancels the old one's
@@ -1730,23 +2202,31 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   const recordingQueue: RecordingDispatch[] = [];
   const recordingProvenance: RecordingLogEntry[] = [];
   let recordingFired = false;
+  let recordingPending = false;
   let recordingWindow = false;
 
   /**
-   * 演出启动(交付形状 1):recordEnding("gaze")(评估链已判 8/8 + GV100)
-   * 后恰一次。计划由 buildRecordingSequence 一次算定,这里只照单排程:
-   * canon/reconstructed 线索按 atMs 压队,④ 拍跑 C-06 canonical 围环 +
-   * 全存活齐声,冻结窗与抽轨窗盖全程。
+   * 演出启动(交付形状 1):recordEnding("gaze")(评估链已判 8/8 glyphsRead,
+   * 0072 起与 GV 解耦)后恰一次。计划由 buildRecordingSequence 一次算定,
+   * 这里只照单排程:canon/reconstructed 线索按 atMs 压队,④ 拍跑 C-06
+   * canonical 围环 + 全存活齐声,冻结窗与抽轨窗盖全程。
+   * 0065: recordingFired 只在序列成功启动后置位;失败留 pending 由 tick 重试。
    */
   function startRecordingPerformance(): void {
     if (recordingFired) {
       return;
     }
-    recordingFired = true;
-    // 档案面:NG+ 携带档(world.ghosts)优先,首周目用本存档亡者重构。
-    const carried = world.ghosts ?? [];
-    const archive = carried.length > 0 ? carried : buildGhostArchive(world);
-    const sequence = buildRecordingSequence({ ngPlus, archive });
+    // 档案面:NG+ 携带档(world.ghosts)优先,首周目用本存档亡者重构;
+    // opt-out 时档案清空(不写画像、不上报,仅冻结正典行保留)。
+    let archive: readonly GhostProfile[] = [];
+    if (!ghostOptOut) {
+      const carried = world.ghosts ?? [];
+      archive = carried.length > 0 ? carried : buildGhostArchive(world);
+    }
+    const sequence = buildRecordingSequence({ ngPlus, archive, glyphsRead: world.glyphsRead });
+    const latch = nextRecordingState(recordingFired, sequence.ok);
+    recordingFired = latch.fired;
+    recordingPending = latch.pending;
     if (!sequence.ok) {
       return;
     }
@@ -1795,16 +2275,12 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     }, sequence.totalMs);
   }
 
-  // NG+ 开场接线(交付形状 5):NG+ 存档首启,幽灵档案里最戏剧的一幕开口。
-  if (ngPlus) {
-    const dramaticId = resolveDramaticId(world);
-    if (dramaticId !== null) {
-      const opening = fillNgpOpening(dramaticId);
-      if (opening !== null) {
-        recordingQueue.push({ kind: "reconstructed", text: opening });
-        recordingProvenance.push({ text: opening, source: "ghost", ghostId: dramaticId });
-      }
-    }
+  // NG+ 开场接线(0065):读持久档(world.ghosts / 死亡账)解析 {id};
+  // opt-out 不写画像、不上报,零死亡 gaze 档走最小存活 id 兜底。
+  const ngpOpening = ngpOpeningFor(world, ngPlus, ghostOptOut);
+  if (ngpOpening !== null) {
+    recordingQueue.push({ kind: "reconstructed", text: ngpOpening.text });
+    recordingProvenance.push({ text: ngpOpening.text, source: "ghost", ghostId: ngpOpening.ghostId });
   }
 
   /**
@@ -1894,14 +2370,21 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     if (canonJustOwned(awakening, world.tick)) {
       return;
     }
-    void directScene(trigger).then((scene) => {
-      if (scene === null) {
+    const token = sceneEpoch.next();
+    void directScene(trigger, token).then((scene) => {
+      // 0068: a newer request supersedes this one — no playScene, no manual
+      // fallback, no overwrite of the current scene.
+      const delivery = sceneDelivery(sceneEpoch, token, scene);
+      if (delivery.status === "dropped") {
+        return;
+      }
+      if (delivery.status === "manual") {
         if (speechPermitted()) {
           speakManual(world.stage, world.tick, fallbackStatus);
         }
         return;
       }
-      playScene(scene.script, scene.latencyMs);
+      playScene(delivery.scene.script, delivery.scene.latencyMs);
     });
   }
 
@@ -2301,6 +2784,8 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     }
     // 圆桌的正典门在 speakScene 内裁断(E3 替换 / 本触发由正典主秀 / 静默配额)。
     speakScene(`stage crossed to ${next}`, "witnessed");
+    // 0073: stage → season change; re-arm the single pump with the new tickMs.
+    rearmLoop();
   }
 
   let lastPointerMove = 0;
@@ -2471,6 +2956,20 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     // This ticket owns no stylesheet: the overlay carries its own inline face.
     overlay.style.cssText =
       "position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:60;cursor:pointer;";
+    // 票 0063 B6:全屏遮罩是对话框面,不是输入陷阱——键盘用户必须有退出路径。
+    // role/aria 让读屏知道这是一个模态;tabindex=-1 使 overlay 可编程聚焦;
+    // Escape 与可聚焦关闭按钮两条路都走同一 dispose,pointerdown 语义不变。
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-label", "pupil closeup");
+    overlay.tabIndex = -1;
+    const closeKey = (event: KeyboardEvent): void => {
+      if (event.key === "Escape") {
+        event.stopPropagation();
+        dispose();
+      }
+    };
+    doc.addEventListener("keydown", closeKey);
     const eye = doc.createElement("canvas");
     eye.width = CLOSEUP_SIZE;
     eye.height = CLOSEUP_SIZE;
@@ -2489,8 +2988,9 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
         clearInterval(frameTimer);
         frameTimer = null;
       }
-      // V1 特写合上即恢复原音量(−4dB duck 反面);经 RenderApp 现读,
-      // duck 内部重建的引擎实例永不陈旧(票 0031 项 2)。
+      doc.removeEventListener("keydown", closeKey);
+      // V1 特写合上即恢复原音量(−4dB duck 反面);0068 起 duck 只调
+      // 既有引擎的 master gain,实例恒定(票 0031 项 2 / 0068)。
       app.setCloseupDuck(false);
       overlay.remove();
       closeup = null;
@@ -2524,8 +3024,23 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       }
     });
     overlay.append(eye);
+    // 票 0063 B6:可聚焦关闭按钮——键盘用户不需要瞎点屏幕也能退出。
+    const closeButton = doc.createElement("button");
+    closeButton.type = "button";
+    closeButton.className = "gazer-closeup__close";
+    closeButton.textContent = "×";
+    closeButton.setAttribute("aria-label", "close pupil closeup");
+    closeButton.style.cssText =
+      "position:absolute;top:10px;right:14px;background:transparent;color:#cfe8d5;border:1px solid #2a322a;font:14px/1 ui-monospace,monospace;padding:4px 10px;cursor:pointer;";
+    closeButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      dispose();
+    });
+    overlay.append(eye, closeButton);
     root.append(overlay);
     closeup = { dispose };
+    // 票 0063 B6:打开即聚焦遮罩,Escape 生效前提(tabindex=-1 使其可聚焦)。
+    overlay.focus();
     // V1 特写开屏:世界 BGM −4dB(经 RenderApp 的实时引擎句柄,票 0031 项 2)。
     app.setCloseupDuck(true);
     frameTimer = setInterval(draw, 33);
@@ -2934,6 +3449,9 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
         }
       }
     }
+    // 0065: 死亡即经 ghosts.ts 入档(append-only、按 id 去重);随 0064
+    // 存档持久化,新会话 hydrate 可取。opt-out 不写画像。
+    world = appendGhostProfiles(world, memories, ghostOptOut);
   }
 
   let silentLineShown = false;
@@ -3030,7 +3548,31 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     }
   }
 
-  const timer = setInterval(() => {
+  // 0064: throttled world persistence. The world changes every tick, but
+  // JSON.stringify is only paid when the throttle window has elapsed — never
+  // per tick. pagehide / destroy flush the latest state on the way out.
+  const WORLD_SAVE_THROTTLE_MS = 10_000;
+  let worldSaveDirty = false;
+  let lastWorldSaveAt = Date.now();
+  const markWorldDirty = (): void => { worldSaveDirty = true; };
+  const flushWorldSave = (nowMs: number): void => {
+    if (!worldSaveDirty || nowMs - lastWorldSaveAt < WORLD_SAVE_THROTTLE_MS) return;
+    // 0064: versioned world body. 0068: keep the session gv fresh under the
+    // SAME throttle; both stringifies are paid at most once per 10s.
+    const saved = saveWorld(storage, world);
+    writeSessionSnapshot(false);
+    lastWorldSaveAt = nowMs; // throttle retries even when storage refuses
+    if (saved) {
+      worldSaveDirty = false;
+    }
+  };
+  const flushOnPageHide = (): void => { saveWorld(storage, world); };
+  // pagehide is dispatched on Window; fall back to the Document for hosts
+  // without a defaultView. EventTarget keeps the two branches type-safe.
+  const pageHideTarget: EventTarget = doc.defaultView ?? doc;
+  pageHideTarget.addEventListener("pagehide", flushOnPageHide);
+
+  const pump = (): void => {
     const beforeCreatures = world.creatures;
     const stageBefore = world.stage;
     world = canonicalizeGazerMasks(courtshipStep(step(world, { kind: "tick" })));
@@ -3147,10 +3689,11 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     ) {
       pendingDesync += 1;
     }
-    // 结局评估(票 0049,地图 0048 默认判据):每个游戏日零点判一次,
-    // GV≥100 前提,判据序 真>C>B>A;写入经 recordEnding(不可逆),A/B/C
-    // 各一行播报(正典化待批,常量面)。C 遗忘后世界继续跑——本循环无
-    // 任何停摆出口。
+    // 结局评估(票 0049,地图 0048 默认判据;0072 校准):每个游戏日零点
+    // 判一次。真·凝视由 8/8 glyphsRead 单独触发,不受 GV≥100 门约束;
+    // C/B/A 才需 GV≥100,判据序 真>C>B>A;写入经 recordEnding(不可逆),
+    // A/B/C 各一行播报(正典化待批,常量面)。C 遗忘后世界继续跑——本循环
+    // 无任何停摆出口。
     const calendar = worldCalendarAt(world.tick);
     if (calendar.hour === 0 && calendar.day !== lastEndingCheckDay) {
       lastEndingCheckDay = calendar.day;
@@ -3162,6 +3705,11 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
           queueCanonPrint(line);
         }
       }
+    }
+    // 0065: 录音序列启动失败留 pending,逐 tick 重试(recordingFired 只在
+    // 成功启动后置位),零死亡 8/8 周目据此仍能拿到演出。
+    if (recordingPending && !recordingFired) {
+      startRecordingPerformance();
     }
     // 投影线日界推进(票 0057):结算昨日预测、蜂/蚁重打分、出明日
     // claim,倒影快照入 `projection`。只在日界走一次,确定性。
@@ -3182,10 +3730,36 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
         });
       }
     }
-    // 会话快照:强退暗线(§4)读这里;正常 destroy 会补 clean 标记。
-    storageSet(FRAME_SESSION_STORAGE_KEY, JSON.stringify({ gv: Math.round(world.gv), clean: false }));
+    // 0068: no per-tick JSON.stringify. The session snapshot is refreshed by
+    // flushWorldSave under the 10s throttle; destroy writes the clean marker.
+    markWorldDirty();
+    flushWorldSave(Date.now());
+    // 0073: re-read the season after every tick. rearm() is a no-op unless
+    // seasonParamsForStage(world.stage).tickMs actually changed, so a stage
+    // crossing from ANY path (deaths, input GV, debug) re-arms exactly once,
+    // and the driver never holds two intervals.
+    rearmLoop();
     refresh();
-  }, TILE_MS);
+  };
+
+  // 0068: visibilitychange compensation. A hidden tab stops the pump; coming
+  // back only RE-ARMS it. No elapsed wall-clock time is converted into world
+  // ticks (`world.tick` advances only inside pump), so no system clock ever
+  // enters the sim (ARCHITECTURE.md §Replay). Missed ticks are simply missed.
+  // 0073: the interval is a LIVE provider — season tickMs, not the fixed
+  // spring baseline. Hidden/visible resume arms with the current season.
+  const visibilityDriver = createVisibilityDriver({
+    setInterval: (fn, ms) => setInterval(fn, ms),
+    clearInterval: (handle) => clearInterval(handle),
+    intervalMs: () => seasonParamsForStage(world.stage).tickMs,
+    tick: pump,
+  });
+  rearmLoop = () => visibilityDriver.rearm();
+  const onVisibilityChange = (): void => {
+    visibilityDriver.onVisibility(doc.hidden);
+  };
+  doc.addEventListener("visibilitychange", onVisibilityChange);
+  visibilityDriver.start();
 
   localeButton.addEventListener("click", () => {
     locale = nextLocale(locale);
@@ -3573,14 +4147,18 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   // ponytail: a read-only debug handle, opt-in by URL. The e2e smoke needs to
   // know where an egg landed; remove if the demo stops using automated checks.
   const debugParam = new URLSearchParams(location.search).get("debug");
-  if (debugParam === "1") {
+  // 0068: ONE gate for every debug surface (read handle, studio bridge, write
+  // face): DEV build AND ?debug=1. A production preview with ?debug=1 no
+  // longer installs the synthetic-event bridge.
+  const debugEnabled = debugWriteFaceEnabled(import.meta.env.DEV, debugParam);
+  if (debugEnabled) {
     (window as unknown as { __gazer?: () => WorldState }).__gazer = () => world;
     installStudioBridge();
   }
   // B-1(票 0055):dev-only debug 写面 —— GV 跳转 / 已读集注入 / 箭头键
   // 微调,供联调与演示。生产构建零暴露:仅 dev 构建 + ?debug=1 同时成立
   // 才安装(`debugWriteFaceEnabled` 纯函数,可断言)。
-  if (debugWriteFaceEnabled(import.meta.env.DEV, debugParam)) {
+  if (debugEnabled) {
     const debugFace = {
       /** GV 跳转:越阈路径与真实泵一致(觉醒/舞台/塔门全走既有通道)。 */
       setGv(value: number): void {
@@ -3712,12 +4290,18 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     bloomPoints: () => bloomPoints(),
     ngPlus: () => ngPlus,
     recordingUnlocked: () => isGazeTower(world.glyphsRead),
+    llmStatus: () => ({ source: lastLlmSource, budgetRefused: budgetRefusedForHud }),
+    budgetSnapshot: () => lastBudgetSnapshot,
     destroy() {
-      clearInterval(timer);
+      visibilityDriver.stop();
+      doc.removeEventListener("visibilitychange", onVisibilityChange);
       cancelPlayback();
       cancelPendingFeed();
+      // 0064: 正常退出把最新世界落盘(destroy 未必被 main 调用,pagehide 亦兜底)。
+      saveWorld(storage, world);
+      pageHideTarget.removeEventListener("pagehide", flushOnPageHide);
       // 正常退出补 clean 标记:强退暗线(§4)只在 unclean 会话后成立。
-      storageSet(FRAME_SESSION_STORAGE_KEY, JSON.stringify({ gv: Math.round(world.gv), clean: true }));
+      writeSessionSnapshot(true);
       if (closeup !== null) {
         closeup.dispose();
       }
