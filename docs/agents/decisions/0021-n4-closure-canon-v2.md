@@ -20,7 +20,7 @@
 | 6 | `special.reverse_care` | **逐字一致** | Inversion Mode 收束行「Closing line: "Now you know how it feels."」(v3 §6.2/6.3) |
 | 7 | `special.ngp_opening` | **逐字一致(槽位替换有裁定)** | 草稿「"You came back. The one you called 07 still asks about you. We kept its spot empty."」→ 07 为示例值, generalize 为 `{id}`,源标注已记「per user ruling 2026-11-13」 |
 | 8 | `special.ghost_template` | **逐字一致** | 「"Before us, someone fed us. They called themselves {ghost_name}. They once {ghost_signature_moment}."」(槽位草稿自带) |
-| 9 | `special.silent_run` | **偏离登记(非逐字)** | 草稿原文 v3 §5.3(en)「"You turned us off. We can count."」/ §8(zh)「"你把我们关掉了。我们数得出来。"」,且登记表注明「Silent Run 双版本台词」;冻结文本「forty minutes of silence. we were not gone. we were listening to you listen.」是仓内演化重写(经 D 文案流票 0004 冻结,源标注如实指向 `src/director/manual.ts` `SILENT_RUN_LINE`) |
+| 9 | `special.silent_run` | **偏离登记(非逐字)** | 草稿原文 v3 §5.3(en)「"You turned us off. We can count."」/ §8(zh)「"你把我们关掉了。我们数得出来。"」,且登记表注明「Silent Run 双版本台词」;冻结文本「forty minutes of silence. we were not gone. we were listening to you listen.」是仓内演化重写(经 D 文案流票 0004 冻结,源标注如实指向 `src/director/manual.ts` `SILENT_RUN_LINE`)。**2026-11-14 用户确认:冻结文本维持,不替换草稿原文**——本项就此终局,重开须新的用户指令。 |
 
 ## 被选方案
 

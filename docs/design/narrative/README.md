@@ -66,5 +66,5 @@ NARRATIVE-CORE-01(1997 八碎片与真结局录音,P0 收官)与 NARRATIVE-CORE-
 
 ### 闭合登记(2026-11-14,票 0071 追加 / ADR 0021)
 
-- 用户于 2026-11-14 指认 v3/v3.5 冻结稿出处(Magpie 会话存档 `c_mwbk54a8lt6834.json`),委托逐行核验。结果:**9 行中 8 行逐字一致**(关系清算 5 + reverse_care + ngp_opening(槽位替换已有 2026-11-13 裁定)+ ghost_template);**`special.silent_run` 为仓内演化重写**,草稿原文(en「You turned us off. We can count.」/ zh「你把我们关掉了。我们数得出来。」)已存档于 ADR 0021,冻结文本维持不动,替换属行为变更须另裁。
+- 用户于 2026-11-14 指认 v3/v3.5 冻结稿出处(Magpie 会话存档 `c_mwbk54a8lt6834.json`),委托逐行核验。结果:**9 行中 8 行逐字一致**(关系清算 5 + reverse_care + ngp_opening(槽位替换已有 2026-11-13 裁定)+ ghost_template);**`special.silent_run` 为仓内演化重写**,草稿原文(en「You turned us off. We can count.」/ zh「你把我们关掉了。我们数得出来。」)已存档于 ADR 0021,冻结文本维持不动,替换属行为变更须另裁。**2026-11-14 用户确认:冻结文本维持、不替换,N4 事项终局**(见 ADR 0021 同日加注)。
 - `canon.lock` 版本 `v2-partial` → **`v2`**(仅版本元数据;45 条哈希零改动,`tests/canon-lock.test.ts` 19 例全绿)。决议落 `docs/agents/decisions/0021-n4-closure-canon-v2.md`;上方「裁定边界与交用户裁」条目自此按该 ADR 履行完毕,既有条目文字不改写。
