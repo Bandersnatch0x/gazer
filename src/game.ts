@@ -3792,12 +3792,28 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     refresh();
   });
 
+  /**
+   * 0082: opening a fixed-position panel over the canvas can leave the
+   * compositor showing an uninitialised strip until the canvas layer is
+   * re-uploaded (observed 1440×900: ~148×150 pale block at the canvas top-right
+   * after opening 说明书). `drawWorld` alone does not force the upload, so nudge
+   * the layer by a sub-pixel transform change and restore it. Verified to clear
+   * the strip in a real browser.
+   */
+  function nudgeCanvasCompositor(): void {
+    const previous = canvas.style.transform;
+    canvas.style.transform = "translateZ(0) scale(1.0000001)";
+    void canvas.offsetWidth;
+    canvas.style.transform = previous.length > 0 ? previous : "translateZ(0)";
+  }
+
   function openPanel(node: HTMLElement): void {
     panel.replaceChildren(closeButton, node);
     panel.hidden = false;
     // The panel is a fixed overlay, so the canvas below it must be redrawn
     // rather than left to the compositor.
     refresh();
+    nudgeCanvasCompositor();
   }
 
   function askName(creatureId: string): void {
