@@ -156,10 +156,12 @@ function isGrounded(turn: RoundtableTurn, slices: Readonly<Record<CreatureId, Me
 
 /**
  * Keep only turns that are grounded in the speaker's own memory. A turn that
- * fails grounding is replaced from the speaker's own pool when one exists, and
- * dropped otherwise — a speaker with no pool must never smuggle a fabricated
- * line through (the model's speaker list itself is untrusted). Returns null
- * when nothing survives, so the caller falls back to the manual pool.
+ * fails grounding is replaced from the speaker's own pool when one exists.
+ * When no trustworthy line exists (no pool, or a speaker the slices/pools do
+ * not know at all), the WHOLE scene falls back to `null` so the caller uses the
+ * manual pool. R4.3 forbids silently dropping a turn and keeping a shortened
+ * 1–3 turn scene (0077); the model's speaker list itself is untrusted, so an
+ * unknown id must never smuggle a fabricated line through.
  */
 export function validateTurns(
   script: RoundtableScript,
@@ -173,9 +175,12 @@ export function validateTurns(
       continue;
     }
     const replacement = replacementText(turn, pools, index);
-    if (replacement !== null) {
-      scene.push({ ...turn, text: replacement });
+    if (replacement === null) {
+      // 0077 / R4.3: a single unrepairable turn invalidates the scene whole,
+      // rather than returning a shorter script with a silent gap.
+      return null;
     }
+    scene.push({ ...turn, text: replacement });
   }
   return scene.length === 0 ? null : { scene };
 }

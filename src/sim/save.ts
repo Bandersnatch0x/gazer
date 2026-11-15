@@ -70,6 +70,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/** 0076: enums a loaded world is allowed to carry; anything else is a malformed archive. */
+const WITNESSED: ReadonlySet<string> = new Set(["witnessed", "heard", "inferred", "fabricated"]);
+const MOODS: ReadonlySet<string> = new Set(["curious", "sad", "loving", "wrong", "hungry"]);
+const ENDING_KINDS: ReadonlySet<string> = new Set([
+  "fusion",
+  "judgment",
+  "forgetting",
+  "gaze",
+]);
+
 function isFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
 }
@@ -78,13 +88,132 @@ function isFinitePair(value: unknown): boolean {
   return isRecord(value) && isFiniteNumber(value["x"]) && isFiniteNumber(value["y"]);
 }
 
+function isMemoryEntry(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  if (typeof value["id"] !== "string") return false;
+  if (!isFiniteNumber(value["atTick"])) return false;
+  if (typeof value["wallClock"] !== "string") return false;
+  if (typeof value["fact"] !== "string") return false;
+  if (typeof value["witnessed"] !== "string" || !WITNESSED.has(value["witnessed"])) return false;
+  const source = value["source"];
+  if (source !== null && typeof source !== "string") return false;
+  const distortion = value["distortion"];
+  if (distortion !== null && typeof distortion !== "string") return false;
+  if (!isFiniteNumber(value["salience"])) return false;
+  if (!isFiniteNumber(value["valence"])) return false;
+  return true;
+}
+
+function isConsolidatedEntry(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  if (typeof value["id"] !== "string") return false;
+  if (typeof value["content"] !== "string") return false;
+  if (!Array.isArray(value["derivedFrom"])) return false;
+  if (!value["derivedFrom"].every((item) => typeof item === "string")) return false;
+  if (typeof value["consolidatedAt"] !== "string") return false;
+  const note = value["perspectiveNote"];
+  if (note !== null && typeof note !== "string") return false;
+  return true;
+}
+
+/** 0076: a slice is only safe to consume when every entry has its required shape. */
 function isMemorySlice(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  if (!Array.isArray(value["working"]) || !value["working"].every(isMemoryEntry)) return false;
+  if (!Array.isArray(value["consolidated"]) || !value["consolidated"].every(isConsolidatedEntry)) {
+    return false;
+  }
+  return true;
+}
+
+function isMoodState(value: unknown): boolean {
   return (
     isRecord(value) &&
-    Array.isArray(value["working"]) &&
-    Array.isArray(value["consolidated"])
+    typeof value["mood"] === "string" &&
+    MOODS.has(value["mood"]) &&
+    isFiniteNumber(value["intensity"])
   );
 }
+
+function isTileStain(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    typeof value["kind"] === "string" &&
+    isFiniteNumber(value["intensity"]) &&
+    isFiniteNumber(value["createdAtTick"]) &&
+    isFiniteNumber(value["lastTouchTick"])
+  );
+}
+
+function isMourningCircle(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    typeof value["corpseId"] === "string" &&
+    isFinitePair(value["at"]) &&
+    Array.isArray(value["participants"]) &&
+    value["participants"].every((p) => typeof p === "string") &&
+    isFiniteNumber(value["startedTick"]) &&
+    isFiniteNumber(value["duration"])
+  );
+}
+
+function isSocialState(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  const sexes = value["sexes"];
+  if (!isRecord(sexes) || !Object.values(sexes).every((s) => s === "female" || s === "male")) {
+    return false;
+  }
+  const moods = value["moods"];
+  if (!isRecord(moods) || !Object.values(moods).every(isMoodState)) return false;
+  const stains = value["stains"];
+  if (!isRecord(stains) || !Object.values(stains).every(isTileStain)) return false;
+  const mourning = value["mourning"];
+  if (!Array.isArray(mourning) || !mourning.every(isMourningCircle)) return false;
+  return true;
+}
+
+function isPredictionClaim(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  if (typeof value["id"] !== "string") return false;
+  if (typeof value["topic"] !== "string") return false;
+  if (!isFiniteNumber(value["resolvesOnDay"])) return false;
+  const resolved = value["resolvedTo"];
+  if (resolved !== null && resolved !== "hit" && resolved !== "miss") return false;
+  if (!isFiniteNumber(value["confidence"])) return false;
+  return true;
+}
+
+function isProjectionState(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  const predictions = value["predictions"];
+  if (!Array.isArray(predictions) || !predictions.every(isPredictionClaim)) return false;
+  const lastReflection = value["lastReflection"];
+  if (lastReflection !== null && !isRecord(lastReflection)) return false;
+  const hits = value["hits"];
+  if (!isRecord(hits)) return false;
+  for (const slot of Object.values(hits)) {
+    if (!isRecord(slot) || !isFiniteNumber(slot["hit"]) || !isFiniteNumber(slot["miss"])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function isGhostProfile(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  if (typeof value["id"] !== "string") return false;
+  const traits = value["traits"];
+  if (!isRecord(traits)) return false;
+  for (const key of ["curiosity", "loyalty", "deceit", "clinging", "watchfulness"]) {
+    if (!isFiniteNumber(traits[key])) return false;
+  }
+  if (typeof value["signatureMomentId"] !== "string") return false;
+  if (typeof value["signatureMoment"] !== "string") return false;
+  if (!Array.isArray(value["keptMemoryIds"])) return false;
+  if (!value["keptMemoryIds"].every((item) => typeof item === "string")) return false;
+  return true;
+}
+
 
 function isCreature(value: unknown, id: string): boolean {
   if (!isRecord(value)) return false;
@@ -148,23 +277,33 @@ function validateWorld(value: unknown): WorldState | null {
     }
     normalized["memories"] = memories;
   }
-  for (const key of ["social", "projection"] as const) {
-    const item = value[key];
-    if (item === undefined) continue;
-    if (!isRecord(item)) return null;
-    normalized[key] = item;
+  const social = value["social"];
+  if (social !== undefined) {
+    if (!isSocialState(social)) return null;
+    normalized["social"] = social;
   }
-  for (const key of ["glyphsRead", "ghosts"] as const) {
-    const item = value[key];
-    if (item === undefined) continue;
-    if (!Array.isArray(item)) return null;
-    normalized[key] = item;
+  const projection = value["projection"];
+  if (projection !== undefined) {
+    if (!isProjectionState(projection)) return null;
+    normalized["projection"] = projection;
+  }
+  const glyphsRead = value["glyphsRead"];
+  if (glyphsRead !== undefined) {
+    if (!Array.isArray(glyphsRead) || !glyphsRead.every((item) => typeof item === "string")) {
+      return null;
+    }
+    normalized["glyphsRead"] = glyphsRead;
+  }
+  const ghosts = value["ghosts"];
+  if (ghosts !== undefined) {
+    if (!Array.isArray(ghosts) || !ghosts.every(isGhostProfile)) return null;
+    normalized["ghosts"] = ghosts;
   }
   const ending = value["ending"];
   if (ending !== undefined) {
-    if (!isRecord(ending) || typeof ending["kind"] !== "string" || !isFiniteNumber(ending["atTick"])) {
-      return null;
-    }
+    if (!isRecord(ending)) return null;
+    if (typeof ending["kind"] !== "string" || !ENDING_KINDS.has(ending["kind"])) return null;
+    if (!isFiniteNumber(ending["atTick"])) return null;
     normalized["ending"] = ending;
   }
   return normalized as unknown as WorldState;

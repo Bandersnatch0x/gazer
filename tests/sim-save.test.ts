@@ -187,6 +187,58 @@ describe("0064 bad archive falls back to a new world", () => {
     }
   });
 
+  it("0076 rejects malformed nested extension fields inside a valid envelope", () => {
+    const world = makeWorld();
+    const slice = world.memories!["gazer_01"]!;
+    const goodEntry = {
+      id: "mem_1",
+      atTick: 3,
+      wallClock: "12:02",
+      fact: "it watched",
+      witnessed: "witnessed",
+      source: null,
+      distortion: null,
+      salience: 0.4,
+      valence: -0.1,
+    };
+    const goodConsolidated = {
+      id: "cons_1",
+      content: "you lied",
+      derivedFrom: ["mem_1"],
+      consolidatedAt: "12:03",
+      perspectiveNote: null,
+    };
+    const nestedBroken: unknown[] = [
+      // memory entry missing required scalars / bad enum
+      { ...world, memories: { gazer_01: { ...slice, working: [{ ...goodEntry, salience: "hot" }] } } },
+      { ...world, memories: { gazer_01: { ...slice, working: [{ ...goodEntry, witnessed: "guessed" }] } } },
+      { ...world, memories: { gazer_01: { ...slice, consolidated: [{ ...goodConsolidated, derivedFrom: [1] }] } } },
+      // social sub-records
+      { ...world, social: { sexes: { gazer_01: "unknown" }, moods: {}, stains: {}, mourning: [] } },
+      { ...world, social: { sexes: {}, moods: { gazer_01: { mood: "angry", intensity: 1 } }, stains: {}, mourning: [] } },
+      { ...world, social: { sexes: {}, moods: {}, stains: {}, mourning: [{ corpseId: "x" }] } },
+      // projection
+      { ...world, projection: { predictions: [{ id: "p", topic: "t", resolvesOnDay: 1, resolvedTo: "maybe", confidence: 0.5 }], lastReflection: null, hits: {} } },
+      { ...world, projection: { predictions: [], lastReflection: null, hits: { weather: { hit: 1 } } } },
+      // ghosts
+      { ...world, ghosts: [{ id: "g", traits: { curiosity: 1 }, signatureMomentId: "m", signatureMoment: "x", keptMemoryIds: [] }] },
+      // ending kind
+      { ...world, ending: { kind: "ascension", atTick: 5 } },
+    ];
+    for (const candidate of nestedBroken) {
+      expect(hydrateWorld(serializeWorld(candidate as WorldState))).toBeNull();
+    }
+    // a fully valid nested world still round-trips
+    const valid = {
+      ...world,
+      memories: { gazer_01: { ...slice, working: [goodEntry], consolidated: [goodConsolidated] } },
+      social: { sexes: { gazer_01: "female" }, moods: {}, stains: {}, mourning: [] },
+      projection: { predictions: [], lastReflection: null, hits: {} },
+      ghosts: [{ id: "g", traits: { curiosity: 0.5, loyalty: 0.5, deceit: 0.5, clinging: 0.5, watchfulness: 0.5 }, signatureMomentId: "m", signatureMoment: "x", keptMemoryIds: [] }],
+    };
+    expect(hydrateWorld(serializeWorld(valid as unknown as WorldState))).toEqual(valid);
+  });
+
   it("a checksum mismatch (tampered payload) is rejected, not thrown", () => {
     const world = makeWorld();
     const env = JSON.parse(serializeWorld(world)) as Envelope;

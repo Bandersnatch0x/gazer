@@ -225,9 +225,8 @@ describe("roundtable validation", () => {
     expect(result).toBeNull();
   });
 
-  it("drops a turn from a speaker the slices and pools do not know at all", () => {
-    // The model's speaker list is untrusted: an unknown id must never smuggle
-    // its fabricated line past validation (playtest p4 finding F4).
+  it("0077 falls back whole when a speaker is unknown (no silent short scene)", () => {
+    // R4.3: never keep a shortened scene; an unknown speaker invalidates it.
     const script: RoundtableScript = {
       scene: [
         { speaker: "99", text: "i invented a memory", intent: "confide", mood: "sad", memoryRef: "mem_99" },
@@ -237,11 +236,7 @@ describe("roundtable validation", () => {
     const slices = { "01": sliceOf(entry("mem_1", "the room went dark")) };
     const pools = { "01": ["pool line"] };
 
-    const result = validateTurns(script, slices, pools);
-
-    expect(result).not.toBeNull();
-    expect(result?.scene).toHaveLength(1);
-    expect(result?.scene[0]?.speaker).toBe("01");
+    expect(validateTurns(script, slices, pools)).toBeNull();
   });
 
   it("falls back to null when every turn is ungrounded", () => {
