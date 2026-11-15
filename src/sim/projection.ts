@@ -33,6 +33,18 @@ import {
 
 export type ReflectionTopic = OutsideTopic | "player";
 
+/**
+ * 0080 / 0014 degradation switch. Under the real runtime order (day-boundary
+ * advance at 00:00 BEFORE the 09:00 percolation) and the required ≥200 seeds,
+ * the bee/ant predictor measured 0.378 hit rate — below the calibration floor
+ * of 1/3 + 10pp (0.433). 0014's written degradation path is therefore taken:
+ * drop the forward-prediction layer and degrade to pure observation. The
+ * reflection aggregate and hit/miss tallies stay observable; no open claim is
+ * emitted, so no forecast is presented as calibrated. Flip this only after a
+ * re-calibration run passes the floor.
+ */
+export const PREDICTION_LAYER_ENABLED = false;
+
 export interface ReflectionNode {
   readonly topic: ReflectionTopic;
   readonly claimEn: string;
@@ -295,6 +307,7 @@ export function advanceProjections(
   world: WorldState,
   memories: Readonly<Record<CreatureId, MemorySlice>>,
   day: number,
+  predictionEnabled: boolean = PREDICTION_LAYER_ENABLED,
 ): ProjectionState {
   const hits: Record<OutsideTopic, { hit: number; miss: number }> = {
     sky: { ...state.hits.sky },
@@ -335,7 +348,11 @@ export function advanceProjections(
     resolvedTo: null,
     confidence,
   };
-  const kept = [...predictions, emitted].slice(-PREDICTION_CAPACITY);
+  // 0080: when the prediction layer is degraded (calibration below floor), keep
+  // only resolved history + observation; never present an uncalibrated forecast.
+  const kept = (
+    predictionEnabled ? [...predictions, emitted] : predictions
+  ).slice(-PREDICTION_CAPACITY);
   return {
     predictions: kept,
     lastReflection: aggregateReflection(world, memories, day),

@@ -11,6 +11,7 @@ import { percolationPass, seedForDay, topicForDay } from "../src/sim/outside";im
   aggregateReflection,
   corruptionPressure,
   emptyProjectionState,
+  PREDICTION_LAYER_ENABLED,
   type ProjectionState,
 } from "../src/sim/projection";
 import { rememberEntry, type MemorySlice } from "../src/sim/memory";
@@ -147,11 +148,11 @@ describe("the bee/ant predictor (sim/projection.ts)", () => {
   it("resolves yesterday's claim at the boundary and emits tomorrow's", () => {
     const world = coldStartWorld();
     let state: ProjectionState = emptyProjectionState();
-    state = advanceProjections(state, world, {}, 0);
+    state = advanceProjections(state, world, {}, 0, true);
     const open = state.predictions.find((claim) => claim.resolvesOnDay === 1);
     expect(open).toBeDefined();
     expect(open?.resolvedTo).toBeNull();
-    state = advanceProjections(state, world, {}, 1);
+    state = advanceProjections(state, world, {}, 1, true);
     const resolved = state.predictions.find((claim) => claim.id === "pred_d1");
     expect(resolved?.resolvedTo).not.toBeNull();
     const expected = resolved?.topic === topicForDay(world.seed, 1) ? "hit" : "miss";
@@ -165,7 +166,7 @@ describe("the bee/ant predictor (sim/projection.ts)", () => {
 
   it("never lets a creature see the whole: the reflection lives on the state, not in any slice", () => {
     const world = coldStartWorld();
-    const state = advanceProjections(emptyProjectionState(), world, {}, 0);
+    const state = advanceProjections(emptyProjectionState(), world, {}, 0, true);
     // The predictor's output is engine-side state; no creature memory grew.
     expect(state.lastReflection).not.toBeNull();
   });
@@ -173,7 +174,8 @@ describe("the bee/ant predictor (sim/projection.ts)", () => {
   it("beats the uniform baseline by at least 10pp (the calibration floor)", () => {
     const WARMUP_DAYS = 3;
     const RUN_DAYS = 40;
-    const SEEDS = Array.from({ length: 40 }, (_, index) => 1000 + index * 137);
+    // SPEC §10 / ticket 0057: ≥200 seeds. 40 was too few to trust the floor.
+    const SEEDS = Array.from({ length: 200 }, (_, index) => 1000 + index * 137);
     let hit = 0;
     let miss = 0;
     for (const seed of SEEDS) {
@@ -181,27 +183,38 @@ describe("the bee/ant predictor (sim/projection.ts)", () => {
       const memories: Record<string, MemorySlice> = {};
       let state: ProjectionState = emptyProjectionState();
       for (let day = 0; day <= RUN_DAYS; day += 1) {
-        // The ant only ever sees what percolation delivered — never the
-        // stream itself. Quiet days leave gaps in the trail, honestly.
+        // Runtime order (0080): the day boundary advance runs at 00:00 BEFORE
+        // percolation at 09:00, so resolving/predicting may only use the trail
+        // from days already observed — never the same day's un-landed seed.
+        state = advanceProjections(state, world, memories, day, true);
+        if (day >= WARMUP_DAYS) {
+          const resolved = state.predictions.find((claim) => claim.resolvesOnDay === day);
+          if (resolved?.resolvedTo === "hit") {
+            hit += 1;
+          } else if (resolved?.resolvedTo === "miss") {
+            miss += 1;
+          }
+        }
+        // Percolation lands at 09:00 and only then feeds tomorrow's predictor.
         const pass = percolationPass({ ...world, tick: ninthHourTick(day) }, memories);
         Object.assign(memories, pass.memories);
-        state = advanceProjections(state, world, memories, day);
-        if (day < WARMUP_DAYS) {
-          continue;
-        }
-        const resolved = state.predictions.find((claim) => claim.resolvesOnDay === day);
-        if (resolved?.resolvedTo === "hit") {
-          hit += 1;
-        } else if (resolved?.resolvedTo === "miss") {
-          miss += 1;
-        }
       }
     }
     const rate = hit / Math.max(1, hit + miss);
-    // SPEC §10.2: ≥ chance (1/3) + 10pp. Below the floor, the spec's own
-    // degradation path (drop L4) fires — this test is where that decision
-    // would surface.
-    expect(rate).toBeGreaterThanOrEqual(1 / 3 + 0.1);
+    // Measured honestly under the runtime order: ~0.378, i.e. +4.5pp over the
+    // uniform 1/3 — BELOW the SPEC §10.2 floor of +10pp. Per 0014 this is the
+    // documented trigger to drop the prediction layer to pure observation.
+    expect(rate).toBeLessThan(1 / 3 + 0.1);
+    expect(PREDICTION_LAYER_ENABLED).toBe(false);
+  });
+
+  it("0080 default (degraded) path emits no open forecast, only observation", () => {
+    const world = coldStartWorld(777);
+    let state: ProjectionState = emptyProjectionState();
+    state = advanceProjections(state, world, {}, 0);
+    expect(state.predictions.some((claim) => claim.resolvedTo === null)).toBe(false);
+    // Observation survives even with the forecast layer dropped.
+    expect(state.lastReflection).not.toBeNull();
   });
 
   it("degrades under a sustained lie: forged topics poison the ant model", () => {
@@ -234,7 +247,7 @@ describe("the bee/ant predictor (sim/projection.ts)", () => {
             valence: -0.4,
           });
         }
-        state = advanceProjections(state, world, memories, day);
+        state = advanceProjections(state, world, memories, day, true);
         if (day < 3) {
           continue;
         }
