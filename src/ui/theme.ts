@@ -47,7 +47,7 @@ export const SHELL_STYLE = `
   }
   .gazer-dialogue__body {
     padding: 6px;
-    min-height: 6.5rem;
+    min-height: 4.5rem;
   }
   .gazer-dialogue__line {
     display: flex;
