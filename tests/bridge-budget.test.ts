@@ -131,3 +131,15 @@ describe("budget admission (two-phase hard budget)", () => {
     expect(admission.allows(T0 + 2)).toBe(true);
   });
 });
+
+describe("0088 empty completion retry contract", () => {
+  it("keeps one success settle per request even when the first attempt is empty", () => {
+    // The middleware retries an empty completion once and settles budget once,
+    // so a retried-then-successful request must count as exactly one success.
+    const admission = createBudgetAdmission();
+    const now = 1_000_000;
+    expect(admission.allows(now)).toBe(true);
+    admission.settle(now, true);
+    expect(admission.allows(now)).toBe(true);
+  });
+});

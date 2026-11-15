@@ -133,40 +133,64 @@ function llmAdapter(): Plugin {
       }
       // Slot reserved above; it is spent only after a validated success.
       let succeeded = false;
-      try {
-        const upstream = await fetch(UPSTREAM, {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-            authorization: `Bearer ${KEY}`,
-          },
-          body: JSON.stringify({
-            model: MODEL,
-            messages: isRoundtable
-              ? [
-                  { role: "system", content: RT_SYSTEM },
-                  { role: "user", content: userContent },
-                ]
-              : [{ role: "user", content: userContent }],
-            temperature: TEMPERATURE[kind] ?? 0.9,
-            max_tokens: MAX_TOKENS[kind] ?? 200,
-          }),
-          signal: AbortSignal.timeout(isRoundtable ? Math.max(1, routeTimeoutMs("roundtable")) : 30_000),
-        });
-        if (!upstream.ok) {
-          res.statusCode = 502;
-          res.end(JSON.stringify({ error: `upstream ${upstream.status}` }));
-          return;
+      // 0088: an upstream that answers 200 with no content is a transient fault,
+      // not a verdict. Retry exactly once — the empty attempt produced nothing,
+      // so it must not be charged — and keep one budget settlement for the whole
+      // request. Every other failure stays final (0067's "malformed output is
+      // the only retryable reason" is unchanged on the client side).
+      const attemptUpstream = async (): Promise<
+        { readonly ok: true; readonly text: string } | { readonly ok: false; readonly error: string }
+      > => {
+        let response: Response;
+        try {
+          response = await fetch(UPSTREAM, {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              authorization: `Bearer ${KEY}`,
+            },
+            body: JSON.stringify({
+              model: MODEL,
+              messages: isRoundtable
+                ? [
+                    { role: "system", content: RT_SYSTEM },
+                    { role: "user", content: userContent },
+                  ]
+                : [{ role: "user", content: userContent }],
+              temperature: TEMPERATURE[kind] ?? 0.9,
+              max_tokens: MAX_TOKENS[kind] ?? 200,
+            }),
+            signal: AbortSignal.timeout(
+              isRoundtable ? Math.max(1, routeTimeoutMs("roundtable")) : 30_000,
+            ),
+          });
+        } catch {
+          return { ok: false, error: "upstream unreachable" };
         }
-        const payload = (await upstream.json()) as {
+        if (!response.ok) {
+          return { ok: false, error: `upstream ${response.status}` };
+        }
+        const payload = (await response.json().catch(() => null)) as {
           choices?: { message?: { content?: unknown } }[];
-        };
-        const text = payload.choices?.[0]?.message?.content;
+        } | null;
+        const text = payload?.choices?.[0]?.message?.content;
         if (typeof text !== "string" || text.length === 0) {
+          return { ok: false, error: "empty completion" };
+        }
+        return { ok: true, text };
+      };
+
+      try {
+        let attempt = await attemptUpstream();
+        if (!attempt.ok && attempt.error === "empty completion") {
+          attempt = await attemptUpstream();
+        }
+        if (!attempt.ok) {
           res.statusCode = 502;
-          res.end(JSON.stringify({ error: "empty completion" }));
+          res.end(JSON.stringify({ error: attempt.error }));
           return;
         }
+        const text = attempt.text;
         res.setHeader("content-type", "application/json");
         if (isRoundtable) {
           // Only a parsed scene object ever crosses back; raw model text —
