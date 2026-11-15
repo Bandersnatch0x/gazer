@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
-import { parseRoundtable, validateTurns } from "../src/director/roundtable";
+import { isValidSceneShape, parseRoundtable, validateTurns } from "../src/director/roundtable";
 import { manualPool } from "../src/director/manual";
 import type { RoundtableScript, RoundtableTurn } from "../src/sim/roundtable";
 import type { ConsolidatedEntry, MemoryEntry, MemorySlice } from "../src/sim/memory";
@@ -261,5 +261,18 @@ describe("roundtable validation", () => {
     const pools = { "01": manualPool(3) };
 
     expect(validateTurns(script, slices, pools)).toEqual(validateTurns(script, slices, pools));
+  });
+});
+
+describe("0078 isValidSceneShape: the server-side success gate", () => {
+  it("accepts only 2..4 turn scenes, rejects parseable-but-wrong shapes", () => {
+    expect(isValidSceneShape({ scene: [{}, {}] })).toBe(true);
+    expect(isValidSceneShape({ scene: [{}, {}, {}, {}] })).toBe(true);
+    expect(isValidSceneShape({ scene: [{}] })).toBe(false);
+    expect(isValidSceneShape({ scene: [{}, {}, {}, {}, {}] })).toBe(false);
+    expect(isValidSceneShape({})).toBe(false);
+    expect(isValidSceneShape({ scene: "nope" })).toBe(false);
+    expect(isValidSceneShape(null)).toBe(false);
+    expect(isValidSceneShape([])).toBe(false);
   });
 });

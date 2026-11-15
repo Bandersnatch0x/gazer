@@ -29,6 +29,18 @@ const INTENTS: readonly TurnIntent[] = [
 
 const MOODS: readonly Mood[] = ["curious", "sad", "loving", "wrong", "hungry"];
 
+/**
+ * 0078: the single shared definition of a "successful roundtable body" for the
+ * edge (middleware) that decides whether a call may spend quota. A merely
+ * parseable object is not enough: it must carry a `scene` array of MIN..MAX
+ * turns. Grounding (memoryRef / shared words) still runs client-side later.
+ */
+export function isValidSceneShape(scene: unknown): boolean {
+  if (!isRecord(scene)) return false;
+  const turns = scene["scene"];
+  return Array.isArray(turns) && turns.length >= MIN_TURNS && turns.length <= MAX_TURNS;
+}
+
 /** Below this many shared content words, the line has left its cited memory. */
 const MIN_SHARED_WORDS = 2;
 

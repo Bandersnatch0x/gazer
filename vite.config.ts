@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin } from "vitest/config";
 import { createBudgetAdmission } from "./src/bridge/budget";
 import { routeTimeoutMs } from "./src/director/router";
+import { isValidSceneShape } from "./src/director/roundtable";
 
 /**
  * LLM protocol adapter (jam acceptance: "接入 LLM").
@@ -181,8 +182,7 @@ function llmAdapter(): Plugin {
           // minimal 2–4 turn scene shape before this call may spend quota, so
           // malformed scenes are not charged server-side. Full grounding
           // (memoryRef / shared-words) still runs client-side in the game.
-          const turns = (scene as { scene?: unknown }).scene;
-          if (!Array.isArray(turns) || turns.length < 2 || turns.length > 4) {
+          if (!isValidSceneShape(scene)) {
             res.statusCode = 502;
             res.end(JSON.stringify({ error: "invalid scene shape" }));
             return;
