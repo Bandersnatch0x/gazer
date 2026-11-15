@@ -1897,6 +1897,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   closeButton.type = "button";
   closeButton.className = "gazer-key";
   closeButton.textContent = "x";
+  closeButton.setAttribute("aria-label", "close panel and return to the world");
   const cleanButton = doc.createElement("button");
   cleanButton.type = "button";
   cleanButton.className = "gazer-key";
@@ -3810,10 +3811,19 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   function openPanel(node: HTMLElement): void {
     panel.replaceChildren(closeButton, node);
     panel.hidden = false;
+    // 0081: a panel is a reading mode, not a floating card over a live world.
+    // Dim the world and label the mode so the player knows where they are.
+    doc.body.classList.add("gazer-reading");
     // The panel is a fixed overlay, so the canvas below it must be redrawn
     // rather than left to the compositor.
     refresh();
     nudgeCanvasCompositor();
+  }
+
+  function closePanel(): void {
+    panel.hidden = true;
+    doc.body.classList.remove("gazer-reading");
+    refresh();
   }
 
   function askName(creatureId: string): void {
@@ -3831,7 +3841,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       });
       maybeAwaken();
       view.destroy();
-      panel.hidden = true;
+      closePanel();
       if (speechPermitted()) {
         // The naming reaction answers at every stage now (playtest p3 finding
         // 10): for the first ~30 minutes the old gate left a name with no
@@ -3923,7 +3933,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       });
       maybeAwaken();
       view.destroy();
-      panel.hidden = true;
+      closePanel();
       if (speechPermitted()) {
         speakManual(world.stage, world.tick, "witnessed");
       }
@@ -3989,8 +3999,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   });
 
   closeButton.addEventListener("click", () => {
-    panel.hidden = true;
-    refresh();
+    closePanel();
   });
 
   // The clean key arms one tap: mobile gets the clean verb without a press
