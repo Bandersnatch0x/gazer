@@ -1005,6 +1005,12 @@ export interface CrtShellOptions {
   readonly biosExtraLines?: readonly string[];
   /** 移动端瘦身(§8):12px 框、缩写铭牌、4.0s 冷启动、RGB 栅格关。 */
   readonly mobile?: boolean;
+  /**
+   * 0081: desktop shell visual weight. 1 = the baked beige frame at full
+   * strength (default, unchanged); <1 composites the whole frame over the page
+   * background at that opacity so the bezel recedes and the world reads first.
+   */
+  readonly shellWeight?: number;
   /** 音频位:每跨一拍回调一次。默认静默 stub。 */
   readonly onAudioBeat?: (beat: string) => void;
   /** 消磁钮点击(接线归 game/main;安装器只发事件)。 */
@@ -1241,6 +1247,9 @@ export function installCrtShell(options: CrtShellOptions): CrtShellHandle {
   // integer scale from `canvas.parentElement`'s client size, so sizing this
   // layer makes the framed monitor always fit the viewport without touching
   // the integer-scaling discipline (the canvas stays on whole multiples).
+  // 0081: the whole frame (shell + glass + spill) composites at shellWeight so
+  // the beige bezel no longer outweighs the picture. One knob, zero re-bake.
+  const shellWeight = options.shellWeight ?? 1;
   const fitDiv = doc.createElement("div");
   fitDiv.className = "gazer-crt-fit";
   fitDiv.style.cssText = "display:grid;place-items:center;contain:paint;";
@@ -1281,6 +1290,9 @@ export function installCrtShell(options: CrtShellOptions): CrtShellHandle {
   fill(dimLayer, true);
   glass.append(fxCanvas, bloomCanvas, waveCanvas, ledCanvas, bootCanvas, dimLayer);
   frame.append(shellCanvas, glass, spillCanvas);
+  if (shellWeight < 1) {
+    frame.style.opacity = String(shellWeight);
+  }
 
   // Hardware hotspots: N1(票 0040)— mounted on <body> in the ROOT stacking
   // context (position:fixed) so no #stage contain:paint context can bury them

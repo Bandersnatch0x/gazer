@@ -47,7 +47,9 @@ export const SHELL_STYLE = `
   }
   .gazer-dialogue__body {
     padding: 6px;
-    min-height: 4.5rem;
+    /* 0081: idle transcript collapses to one quiet line instead of a tall
+       empty box; lines push it open as they arrive. */
+    min-height: 0;
   }
   .gazer-dialogue__line {
     display: flex;

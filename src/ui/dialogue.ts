@@ -174,11 +174,15 @@ export function createDialogue(doc: Doc, locale: Locale): DialogueView {
   const showLines = (lines: readonly DialogueLineInput[], active: Locale): void => {
     body.textContent = "";
     if (lines.length === 0) {
+      // 0081: the idle state is one dim line, not a tall empty transcript —
+      // mark the box collapsed so CSS can shrink it to the single row.
+      root.setAttribute("data-empty", "");
       body.append(
         el(doc, "p", { className: "gazer-dialogue__empty", text: t(active, COPY.dialogue.emptyScript) }),
       );
       return;
     }
+    root.removeAttribute("data-empty");
     for (const line of lines) {
       body.append(lineNode(doc, line, active));
     }

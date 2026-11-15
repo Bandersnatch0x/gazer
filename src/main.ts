@@ -145,6 +145,9 @@ const crt = installCrtShell({
   cold: !warmBoot,
   firstBoot,
   mobile,
+  // 0081: the beige frame keeps its identity but stops outweighing the
+  // picture on desktop; mobile keeps its slim layout and full opacity.
+  shellWeight: mobile ? 1 : 0.82,
   memoryK: bootMemoryK,
   biosExtraLines: bootBiosExtra,
   onAudioBeat: () => {},
