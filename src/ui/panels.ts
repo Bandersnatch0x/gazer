@@ -63,13 +63,12 @@ export function namePanel(
   });
   // 0081: name the subject — the raw creature id reads like hardware, so show
   // it once, dim, above the field. No second lookup surface.
+  const generation =
+    target === undefined ? null : t(locale, COPY.album.generationInline).replace("{n}", String(target.generation));
   const subject =
     target === undefined
       ? null
-      : el(doc, "p", {
-          className: "gazer-panel__note",
-          text: `${target.id} · ${t(locale, COPY.album.generationInline).replace("{n}", String(target.generation))}`,
-        });
+      : el(doc, "p", { className: "gazer-panel__note", text: `${target.id} · ${generation}` });
   const input = doc.createElement("input");
   input.className = "gazer-input";
   input.maxLength = 24;
