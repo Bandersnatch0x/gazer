@@ -32,7 +32,7 @@ import type { PromptGenome } from "../src/sim/genome";
 
 /** HARNESS.md §5 latency budgets, keyed by TaskKind. `tts` is local (0). */
 const HARNESS_LATENCY_MS: Readonly<Record<TaskKind, number>> = Object.freeze({
-  roundtable: 800, // HARNESS.md:99 "800 ms"
+  roundtable: 4000, // HARNESS.md:99 "4000 ms" (ADR 0023, supersedes 0019)
   ontology_staging: 1200, // HARNESS.md:100 "1200 ms"
   consolidation: 2000, // HARNESS.md:101 "2000 ms, off the critical path"
   level_b: 600, // HARNESS.md:102 "600 ms"

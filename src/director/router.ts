@@ -40,12 +40,12 @@ const ROUTES: Readonly<Record<TaskKind, Route>> = Object.freeze({
     primary: "primary_hosted",
     secondary: "smaller_hosted",
     fallback: "manual_pool",
-    // HARNESS §5 budgets 800ms for the roundtable call. Ticket 0069 aligns the
-    // code with the design doc (authoritative); playtest 0014 measured ~2.7s per
-    // scene against that budget, so a real call can abort into the manualPool
-    // fallback. Amending HARNESS §5 needs a separate ADR (docs are out of this
-    // ticket's scope) — the tradeoff is recorded in ticket 0069 Log.
-    timeoutMs: 800,
+    // 0023 (2026-11-15) supersedes 0019's 800ms: the live jam endpoint answers a
+    // full scene in ~3.4–3.9s, so 800ms aborted every real call into the manual
+    // pool and the model's lines effectively never appeared. 4000ms keeps the
+    // real path viable; failures still fall back and are absorbed by the
+    // voice_degraded narration (HARNESS §6).
+    timeoutMs: 4000,
   }),
   ontology_staging: Object.freeze({
     primary: "primary_hosted_effect_schema",
