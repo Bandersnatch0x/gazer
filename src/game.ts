@@ -3855,7 +3855,11 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   }
 
   function askName(creatureId: string): void {
-    const view = namePanel(doc, locale, (name) => {
+    const target = world.creatures[creatureId];
+    const view = namePanel(
+      doc,
+      locale,
+      (name) => {
       world = step(world, { kind: "name", creatureId, name });
       remember(
         creatureId,
@@ -3877,7 +3881,11 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
         speak(collective, (active) => namingLine(name, active), "witnessed");
       }
       refresh();
-    });
+    },
+      target === undefined
+        ? undefined
+        : { id: creatureId, generation: target.genome?.generation ?? 1 },
+    );
     openPanel(view.root);
     view.focus();
   }

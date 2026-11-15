@@ -55,11 +55,21 @@ export function namePanel(
   doc: Doc,
   locale: Locale,
   onSubmit: (name: string) => void,
+  target?: { readonly id: string; readonly generation: number },
 ): NamePanel {
   const heading = el(doc, "h2", {
     className: "gazer-panel__title",
     text: t(locale, COPY.panels.nameTitle),
   });
+  // 0081: name the subject — the raw creature id reads like hardware, so show
+  // it once, dim, above the field. No second lookup surface.
+  const subject =
+    target === undefined
+      ? null
+      : el(doc, "p", {
+          className: "gazer-panel__note",
+          text: `${target.id} · ${t(locale, COPY.album.generationInline).replace("{n}", String(target.generation))}`,
+        });
   const input = doc.createElement("input");
   input.className = "gazer-input";
   input.maxLength = 24;
@@ -82,7 +92,10 @@ export function namePanel(
       submit();
     }
   });
-  const root = el(doc, "div", { className: "gazer-form", children: [heading, input, button] });
+  const root = el(doc, "div", {
+    className: "gazer-form",
+    children: (subject === null ? [heading, input, button] : [heading, subject, input, button]) as readonly Node[],
+  });
   return {
     root,
     focus: () => input.focus(),
