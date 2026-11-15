@@ -1191,6 +1191,12 @@ export function executeFx(state: FxState, request: FxRequest, world: WorldState)
     }
   }
 
+  // C-09: pond/shrine/ruin are deferred extension slots (fx/README F3). Accepting
+  // them used to charge cost with an empty dispatch; refuse explicitly, zero fee.
+  if (primitive.kind === "spawn_structure" && params.type !== "tower") {
+    return refused(s, request, primitive, "unsupported_structure", "rejected", tick);
+  }
+
   // 4. Cap clipping. Canonical events run the script intensity as-is.
   const cap = primitive.cap;
   const applied =

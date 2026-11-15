@@ -591,14 +591,17 @@ describe("guard G1 — tower position and uniqueness", () => {
     );
     expect(duplicate.result.status).toBe("suppressed");
     expect(duplicate.result.reason).toBe("guard_G1");
-    // Non-tower structures are free-position (and have no Effect kind to translate to yet).
+    // C-09: pond/shrine/ruin are deferred extension slots (README F3) — refuse
+    // explicitly with zero fee instead of charging for an empty dispatch (0083).
     const pond = executeFx(
       duplicate.state,
       { kind: "spawn_structure", params: { type: "pond", pos: { x: 5, y: 5 } } },
       towerWorld,
     );
-    expect(pond.result.status).toBe("executed");
+    expect(pond.result.status).toBe("rejected");
+    expect(pond.result.reason).toBe("unsupported_structure");
     expect(pond.result.effects).toEqual([]);
+    expect(pond.state.spentToday).toBe(duplicate.state.spentToday);
   });
 });
 

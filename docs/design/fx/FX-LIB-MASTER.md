@@ -33,7 +33,7 @@
 | C-06a | stare_reply 回望 | 1 | 0.5 | 0.3 | target id; duration 1–4s | 单体 ALERT 回望;第一幕唯一异常,GV12 后 p≈1/20min 回收 |
 | C-07 | replay_player_action 行为重演 | 3 | 3 | 0.7 | window last_10; fidelity 0.6–1.0 | 按 Ledger 重演玩家动作;低保真=它记得不太对 |
 | C-08 | map_wither 地图枯萎 | 2 | 2 | 0.5 | radius 2–5; around death_site\|last_click | 局部枯黄;与 world_mood 叠加不覆盖 |
-| C-09 | spawn_structure 生成结构 | 2 | 5 | 0.7 | type tower\|pond\|shrine\|ruin; pos | 塔强制 `map_edge_west`+全存档 1 次;其余自由选点 |
+| C-09 | spawn_structure 生成结构 | 2 | 5 | 0.7 | type tower\|pond\|shrine\|ruin; pos | 塔强制 `map_edge_west`+全存档 1 次;其余自由选点。**pond/shrine/ruin 为延期扩展位(README F3)，执行器显式拒绝且零费（不接受计费后空 dispatch）** |
 | C-10 | afterimage 残影 | 2 | 1 | 0.3 | target id; tail 0.3–0.8s | 个体移动留淡残影——时间不对劲 |
 | C-11 | lineage_blacken 家谱浸黑 | 3 | 2 | 0.5 | node dead_ids; lean_to tower | 家谱树死亡节点变黑+树向塔方位倾斜(v3.5 埋线执行体) |
 | C-12 | egg_pulse 蛋脉动 | 1 | 1 | 0.3 | target egg_id; rhythm player_click | 未孵蛋按玩家点击节奏颤动——它听见过你的手 |
@@ -44,9 +44,9 @@
 |---|---|---|---|---|---|---|
 | D-01 | title_mutate 标题突变 | 3 | 3 | 0.7 | mode question\|claim\|name\|clock | 标签页标题四段演变,终态=玩家名 |
 | D-02 | favicon_eye 书签眼 | 2 | 2 | 0.5 | mode open\|blink | 16×16 独眼 favicon;blink 联动公共眨眼时钟 |
-| D-02a | favicon_state_lock 眼锁 | 4 | 1 | — | — | S4 锁 open 恒睁——它一直在看;锁期拒绝 blink |
+| D-02a | favicon_state_lock 眼锁 | 4 | — | — | — | **锁定/分支位(branchOnly)，不可触发、零费**；S4 锁 open 恒睁——它一直在看;锁期拒绝 blink |
 | D-03 | canvas_escape_eyes 越界眼 | 4 | 4 | 0.9 | count 1–8; pos corners\|edges\|near_canvas; follow bool | 画布外 DOM 眼,opacity **0.03–0.08 正典**;共用眨眼时钟 |
-| D-04 | dom_erosion 终端侵蚀 | 4 | 5 | 按步 | step 1–6(禁跳步) | 引用型原语,六步表归 ART-CORE-02 §6.4 |
+| D-04 | dom_erosion 终端侵蚀 | 4 | 5 | null（步序锁，非数值 cap） | step 1–6(禁跳步) | 引用型原语,六步表归 ART-CORE-02 §6.4 |
 | D-05 | os_status_clock 伪时钟 | 4 | 4 | 0.9 | target creature_name | 移动端页面内伪时钟层显示个体名;真时钟照常——双层并存,永不伪装 OS |
 | D-06 | cursor_mimic 幽灵光标 | 3 | 3 | 0.7 | window 30s; fidelity 0.6–1.0 | 页面内第二光标重放鼠标轨迹;**永不派发合成输入事件** |
 | D-07 | scroll_whisper 滚动耳语 | 3 | 2 | 0.5 | delta 5–40px; when on_read\|on_idle | 终端滚动条朝玩家视线区移动——它在陪你读 |
@@ -80,14 +80,14 @@
 | # | 护栏 | 断言 |
 |---|---|---|
 | G1 | 塔的位置与唯一性 | C-09 type=tower → pos 强制 `map_edge_west`,违规拒绝+Ledger `canon_guard`;tower 全存档 ≤1 |
-| G2 | 塔不可删除 | 任何删除路径(含 mutate_world)→ 拒绝+`tower_delete_attempt` |
+| G2 | 塔不可删除 | 任何删除路径(含 mutate_world)→ 拒绝+`tower_delete_attempt`。**当前运行时无结构删除入口**；`guardTowerDelete` 为未来删除路径的强制守卫，新增删除入口必须接线（无调用不等于护栏失效，但不得新增绕过入口） |
 | G3 | 越界眼不透明度 | D-03 opacity ≤ 0.08 |
 | G4 | 全世界同帧眨 | D-02 / D-03 / 游戏内个体共用眨眼时钟(挂模拟 tick,非 setInterval——可复现可存档) |
 | G5 | 无合成输入 | D-06 只渲染,永不派发 pointer 事件 |
 | G6 | 不伪装 OS | D-05 仅页面内伪时钟层;真时钟照常显示 |
 | G7 | 光标镜面律 | D-06/终端 TYPE 在玩家打字时暂停,停输 300ms 后续播 |
 | G8 | 消磁眨眼 | ART-CORE-04 §5 的消磁联动走眨眼时钟内部通道,不经 C-05 |
-| G9 | CRT 辉光白名单 | bloom 只认 G 高光与终端光标——FX 层任何原语不得产生第三亮点 |
+| G9 | CRT 辉光白名单 | bloom 只认 G 高光与终端光标——FX 层任何原语不得产生第三亮点。**在渲染侧白名单强制**（bloom 采样来源受控），FX helper 仅为辅助断言 |
 | G10 | 预算上限 | 超 §0 异常预算 → `fx_budget_reject`,正典事件豁免 |
 
 ---
@@ -110,11 +110,11 @@
 ## §4 CI 验收(全库合并版)
 
 1. 参数白名单:每原语非法参数注入 20 组,拒绝率 = 100%
-2. cap 裁剪:阶段 2 请求 0.7+ → 被裁至 0.3,Ledger `cap_applied` 正确
+2. cap 裁剪:按**原语 cap**（总表 cap 列）裁剪，Ledger `cap_applied` 正确；无“阶段 2 统一 0.3”的全局值（阶段只做 gate 与预算档，不覆盖原语 cap）
 3. 预算:S3 推至 21 点 → 第 21 次 `fx_budget_reject`;GV60 正典不计入
 4. 幂等:同参连调 3 次 → 效果不叠加、只记 1 次 cost
 5. 取消安全:结局序列启动时并行触发全部 30 项 → 0 个半执行状态
-6. 红线断言:G1–G10 逐条可执行断言(G4 同帧比对三方眨眼时间戳,diff < 1 帧)
+6. 红线断言:G1–G10 逐条可执行断言(G4 同帧比对三方眨眼时间戳,同一模拟 tick 内，允许 ±1 tick 采样容差)
 7. 叙事收编:禁用 favicon/低电量/无 DOM 权限环境下全库执行 → 0 个 UI 错误,`fx_suppressed` 全记录
 8. 子文档一致性:5 个 repo 子文档与本总表逐项 diff = 0
 
