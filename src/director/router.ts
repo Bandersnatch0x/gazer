@@ -5,6 +5,13 @@
  * chosen per call, not per session, so one slow route never degrades another.
  * `timeoutMs` is the latency budget for that call; 0 means the route is local and
  * has no network deadline.
+ *
+ * 0079 honesty note: this table is the CONTRACT target. The current deployment
+ * provisions a single upstream model; there is no separate smaller-model
+ * endpoint, so `secondary` is not selected at runtime yet. `fallback` is real
+ * (manualPool / scripted table / seeded PRNG / keep-original-turn). The HARNESS
+ * §5 table is annotated to match. Do not cite this table as proof of five
+ * independent network capabilities.
  */
 
 export type TaskKind =
@@ -71,6 +78,12 @@ export function routeTask(kind: TaskKind): Route {
   // A runtime caller can hand us a string outside the union; the roundtable route
   // is the safe default because it is the one path the game cannot run without.
   return ROUTES[kind] ?? ROUTES.roundtable;
+}
+
+/** 0078: the latency budget a caller (incl. the dev/preview middleware) should
+ *  enforce for a task. Single source so client and server do not drift. */
+export function routeTimeoutMs(kind: TaskKind): number {
+  return routeTask(kind).timeoutMs;
 }
 
 export function isAsyncTask(kind: TaskKind): boolean {

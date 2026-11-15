@@ -99,12 +99,14 @@ Five routes, each with a preferred, secondary, and fallback target.
 | Roundtable dialogue | Primary hosted model, Level A single call | Smaller hosted model, same prompt | `manualPool` lines | 800 ms |
 | OntologyShift choreography | Primary hosted model with effect schema | Smaller hosted model | Scripted shift table | 1200 ms |
 | Drift and consolidation | Primary hosted model at `session:end` | Smaller hosted model | Deterministic drift pick from the seeded PRNG | 2000 ms, off the critical path |
-| Level B verification | Primary hosted model, single-creature context | Smaller hosted model | Keep the original turn | 600 ms |
+| Level B verification | Engine-side single-creature slice check (no network call; see 0079 note) | — | Keep the original turn | 600 ms (local; no deadline) |
 | TTS | Browser `SpeechSynthesis`, Stage 3+ | — | Text bubbles only | none; it is local |
 
 Routing is chosen per call, not per session, so one slow route does not degrade the others. `llm:budget` runs before every route and refuses the call when the ceiling is reached, which sends that route to its fallback instead of queueing.
 
-> **2026-11-15 实现边界（0084，待 0079 收口前如实登记）**：当前运行时只有 Roundtable 主链真实消费路由与预算；`Drift and consolidation` 走的是周期性的确定性 `fallbackConsolidate`（非 `session:end` 模型调用），`Level B` 走引擎侧本地亲见判定，`ontology_staging` 未接真实请求。上表是**契约目标**，不是已全部联网实现的清单；补齐见 0078/0079。不得据本表宣称五类能力均已实装。
+> **2026-11-15 实现边界（0079）**：§5 表是**契约目标**，当前部署只配置**单一上游模型**，没有独立的小模型端点，`secondary` 运行时不会被选择；`fallback` 均为真实路径。**Level B 当前是引擎侧“单个体切片亲见判定”，不发独立模型请求**——这是 0066 的历史取舍，0079 正式把契约降到这个口径而不是继续声称“模型互证”。对外演示不得把 §5 当作五种联网能力的证据。
+
+> **2026-11-15 实现边界（0084）**：`Drift and consolidation` 当前走周期性的确定性 `fallbackConsolidate`（非 `session:end` 模型调用），`ontology_staging` 未接真实请求；上表对应行同属契约目标，补齐另立票。
 
 ## 6. Degradation is narrative
 

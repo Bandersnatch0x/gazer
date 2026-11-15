@@ -1,5 +1,6 @@
 import { defineConfig, type Plugin } from "vitest/config";
 import { createBudgetAdmission } from "./src/bridge/budget";
+import { routeTimeoutMs } from "./src/director/router";
 
 /**
  * LLM protocol adapter (jam acceptance: "接入 LLM").
@@ -149,7 +150,7 @@ function llmAdapter(): Plugin {
             temperature: TEMPERATURE[kind] ?? 0.9,
             max_tokens: MAX_TOKENS[kind] ?? 200,
           }),
-          signal: AbortSignal.timeout(30_000),
+          signal: AbortSignal.timeout(isRoundtable ? Math.max(1, routeTimeoutMs("roundtable")) : 30_000),
         });
         if (!upstream.ok) {
           res.statusCode = 502;
