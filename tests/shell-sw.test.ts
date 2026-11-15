@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { registerServiceWorker } from "../src/shell/register";
-import { CACHE_NAME, installServiceWorker, isCacheable, type ServiceWorkerScope } from "../src/shell/sw";
+import { CACHE_NAME, assetUrlsFromIndex, assetUrlsFromManifest, installServiceWorker, isCacheable, type ServiceWorkerScope } from "../src/shell/sw";
 
 const ORIGIN = "https://gazer.test";
 
@@ -161,5 +161,40 @@ describe("installServiceWorker", () => {
     expect(await (await miss.responses[0])?.text()).toBe(`network:${ORIGIN}/fresh.js`);
     expect(requests).toEqual([`${ORIGIN}/fresh.js`]);
     expect(await cache.match(new Request(`${ORIGIN}/fresh.js`))).toBeDefined();
+  });
+});
+
+describe("0085 asset warming", () => {
+  it("extracts hashed shell assets from index.html and ignores remote/anchor refs", () => {
+    const html = `<!doctype html><script type="module" src="./assets/main-abc.js"></script>
+      <link rel="stylesheet" href="./assets/main-x.css">
+      <link rel="manifest" href="./manifest.webmanifest">
+      <a href="#top">x</a><img src="https://cdn.example/x.png"><script src="//evil/x.js"></script>`;
+    const urls = assetUrlsFromIndex(html, "https://gazer.test/");
+    expect(urls).toContain("https://gazer.test/assets/main-abc.js");
+    expect(urls).toContain("https://gazer.test/assets/main-x.css");
+    expect(urls).toContain("https://gazer.test/manifest.webmanifest");
+    expect(urls).toContain("https://gazer.test/manifest.webmanifest");
+    expect(urls.some((u) => u.includes("evil"))).toBe(false);
+    expect(urls.some((u) => u.includes("cdn.example"))).toBe(false);
+  });
+});
+
+describe("0085 manifest warming", () => {
+  it("lists every emitted chunk, fonts included, and skips the worker itself", () => {
+    const manifest = {
+      "index.html": { file: "assets/main-abc.js", css: ["assets/main-x.css"], assets: ["assets/f.woff2"] },
+      "node_modules/pixi/WebGL.js": { file: "assets/WebGLRenderer-def.js" },
+      "sw": { file: "sw.js" },
+    };
+    const urls = assetUrlsFromManifest(manifest, "https://gazer.test/");
+    expect(urls).toContain("https://gazer.test/assets/main-abc.js");
+    expect(urls).toContain("https://gazer.test/assets/main-x.css");
+    expect(urls).toContain("https://gazer.test/assets/f.woff2");
+    expect(urls).toContain("https://gazer.test/assets/WebGLRenderer-def.js");
+
+    // sw.js is removed so the worker never fetches itself.
+    expect(urls).not.toContain("https://gazer.test/sw.js");
+    expect(assetUrlsFromManifest(null, "https://gazer.test/")).toEqual([]);
   });
 });

@@ -229,6 +229,9 @@ export default defineConfig({
   },
   build: {
     target: "es2022",
+    // 0085: the service worker warms the shell from this manifest so an offline
+    // reload can resolve the hashed chunks (index.html alone lists too few).
+    manifest: true,
     rollupOptions: {
       input: {
         main: "./index.html",
