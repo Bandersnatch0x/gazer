@@ -182,7 +182,11 @@ function llmAdapter(): Plugin {
 
       try {
         let attempt = await attemptUpstream();
-        if (!attempt.ok && attempt.error === "empty completion") {
+        // 0088/0087: both transient upstream faults get exactly one retry —
+        // an empty completion produced nothing, and a reply whose JSON wrapper
+        // broke in transit is equally worthless. Still one budget settlement:
+        // neither failed attempt produced content worth charging.
+        if (!attempt.ok && (attempt.error === "empty completion" || attempt.error === "unparseable scene")) {
           attempt = await attemptUpstream();
         }
         if (!attempt.ok) {
