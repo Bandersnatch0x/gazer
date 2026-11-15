@@ -2354,12 +2354,22 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     });
   }
 
+  // 0087 diagnosis: the roundtable delivery chain, panel-free. DEV + ?debug only.
+  const sceneProbeLog: string[] = [];
+
   function speakScene(trigger: string, fallbackStatus: EpistemicStatus): void {
+    const probe = (step: string): void => {
+      if (import.meta.env.DEV && debugParam !== null) {
+        sceneProbeLog.push(`t${world.tick} ${step}`);
+        if (sceneProbeLog.length > 60) sceneProbeLog.shift();
+      }
+    };
     // 声音正典的门依次关:silent run 与午夜不产生任何请求(无 LLM 调用);
     // E7 静默配额期内的 LLM 台词请求一律拒绝并记执行器 Ledger silence_quota
     // (NARRATIVE-CORE-02 §3.4);圆桌正典替换(E3)与「本触发由正典主秀」
     // (E5/E7 等)都在请求发出之前裁断。
     if (silent || midnightSilenceAt(world.tick)) {
+      probe(`skip:silent=${silent},midnight=${midnightSilenceAt(world.tick)}`);
       return;
     }
     // 0087 / ADR 0024: E7's silence quota governs proactive chatter, not an
@@ -2369,24 +2379,30 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     const crossing = trigger.startsWith("stage crossed");
     if (silenceQuotaHeld(fxState, world.tick) && !crossing) {
       fxState = recordSilenceRefusal(fxState, world.tick);
+      probe(`skip:quota tick=${world.tick} until=${fxState.silenceUntilTick}`);
       return;
     }
     if (shouldReplaceRoundtable(awakening, world.gv)) {
       awakening = markFired(awakening, "E3", world.tick);
       fireE3();
+      probe("skip:E3-replacement");
       return;
     }
     if (canonJustOwned(awakening, world.tick)) {
+      probe(`skip:canon-owned tick=${world.tick}`);
       return;
     }
+    probe(`ask:${trigger}:next=${sceneEpoch.current + 1}`);
     const token = sceneEpoch.next();
     void directScene(trigger, token).then((scene) => {
       // 0068: a newer request supersedes this one — no playScene, no manual
       // fallback, no overwrite of the current scene.
       const delivery = sceneDelivery(sceneEpoch, token, scene);
       if (delivery.status === "dropped") {
+        probe(`drop:epoch token=${token} current=${sceneEpoch.current}`);
         return;
       }
+      probe(`deliver:${delivery.status} token=${token} current=${sceneEpoch.current}`);
       if (delivery.status === "manual") {
         // 0087: a crossing already cleared the quota gate above, so its manual
         // fallback must be allowed to speak too — otherwise the player sees
@@ -4225,6 +4241,10 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       /** 0087 诊断:正典进度与静默配额(仅 DEV+debug 面)。 */
       speechState(): { fired: readonly string[]; silenceUntilTick: number; tick: number } {
         return { fired: [...awakening.fired], silenceUntilTick: fxState.silenceUntilTick, tick: world.tick };
+      },
+      /** 0087 诊断:最近一次圆桌投递的结果链路(仅 DEV+debug 面)。 */
+      sceneProbe(): readonly string[] {
+        return [...sceneProbeLog];
       },
     };
     (window as unknown as Record<string, unknown>).__gazerDebug = debugFace;

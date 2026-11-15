@@ -319,7 +319,18 @@ function assembleContext(
   }
 
   sections.push(
-    `BUDGET\n2..4 turns | cite only your own memoryRef | mood from: ${MOODS.join(",")}`,
+    [
+      "BUDGET",
+      "2..4 turns | mood from: " + MOODS.join(","),
+      // 0087: the model invented ids ("gazer_01_m1") when a speaker had no
+      // memory, and every such scene was rejected as ungrounded. Name the two
+      // anchors that always exist so it never has to guess. The literal matches
+      // `SHARED_BELIEF_REF` in director/roundtable.ts (importing it would create
+      // a context <-> roundtable cycle).
+      `memoryRef must be "shared_belief" (the shared belief above), ` +
+        "a bracketed id copied exactly from a creature's own memory lines, " +
+        "or \"\" (no anchor). Never invent an id.",
+    ].join("\n"),
   );
 
   if (input.locale !== undefined) {
