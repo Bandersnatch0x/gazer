@@ -176,6 +176,16 @@ function llmAdapter(): Plugin {
             res.end(JSON.stringify({ error: "unparseable scene" }));
             return;
           }
+          // 0078: a merely parseable object is not a success. Require the
+          // minimal 2–4 turn scene shape before this call may spend quota, so
+          // malformed scenes are not charged server-side. Full grounding
+          // (memoryRef / shared-words) still runs client-side in the game.
+          const turns = (scene as { scene?: unknown }).scene;
+          if (!Array.isArray(turns) || turns.length < 2 || turns.length > 4) {
+            res.statusCode = 502;
+            res.end(JSON.stringify({ error: "invalid scene shape" }));
+            return;
+          }
           res.end(JSON.stringify(scene));
           succeeded = true;
         } else {
