@@ -1412,10 +1412,16 @@ export function installCrtShell(options: CrtShellOptions): CrtShellHandle {
     // slots from the canvas rect so they stay glued to the baked buttons at
     // every scale, above #ui in the root stacking context.
     const placeFixed = (el: HTMLElement, r: Rect): void => {
+      // 0081/0085: the baked slot stays pixel-true, but a phone finger needs a
+      // ≥44px target — grow the hit area around the visual, keeping the
+      // centre glued to the bezel slot.
+      const minTouch = 44;
+      const w = Math.max(r.w * scale, minTouch);
+      const h = Math.max(r.h * scale, minTouch);
       el.style.left = `${canvasRect.left + (r.x - geo.border.left) * scale}px`;
       el.style.top = `${canvasRect.top + (r.y - geo.border.top) * scale}px`;
-      el.style.width = `${r.w * scale}px`;
-      el.style.height = `${r.h * scale}px`;
+      el.style.width = `${w}px`;
+      el.style.height = `${h}px`;
     };
     placeFixed(powerButton, geo.power);
     placeFixed(degaussButton, geo.degauss);

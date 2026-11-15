@@ -320,6 +320,9 @@
       }
       .gazer-osd-bar > * {
         pointer-events: auto;
+        /* 0081: the OSD toggle is a touch target too. */
+        min-height: 44px;
+        min-width: 44px;
       }
       @media (max-width: 720px) {
         /* 行 1(8..~32):OSD 钮;行 2(40..72):HUD;行 3(76+):7 个按钮折行。 */
