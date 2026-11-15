@@ -94,6 +94,19 @@ function world(opts: {
 // ---------------------------------------------------------------------------
 
 describe("evaluateEnding: the trigger table (ticket 0049, map 0048; gaze 口径票 0072)", () => {
+  it("0084: a locked A/B/C ending is final; reaching 8/8 later does not re-evaluate", () => {
+    const locked = world({
+      gv: 100,
+      glyphsRead: READ_ALL,
+      creatures: {},
+      ending: { kind: "fusion", atTick: 36000 },
+    });
+    // Ending already recorded -> no new verdict, no upgrade to gaze.
+    expect(evaluateEnding(locked)).toBeNull();
+    // The recording content is still unlocked independently of the ending.
+    expect(recordingUnlocked(locked)).toBe(true);
+  });
+
   it("GV≥100 gates the A/B/C verdicts; the 8/8 gaze verdict is GV-independent", () => {
     expect(evaluateEnding(world({ gv: 99, creatures: { a: creatureAt("a", { x: 3, y: 3 }) } }))).toBeNull();
     expect(evaluateEnding(world({ gv: 0 }))).toBeNull();

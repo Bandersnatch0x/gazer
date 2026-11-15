@@ -104,6 +104,8 @@ Five routes, each with a preferred, secondary, and fallback target.
 
 Routing is chosen per call, not per session, so one slow route does not degrade the others. `llm:budget` runs before every route and refuses the call when the ceiling is reached, which sends that route to its fallback instead of queueing.
 
+> **2026-11-15 实现边界（0084，待 0079 收口前如实登记）**：当前运行时只有 Roundtable 主链真实消费路由与预算；`Drift and consolidation` 走的是周期性的确定性 `fallbackConsolidate`（非 `session:end` 模型调用），`Level B` 走引擎侧本地亲见判定，`ontology_staging` 未接真实请求。上表是**契约目标**，不是已全部联网实现的清单；补齐见 0078/0079。不得据本表宣称五类能力均已实装。
+
 ## 6. Degradation is narrative
 
 When a local or fallback model takes over, the harness sets `voice_degraded` on the world state. That flag is not an error path, and it must never surface as one:

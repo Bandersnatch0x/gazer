@@ -5,6 +5,7 @@ import {
   scoreMemory,
   TOKEN_BUDGET,
 } from "../src/director/context";
+import { DAY_CYCLE_TICKS } from "../src/sim/clock";
 import type { AttendingCreature, ContextInput } from "../src/director/context";
 import type {
   ConsolidatedEntry,
@@ -151,7 +152,7 @@ describe("memory scoring", () => {
     const trigger = "player_stared 6200ms";
     // Trigger content words: player, stared, 6200ms. The fact shares two of three.
     const relevance = 2 / 3;
-    const recency = 0.5 ** ((1000 - 720) / 1440);
+    const recency = 0.5 ** ((1000 - 720) / DAY_CYCLE_TICKS);
     const expected = 0.8 + 2.0 * relevance + 1.5 * recency + 0 + 0.8 * 0.6 - 0;
 
     expect(scoreMemory(entry, trigger, 1000)).toBeCloseTo(expected, 10);
@@ -164,8 +165,8 @@ describe("memory scoring", () => {
       valence: 0,
     });
     const atZero = scoreMemory(entry, "the room", 0);
-    const atOneDay = scoreMemory(entry, "the room", 1440);
-    const atTwoDays = scoreMemory(entry, "the room", 2880);
+    const atOneDay = scoreMemory(entry, "the room", DAY_CYCLE_TICKS);
+    const atTwoDays = scoreMemory(entry, "the room", DAY_CYCLE_TICKS * 2);
 
     expect(atZero - atOneDay).toBeCloseTo(1.5 * 0.5, 10);
     expect(atOneDay - atTwoDays).toBeCloseTo(1.5 * 0.25, 10);

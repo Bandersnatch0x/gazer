@@ -10,6 +10,7 @@ import type { CreatureState, Mood, Stage } from "../sim/types";
 import type { PromptGenome } from "../sim/genome";
 import { topTraits } from "../sim/genome";
 import type { ConsolidatedEntry, MemoryEntry, MemorySlice } from "../sim/memory";
+import { DAY_CYCLE_TICKS } from "../sim/clock";
 
 export interface AttendingCreature {
   readonly state: CreatureState;
@@ -47,8 +48,11 @@ export const TOKEN_BUDGET = 600;
  */
 const CHARS_PER_TOKEN = 4;
 
-/** One in-game day, in ticks. Recency decays to 0.5 over this span. */
-const HALF_LIFE_TICKS = 1440;
+/** One in-game day, in ticks. Recency decays to 0.5 over this span.
+ * 0084: derived from the actual calendar day (DAY_CYCLE_TICKS) so the docs'
+ * "one in-game day" is literally true instead of a frozen 1440 that disagreed
+ * with a 1200-tick day. */
+const HALF_LIFE_TICKS = DAY_CYCLE_TICKS;
 
 /** Score weight table (CONTEXT.md §4). A tuning change is one edit here. Exported for the doc-alignment CI lock. */
 export const WEIGHTS = Object.freeze({

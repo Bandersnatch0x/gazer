@@ -14,6 +14,7 @@
  */
 
 import { describe, expect, it } from "vitest";
+import { DAY_CYCLE_TICKS } from "../src/sim/clock";
 import { isAsyncTask, routeTask } from "../src/director/router";
 import type { TaskKind } from "../src/director/router";
 import {
@@ -129,7 +130,7 @@ describe("0069 · CONTEXT §4 score weights", () => {
     };
     const trigger = "player_stared 6200ms";
     const relevance = 2 / 3; // trigger content words: player, stared, 6200ms
-    const recency = 0.5 ** ((1000 - 720) / 1440); // HALF_LIFE = 1440 ticks (CONTEXT.md:66)
+    const recency = 0.5 ** ((1000 - 720) / DAY_CYCLE_TICKS); // HALF_LIFE = one in-game day (CONTEXT.md:66, 0084)
     const expected =
       0.8 +
       CONTEXT_WEIGHTS.relevance * relevance +

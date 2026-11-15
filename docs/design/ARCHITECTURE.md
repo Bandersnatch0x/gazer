@@ -33,6 +33,8 @@ GV and ontology are different kinds of number, and the engine treats them differ
 
 The consequence, stated plainly: a kind player who pushes GV back down gets a quieter world, not an innocent one. The creatures still know what they saw; they simply choose to say less. That is the design, not a bug. Nothing here says a GV rollback rolls ontology back, because it cannot.
 
+**Time authority (0084).** The engine's night multiplier (×1.5, 00:00–05:00) is evaluated against the deterministic **world hour** derived from `tick` (`src/sim/clock.ts`), because the simulation owns physics and must be replayable (decision 0003). Requirements R3.3's "local hours" describes the same window as the player perceives it; it does not license reading the host clock. `gvDeltaFor` accepting both hour kinds is a compatibility seam, not two authorities: runtime passes the world hour.
+
 ## Layer boundary
 
 ```

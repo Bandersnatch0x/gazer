@@ -63,7 +63,7 @@ score = salience
 | --- | --- |
 | `salience` | The entry's own `salience` field, 0..1 |
 | `relevance` | Keyword overlap between the entry `fact` and the scene trigger terms, normalised to 0..1 |
-| `recency` | `0.5 ** (ageTicks / HALF_LIFE)`, where `ageTicks = state.tick - entry.atTick` and `HALF_LIFE` is one in-game day (1440 ticks) |
+| `recency` | `0.5 ** (ageTicks / HALF_LIFE)`, where `ageTicks = state.tick - entry.atTick` and `HALF_LIFE` is one in-game day (`DAY_CYCLE_TICKS`, currently 1200 ticks; the constant is derived from the calendar, not a frozen 1440) |
 | `is_core` | 1 if the entry is a consolidation candidate (a death, a player answer, or an exposed lie), else 0 |
 | `valence_extreme` | `abs(valence)`, 0..1: strong feeling is more speakable than mild |
 | `source_penalty` | 1 if `witnessed === "inferred"`, else 0; derived memories are weaker evidence for a speaker |
