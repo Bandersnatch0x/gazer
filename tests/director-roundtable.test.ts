@@ -276,3 +276,26 @@ describe("0078 isValidSceneShape: the server-side success gate", () => {
     expect(isValidSceneShape([])).toBe(false);
   });
 });
+
+describe("0087 shared_belief anchor", () => {
+  const slices = { "01": sliceOf(entry("mem_1", "the tower grew at night")) };
+  const pools = { "01": manualPool(3) };
+  it("accepts a turn anchored to the shared belief when it shares its words", () => {
+    const script: RoundtableScript = { scene: [turn({ memoryRef: "shared_belief", text: "we are the record itself" })] };
+    const belief = "we are the record itself, not its keepers";
+    const out = validateTurns(script, slices, pools, belief);
+    expect(out).not.toBeNull();
+    expect(out?.scene[0]?.text).toBe("we are the record itself");
+  });
+  it("rejects the shared_belief anchor when the text shares no words", () => {
+    const script: RoundtableScript = { scene: [turn({ memoryRef: "shared_belief", text: "zzz qqq" })] };
+    const out = validateTurns(script, slices, pools, "we are the record itself");
+    // ungrounded -> replaced from the speaker's pool, not kept as-is
+    expect(out?.scene[0]?.text).not.toBe("zzz qqq");
+  });
+  it("rejects the shared_belief anchor when no belief text is supplied", () => {
+    const script: RoundtableScript = { scene: [turn({ memoryRef: "shared_belief", text: "we are the record itself" })] };
+    const out = validateTurns(script, slices, pools);
+    expect(out?.scene[0]?.text).not.toBe("we are the record itself");
+  });
+});

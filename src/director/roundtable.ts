@@ -154,7 +154,23 @@ function sharesEnoughWithMemory(text: string, memory: string): boolean {
   return false;
 }
 
-function isGrounded(turn: RoundtableTurn, slices: Readonly<Record<CreatureId, MemorySlice>>): boolean {
+/**
+ * 0087: the context exposes a `SHARED BELIEF` block with no memory id, and the
+ * model reasonably anchors a line to it as `memoryRef: "shared_belief"`. That
+ * anchor is legitimate — it is grounded in text the prompt really showed — so it
+ * is accepted when the line shares content words with that belief block.
+ */
+export const SHARED_BELIEF_REF = "shared_belief";
+
+function isGrounded(
+  turn: RoundtableTurn,
+  slices: Readonly<Record<CreatureId, MemorySlice>>,
+  sharedBelief: string | undefined,
+): boolean {
+  if (turn.memoryRef === SHARED_BELIEF_REF) {
+    return sharedBelief !== undefined && sharedBelief.trim().length > 0 &&
+      sharesEnoughWithMemory(turn.text, sharedBelief);
+  }
   const slice = slices[turn.speaker];
   if (slice === undefined || !hasMemoryRef(slice, turn.memoryRef)) {
     return false;
@@ -179,10 +195,11 @@ export function validateTurns(
   script: RoundtableScript,
   slices: Readonly<Record<CreatureId, MemorySlice>>,
   pools: Readonly<Record<CreatureId, readonly string[]>>,
+  sharedBelief?: string,
 ): RoundtableScript | null {
   const scene: RoundtableTurn[] = [];
   for (const [index, turn] of script.scene.entries()) {
-    if (isGrounded(turn, slices)) {
+    if (isGrounded(turn, slices, sharedBelief)) {
       scene.push(turn);
       continue;
     }

@@ -40,12 +40,13 @@ const ROUTES: Readonly<Record<TaskKind, Route>> = Object.freeze({
     primary: "primary_hosted",
     secondary: "smaller_hosted",
     fallback: "manual_pool",
-    // 0023 (2026-11-15) supersedes 0019's 800ms: the live jam endpoint answers a
-    // full scene in ~3.4–3.9s, so 800ms aborted every real call into the manual
-    // pool and the model's lines effectively never appeared. 4000ms keeps the
-    // real path viable; failures still fall back and are absorbed by the
+    // 0023 (2026-11-15) supersedes 0019's 800ms. The first calibration sampled
+    // three fast replies (3.4–3.9s) and chose 4000ms; a wider sample against the
+    // same live endpoint measured 3664 / 4012 / 4380 / 5742 / 6732 / 11060 ms,
+    // so 4000 aborted most real calls. 12000ms covers the observed maximum while
+    // still bounding the wait; failures fall back and are absorbed by the
     // voice_degraded narration (HARNESS §6).
-    timeoutMs: 4000,
+    timeoutMs: 12000,
   }),
   ontology_staging: Object.freeze({
     primary: "primary_hosted_effect_schema",

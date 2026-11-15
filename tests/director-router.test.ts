@@ -36,9 +36,9 @@ describe("director routing", () => {
 
   it("pins the scene deadlines from the harness", () => {
     // 0023 (2026-11-15) supersedes 0019's 800ms: the live endpoint answers in
-    // ~3.4–3.9s, and 800ms aborted every real call into manualPool. 4000ms is
+    // ~3.4–3.9s, and 800ms aborted every real call into manualPool. A wider sample (3.7-11.1s) then showed 4000ms was still too tight; 12000ms is
     // now the HARNESS §5 budget and the client/middleware share it.
-    expect(routeTask("roundtable").timeoutMs).toBe(4000);
+    expect(routeTask("roundtable").timeoutMs).toBe(12000);
     expect(routeTask("level_b").timeoutMs).toBe(600);
   });
 

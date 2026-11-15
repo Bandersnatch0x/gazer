@@ -1314,6 +1314,8 @@ export interface SceneWiring {
   readonly memories: Readonly<Record<CreatureId, MemorySlice>>;
   readonly pools: Readonly<Record<CreatureId, readonly string[]>>;
   readonly present: readonly CreatureId[];
+  /** 0087: the SHARED BELIEF text shown in the prompt, a valid grounding anchor. */
+  readonly sharedBelief?: string;
   /** Injected verifier; a thrown / timed-out call keeps the original line. */
   readonly verifyTurn?: (turn: RoundtableTurn) => Promise<LevelBVerdict>;
 }
@@ -1401,7 +1403,7 @@ export async function resolveRoundtableScene(w: SceneWiring): Promise<SceneOutco
     return manual(w.manualLine, false);
   }
   const raw = parseRoundtable(parsed);
-  const validated = raw === null ? null : validateTurns(raw, w.memories, w.pools);
+  const validated = raw === null ? null : validateTurns(raw, w.memories, w.pools, w.sharedBelief);
   if (validated === null) {
     return manual(w.manualLine, false);
   }
@@ -2132,6 +2134,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       memories,
       pools,
       present: attendingCreatures().map((creature) => creature.state.id),
+      sharedBelief: sharedBeliefLine(),
       verifyTurn: verifyRoundtableTurn,
     });
     if (!sceneEpoch.isCurrent(token)) {
@@ -2385,7 +2388,11 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
         return;
       }
       if (delivery.status === "manual") {
-        if (speechPermitted()) {
+        // 0087: a crossing already cleared the quota gate above, so its manual
+        // fallback must be allowed to speak too — otherwise the player sees
+        // nothing at all (request made, model scene rejected, no line).
+        const permitted = speechPermitted() || (crossing && !silent && !midnightSilenceAt(world.tick));
+        if (permitted) {
           speakManual(world.stage, world.tick, fallbackStatus);
         }
         return;

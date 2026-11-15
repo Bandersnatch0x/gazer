@@ -96,7 +96,7 @@ Five routes, each with a preferred, secondary, and fallback target.
 
 | Route | Preferred | Secondary | Fallback | Latency budget |
 | --- | --- | --- | --- | --- |
-| Roundtable dialogue | Primary hosted model, Level A single call | Smaller hosted model, same prompt | `manualPool` lines | 4000 ms (0023; 0019's 800 ms superseded) |
+| Roundtable dialogue | Primary hosted model, Level A single call | Smaller hosted model, same prompt | `manualPool` lines | 12000 ms (0023 amendment; 0019's 800 ms superseded) |
 | OntologyShift choreography | Primary hosted model with effect schema | Smaller hosted model | Scripted shift table | 1200 ms |
 | Drift and consolidation | Primary hosted model at `session:end` | Smaller hosted model | Deterministic drift pick from the seeded PRNG | 2000 ms, off the critical path |
 | Level B verification | Engine-side single-creature slice check (no network call; see 0079 note) | — | Keep the original turn | 600 ms (local; no deadline) |
