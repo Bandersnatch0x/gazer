@@ -2359,7 +2359,12 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     if (silent || midnightSilenceAt(world.tick)) {
       return;
     }
-    if (silenceQuotaHeld(fxState, world.tick)) {
+    // 0087 / ADR 0024: E7's silence quota governs proactive chatter, not an
+    // event-driven stage crossing. A crossing is the only player-reachable path
+    // to the model, so it is exempt here; E3 replacement and same-tick canon
+    // ownership still gate it below, exactly as written.
+    const crossing = trigger.startsWith("stage crossed");
+    if (silenceQuotaHeld(fxState, world.tick) && !crossing) {
       fxState = recordSilenceRefusal(fxState, world.tick);
       return;
     }
@@ -4209,6 +4214,10 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
           world = { ...world, glyphsRead: [...read, key] };
         }
         refresh();
+      },
+      /** 0087 诊断:正典进度与静默配额(仅 DEV+debug 面)。 */
+      speechState(): { fired: readonly string[]; silenceUntilTick: number; tick: number } {
+        return { fired: [...awakening.fired], silenceUntilTick: fxState.silenceUntilTick, tick: world.tick };
       },
     };
     (window as unknown as Record<string, unknown>).__gazerDebug = debugFace;
