@@ -1544,6 +1544,13 @@ export interface GameHandle {
   readonly powerPress: () => PowerOutcome;
   /** 消磁钮(§5):波纹帧全体眨眼一次(G4 内部通道)入账,嘭声位。 */
   readonly degaussPress: () => void;
+  // ---- 键盘动词(P-2)----
+  /**
+   * 键盘动词(main 层接线 F2=feed / F3=clean):作用于距光标最后已知瓦片
+   * 最近的个体,走 performFeed/performClean 同一条路径——账本、遥测、GV
+   * 与点击完全一致;犹豫按 0ms 记(键盘没有犹豫)。无可选目标返回 false。
+   */
+  readonly keyboardVerb: (kind: "feed" | "clean") => boolean;
   /** 结局事件入档(WorldState.ending,0035 消费形状的写入面)。 */
   readonly recordEnding: (kind: TowerEnding) => void;
   /** BIOS 内存计数(现实日蠕变,§3 暗线 2)。 */
@@ -2910,6 +2917,14 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   let lastTap: { at: number; tile: { x: number; y: number } } | null = null;
   /** Armed by the clean key: the next released tap cleans instead of feeds. */
   let cleanMode = false;
+  // 孵化面板防误触(P-2):按下不立即开面板,挂起到 pointerup 的 guard 窗口
+  // 确认;一次至多一个挂起动词,后挂者取消前者。挂起绑定按下瓦片:换位
+  // 抬起视为换了意图,不确认。
+  let pendingHatchTimer: ReturnType<typeof setTimeout> | null = null;
+  /** The press that landed on an egg, waiting for its guard-window confirm. */
+  let pendingHatchEggId: string | null = null;
+  /** The tile the pending egg was pressed on; the release must match it. */
+  let pendingHatchTile: { x: number; y: number } | null = null;
 
   function tileFromPoint(x: number, y: number): { x: number; y: number } {
     const rect = canvas.getBoundingClientRect();
@@ -2926,6 +2941,15 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       clearTimeout(pendingFeedTimer);
       pendingFeedTimer = null;
     }
+  }
+
+  function cancelPendingHatch(): void {
+    if (pendingHatchTimer !== null) {
+      clearTimeout(pendingHatchTimer);
+      pendingHatchTimer = null;
+    }
+    pendingHatchEggId = null;
+    pendingHatchTile = null;
   }
 
   /**
@@ -2982,6 +3006,25 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     applyLedgerDelta({ kind: "clean", creatureId });
     app.playEffect({ kind: "gaze_at_player", creatureId, ms: 700 }, world);
     refresh();
+  }
+
+  /**
+   * 键盘动词(P-2):F2 喂 / F3 清洁,作用于距光标最后已知瓦片最近的个体。
+   * 与点击共用 performFeed/performClean——记账与遥测同一条路径;犹豫按
+   * 0ms 记(键盘没有犹豫,这正是它会被记下来的样子)。rapid_click 判定
+   * 不受影响:连点计数只由指针处理器推进。
+   */
+  function keyboardVerb(kind: "feed" | "clean"): boolean {
+    const target = nearestCreature(world, lastCursorTile);
+    if (target === null) {
+      return false;
+    }
+    if (kind === "feed") {
+      performFeed(target.id, 0);
+    } else {
+      performClean(target.id);
+    }
+    return true;
   }
 
   // ---- Pupil close-up (ART-CORE-01 §6, tickets 0019 + 0037) -------------------
@@ -3290,6 +3333,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       // A second finger is a gesture, not a second verb: any feed still under
       // its guard is cancelled so two-thumb handling never double-feeds.
       cancelPendingFeed();
+      cancelPendingHatch();
       return;
     }
     const now = Date.now();
@@ -3310,7 +3354,12 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       (entry) => entry.at.x === tile.x && entry.at.y === tile.y,
     );
     if (egg !== undefined && event.button === 0) {
-      openHatchChoice(egg.id);
+      // 孵化面板防误触(P-2):按下不再立即开面板——落点挂起为待确认蛋,
+      // 由 pointerup 的 guard 窗口确认后打开,窗口内的双击取消。照料节奏
+      // 中瞄准生物时的误触,不再直接弹打断性的模态面板。
+      cancelPendingFeed();
+      pendingHatchEggId = egg.id;
+      pendingHatchTile = tile;
       return;
     }
 
@@ -3322,6 +3371,8 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     }
 
     if (event.button === 0) {
+      // 新的按压意图取代任何挂起动词:蛋的 guard 挂起在这里让位。
+      cancelPendingHatch();
       dragTarget = target.id;
       dragStart = { x: event.offsetX, y: event.offsetY };
       moved = false;
@@ -3334,6 +3385,9 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
         }
         pressGranted = true;
         world = step(world, { kind: "pet", creatureId: target.id });
+        // 触屏注视(P-2):抚摸就是注视的具身形式——pet 窗口内生物回望
+        // 玩家。悬停注视在触屏上不存在,GAZE 由 pet 承载,零新输入。
+        app.playEffect({ kind: "gaze_at_player", creatureId: target.id, ms: 1200 }, world);
         refresh();
         holdTimer = setTimeout(() => {
           if (!moved) {
@@ -3381,9 +3435,44 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       }
       dragTarget = null;
       dragStart = null;
+      cancelPendingHatch();
       return;
     }
     if (event.button !== 0) {
+      cancelPendingHatch();
+      return;
+    }
+
+    // 孵化面板的 guard 确认(P-2):这根指针按下时落在蛋上,release 才是
+    // 确认;必须落在同一瓦片、未被拖动、且是最后那根指针。guard 窗口内的
+    // 双击取消。一次至多一个挂起动词。
+    if (pendingHatchEggId !== null) {
+      const hatchEgg = pendingHatchEggId;
+      const hatchTile = pendingHatchTile;
+      pendingHatchEggId = null;
+      pendingHatchTile = null;
+      const sameTile =
+        hatchTile !== null && hatchTile.x === tile.x && hatchTile.y === tile.y;
+      if (wasLastPointer && !moved && sameTile) {
+        const now = Date.now();
+        const doubleTap =
+          lastTap !== null &&
+          now - lastTap.at <= RHYTHM.feedGuardMs &&
+          lastTap.tile.x === tile.x &&
+          lastTap.tile.y === tile.y;
+        lastTap = null;
+        if (doubleTap) {
+          cancelPendingHatch();
+        } else {
+          pendingHatchTimer = setTimeout(() => {
+            pendingHatchTimer = null;
+            openHatchChoice(hatchEgg);
+          }, RHYTHM.feedGuardMs);
+        }
+      } else {
+        // 异位抬起、指针被接管或右键中途换意图:不开面板。
+        cancelPendingHatch();
+      }
       return;
     }
 
@@ -3420,6 +3509,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
         if (doubleTap) {
           // The second tap cancels the pending feed and stares into the pupil.
           cancelPendingFeed();
+          cancelPendingHatch();
           lastTap = null;
           openPupilPanel(released);
           // 返祖体被选中:凝视即选择,翻译流从这里开始(票 0029)。前置不
@@ -3429,6 +3519,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
           lastTap = { at: now, tile };
           const hesitationMs = pressHesitationMs ?? 0;
           cancelPendingFeed();
+          cancelPendingHatch();
           pendingFeedTimer = setTimeout(() => {
             pendingFeedTimer = null;
             performFeed(released, hesitationMs);
@@ -3457,6 +3548,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     dragTarget = null;
     dragStart = null;
     pressGranted = false;
+    cancelPendingHatch();
   });
 
   function handleDeaths(before: Readonly<Record<CreatureId, CreatureState>>): void {
@@ -4338,6 +4430,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     nudgeOnSleepWake,
     powerPress: () => powerPress(),
     degaussPress: () => fireDegauss(false),
+    keyboardVerb,
     recordEnding,
     biosMemoryK: () => currentBiosMemoryK(),
     biosFirstDayMs: () => biosRecord.firstDayMs,
@@ -4406,6 +4499,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       doc.removeEventListener("visibilitychange", onVisibilityChange);
       cancelPlayback();
       cancelPendingFeed();
+      cancelPendingHatch();
       // 0064: 正常退出把最新世界落盘(destroy 未必被 main 调用,pagehide 亦兜底)。
       saveWorld(storage, world);
       pageHideTarget.removeEventListener("pagehide", flushOnPageHide);

@@ -238,6 +238,20 @@ document.addEventListener("keydown", (event: KeyboardEvent) => {
     syncInputEcho();
     return;
   }
+  // 键盘动词(P-2):F2 喂 / F3 清洁,作用于距光标最近个体,走 game 层
+  // performFeed/performClean 同一条记账路径。放在终端缓冲之前:F2/F3 是
+  // 功能键,不入下面的单字符缓冲,两条通道互不污染;preventDefault 拦掉
+  // F3 的浏览器查找。输入框聚焦时上方守卫已先返回,不会劫持正常打字。
+  if (event.key === "F2") {
+    event.preventDefault();
+    game.keyboardVerb("feed");
+    return;
+  }
+  if (event.key === "F3") {
+    event.preventDefault();
+    game.keyboardVerb("clean");
+    return;
+  }
   if (event.key === "Backspace") {
     terminalInputLine = terminalInputLine.slice(0, -1);
     syncInputEcho();
