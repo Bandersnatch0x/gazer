@@ -71,7 +71,7 @@ describe("tempo table (sim/rhythm.ts)", () => {
   });
 });
 
-describe("GV stage taper (GAME_REVIEW §3, option a)", () => {
+describe("GV stage taper (GAME_REVIEW §3, option a; decision 0025)", () => {
   it("decays strictly per stage and clamps out-of-range stages", () => {
     for (let stage = 1; stage < GV_STAGE_DECAY.length; stage += 1) {
       const previous = GV_STAGE_DECAY[stage - 1] ?? 1;
@@ -79,23 +79,25 @@ describe("GV stage taper (GAME_REVIEW §3, option a)", () => {
       expect(previous).toBeGreaterThan(current);
       expect(stageDecayFor(stage)).toBe(current);
     }
-    expect(stageDecayFor(0)).toBe(1);
-    expect(stageDecayFor(-3)).toBe(1); // clamps to stage 0
+    // Decision 0025: the opening hook is stretched — a stage-0 stare buys
+    // half of what it used to, so the care verbs land before the voice shifts.
+    expect(stageDecayFor(0)).toBe(0.5);
+    expect(stageDecayFor(-3)).toBe(0.5); // clamps to stage 0
     expect(stageDecayFor(9)).toBe(GV_STAGE_DECAY[4] ?? 0.1); // clamps to the finale
   });
 
   it("tapers runtime deltas only when the stage is passed; the two-arg contract stays exact", () => {
     const stare = { kind: "stare" as const, creatureId: "gazer_01", durationMs: 3000 };
     expect(gvDeltaFor(stare, NOON)).toBe(1.5);
-    expect(gvDeltaFor(stare, NOON, 0)).toBe(1.5);
+    expect(gvDeltaFor(stare, NOON, 0)).toBe(0.75);
     expect(gvDeltaFor(stare, NOON, 4)).toBeCloseTo(0.15);
     expect(gvDeltaFor(stare, NOON, 9)).toBeCloseTo(0.15);
     // Night and taper compound.
     expect(gvDeltaFor(stare, 2, 4)).toBeCloseTo(0.225);
   });
 
-  it("the finale is earned slowly: stage 4 buys a tenth of a stage-0 stare", () => {
-    expect(stageDecayFor(4)).toBeLessThan(stageDecayFor(0) / 5);
+  it("the finale is earned slowly: stage 4 buys a fifth of a stage-0 stare", () => {
+    expect(stageDecayFor(4)).toBeLessThan(stageDecayFor(0) / 4);
   });
 });
 

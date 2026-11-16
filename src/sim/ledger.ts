@@ -93,11 +93,12 @@ const GV_WEIGHTS: Readonly<Record<LedgerEvent["kind"], number>> = {
  * real local hour (telemetry context) or the in-world hour derived from the
  * tick (ticket 0008: the runtime now passes the deterministic world hour, so
  * the night multiplier replays identically offline). `stage` is optional:
- * omitted (or out of range) resolves to full weight, so the two-argument
- * contract the wiring tests pin stays exact. The runtime call sites pass the
- * world's stage so gains taper toward the finale (ticket 0002).
+ * omitted resolves to **full weight** — the un-tapered truth the two-argument
+ * contract pins (decision 0025 halved stage 0, not this contract). An explicit
+ * stage clamps through `stageDecayFor` (9 → the finale). The runtime call
+ * sites always pass the world's stage so gains taper toward it (ticket 0002).
  */
 export function gvDeltaFor(event: LedgerEvent, localHour: number, stage?: number): number {
-  const base = GV_WEIGHTS[event.kind] * stageDecayFor(stage ?? 0);
+  const base = GV_WEIGHTS[event.kind] * (stage === undefined ? 1 : stageDecayFor(stage));
   return isNightHour(localHour) ? base * 1.5 : base;
 }

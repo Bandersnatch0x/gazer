@@ -75,13 +75,15 @@ export const RHYTHM: RhythmConfig = Object.freeze({
 });
 
 /**
- * GV gains taper by stage — the long tail is the design (§3 option a). Stage 0
- * hooks at full weight; by stage 4 the same stare buys a fifth of the GV, so
- * the final act takes minutes, not seconds. Index = stage, values multiplicative.
+ * GV gains taper by stage — the long tail is the design (§3 option a, claimed
+ * by decision 0025). The opening hook is deliberately the slowest absolute
+ * ramp: a stage-0 stare buys half of what it used to, so the player learns the
+ * care verbs before the world changes its voice (80s+ of pure-stare opening,
+ * up from 40s). Index = stage, values multiplicative.
  */
 export const GV_STAGE_DECAY: readonly number[] = Object.freeze([
-  1.0, // stage 0 — spring: the cozy act, full pull
-  0.55, // stage 1 — summer
+  0.5, // stage 0 — spring: the cozy act, the hook is stretched (decision 0025)
+  0.4, // stage 1 — summer
   0.3, // stage 2 — autumn
   0.18, // stage 3 — winter
   0.1, // stage 4 — bleak: the finale is earned slowly
