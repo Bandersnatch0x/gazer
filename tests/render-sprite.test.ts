@@ -16,6 +16,7 @@ import {
   normalizeMask,
   pupilAnchorFor,
   renderMask,
+  resolvePupilAnchors,
   spriteKey,
   spriteMask,
 } from "../src/render/sprite";
@@ -377,6 +378,72 @@ describe("canonical gazer sprite: ART-CORE-01 §8 CI (ticket 0019)", () => {
     for (let ms = 0; ms < 2000; ms += 7) {
       expect(["a", "b"]).toContain(microFor("idle", ms));
     }
+  });
+
+  it("care states speak through the gaze — beg locks, avoid looks past", () => {
+    const home = { x: 5, y: 5 };
+    // beg drops the distance rest: the quadrant holds at any distance.
+    expect(pupilAnchorFor({ x: 12, y: 5 }, home, "beg")).toBe("BR"); // track would rest CENTER
+    expect(pupilAnchorFor({ x: 2, y: 9 }, home, "beg")).toBe("BL");
+    // On the cursor there is no quadrant to lock: CENTER either way.
+    expect(pupilAnchorFor({ x: 5, y: 5 }, home, "beg")).toBe("CENTER");
+    // avoid flips the horizontal half — it looks past you, not elsewhere.
+    expect(pupilAnchorFor({ x: 2, y: 2 }, home, "avoid")).toBe("TR"); // track reads TL
+    expect(pupilAnchorFor({ x: 11, y: 9 }, home, "avoid")).toBe("BL"); // track reads BR
+    expect(pupilAnchorFor({ x: 5, y: 5 }, home, "avoid")).toBe("CENTER");
+    // track keeps the book behavior exactly.
+    expect(pupilAnchorFor({ x: 12, y: 5 }, home, "track")).toBe("CENTER");
+    expect(pupilAnchorFor({ x: 2, y: 2 }, home, "track")).toBe("TL");
+  });
+
+  it("resolvePupilAnchors: hunger begs across the room, dirt averts, idle keeps the reach", () => {
+    const world = {
+      gv: 0,
+      structures: [],
+      creatures: {
+        hungry: { id: "hungry", position: { x: 2, y: 2 }, behavior: "hungry" },
+        dirty: { id: "dirty", position: { x: 8, y: 8 }, behavior: "dirty" },
+        idle: { id: "idle", position: { x: 5, y: 9 }, behavior: "idle" },
+      },
+    };
+    // The cursor sits far top-left: hunger still locks the quadrant that
+    // track would have rested to CENTER.
+    const anchors = resolvePupilAnchors(world, { x: 0, y: 0 });
+    expect(anchors.get("hungry")).toBe("TL");
+    // dirty stands below-right of the cursor: it looks top-right — past you,
+    // the vertical keeping its half so the averted gaze reads as shame.
+    expect(anchors.get("dirty")).toBe("TR");
+    // idle nine tiles below rests CENTER — beyond the 6-tile reach, the care
+    // pass never touches it. One step closer it still tracks a quadrant.
+    expect(anchors.get("idle")).toBe("CENTER");
+    const nearWorld = {
+      gv: 0,
+      structures: [],
+      creatures: { idle: { id: "idle", position: { x: 5, y: 9 }, behavior: "idle" } },
+    };
+    expect(resolvePupilAnchors(nearWorld, { x: 0, y: 4 }).get("idle")).toBe("TL");
+    // A resting idle beyond the reach reads CENTER, untouched by the care pass.
+    const restWorld = {
+      gv: 0,
+      structures: [],
+      creatures: { idle: { id: "idle", position: { x: 5, y: 5 }, behavior: "idle" } },
+    };
+    expect(resolvePupilAnchors(restWorld, { x: 12, y: 5 }).get("idle")).toBe("CENTER");
+  });
+
+  it("the twin bond outranks the beg — one eye both bodies wear", () => {
+    const world = {
+      gv: 0,
+      structures: [],
+      creatures: {
+        a: { id: "a", position: { x: 2, y: 2 }, behavior: "idle", twinOf: "b" },
+        b: { id: "b", position: { x: 8, y: 8 }, behavior: "hungry", twinOf: "a" },
+      },
+    };
+    // b is the hungry one and begs at the cursor; a is the lead twin and
+    // rests. The mirror runs last: both wear the lead's eye.
+    const anchors = resolvePupilAnchors(world, { x: 0, y: 0 });
+    expect(anchors.get("a")).toBe(anchors.get("b"));
   });
 
   it("the four eye rows never move between microframes", () => {

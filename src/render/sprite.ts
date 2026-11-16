@@ -413,15 +413,31 @@ export function anchorBeatAt(clockMs: number): number {
 }
 
 /**
+ * The care states that drive the gaze (playability pass): hunger begs — the
+ * pupil locks on the cursor's quadrant at any distance, the tell that reads
+ * across the room — and dirt avoids — the creature looks past you, the shame
+ * that says the sponge is owed. Sleeping keeps SLEEP's shut eye and the dead
+ * have none, so neither appears here.
+ */
+const CARE_GAZE: Readonly<Record<string, "beg" | "avoid">> = Object.freeze({
+  hungry: "beg",
+  dirty: "avoid",
+});
+
+/**
  * The full anchor resolution for one beat (§3 + §7, ticket 0042), in tile
  * space. Order of force:
  *   1. the cursor's quadrant per creature (`pupilAnchorFor`);
- *   2. the GV90 exception (ART-CORE-03 §6.4) — within two tiles of the tower
+ *   2. the care states (`CARE_GAZE`) — hunger locks the eye on the hand and
+ *      dirt looks past it, which is what makes the care loop legible without
+ *      a single number on screen;
+ *   3. the GV90 exception (ART-CORE-03 §6.4) — within two tiles of the tower
  *      an idle creature's pupil is forced CENTER: it is not looking at the
- *      tower, it is looking at whether you are looking. This beats the cursor;
- *   3. twin souls — the pair follows the lead twin (the smaller id) LAST, so
- *      whatever the lead shows — cursor, or the forced CENTER — is the one eye
- *      both bodies wear on the same frame.
+ *      tower, it is looking at whether you are looking. Idle only, so it never
+ *      overlaps the care states;
+ *   4. twin souls — the pair follows the lead twin (the smaller id) LAST, so
+ *      whatever the lead shows — cursor, beg, or averted — is the one eye
+ *      both bodies wear on the same frame. The bond outranks the beg.
  * Pure: same world, same cursor, same anchors.
  */
 export function resolvePupilAnchors(
@@ -437,6 +453,17 @@ export function resolvePupilAnchors(
   const anchors = new Map<string, PupilAnchor>();
   for (const creature of Object.values(world.creatures)) {
     anchors.set(creature.id, pupilAnchorFor(cursorTile, creature.position));
+  }
+  // Care states speak through the gaze (playability pass): hunger locks the
+  // eye on the hand and dirt looks past it. They override the cursor's
+  // quadrant; the tower exception (idle only) and the twin bond keep their
+  // force after them.
+  for (const creature of Object.values(world.creatures)) {
+    const gaze = CARE_GAZE[creature.behavior ?? ""];
+    if (gaze === undefined) {
+      continue;
+    }
+    anchors.set(creature.id, pupilAnchorFor(cursorTile, creature.position, gaze));
   }
   if (world.gv >= 90) {
     const tower = world.structures.find((structure) => structure.kind === "black_tower");
@@ -497,19 +524,47 @@ export function canonicalMask(pose: SpritePose, options: CanonicalOptions = {}):
 }
 
 /**
+ * How a pupil answers the cursor: `track` follows it within reach and rests at
+ * CENTER beyond it; `beg` locks the quadrant at any distance — a hungry
+ * creature stares at the hand until it is fed; `avoid` looks past the cursor —
+ * a dirty creature cannot meet your gaze.
+ */
+export type PupilGazeMode = "track" | "beg" | "avoid";
+
+/**
  * §3 anchor selection: the pupil rests at CENTER when the cursor stays more
  * than six tiles away (or exactly on the watcher), otherwise it snaps to the
  * cursor's quadrant. Ties on an axis fall low/right — deterministic, and a
  * cursor gliding along an axis produces a stable anchor, not a flicker.
+ *
+ * `mode` bends the same step function for the care states (playability pass):
+ * `beg` drops the distance rest — the quadrant holds at any distance, so the
+ * beg reads across the room; `avoid` flips the horizontal half so the creature
+ * looks past you. The vertical keeps its half in both — a creature below the
+ * cursor still looks down, which is what makes the averted gaze read as shame
+ * rather than as looking elsewhere.
  */
-export function pupilAnchorFor(cursor: TilePos, home: TilePos): PupilAnchor {
+export function pupilAnchorFor(
+  cursor: TilePos,
+  home: TilePos,
+  mode: PupilGazeMode = "track",
+): PupilAnchor {
   const dx = Math.trunc(cursor.x) - Math.trunc(home.x);
   const dy = Math.trunc(cursor.y) - Math.trunc(home.y);
-  if (Math.max(Math.abs(dx), Math.abs(dy)) > 6 || (dx === 0 && dy === 0)) {
+  if (dx === 0 && dy === 0) {
     return "CENTER";
   }
   const horizontal = dx < 0 ? "L" : "R";
   const vertical = dy < 0 ? "T" : "B";
+  if (mode === "beg") {
+    return (vertical + horizontal) as PupilAnchor;
+  }
+  if (mode === "avoid") {
+    return (vertical + (dx < 0 ? "R" : "L")) as PupilAnchor;
+  }
+  if (Math.max(Math.abs(dx), Math.abs(dy)) > 6) {
+    return "CENTER";
+  }
   return (vertical + horizontal) as PupilAnchor;
 }
 
