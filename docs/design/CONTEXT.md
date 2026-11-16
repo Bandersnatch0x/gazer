@@ -89,6 +89,14 @@ The convention is `[ID|source] "verbatim fact, at most 25 words" (salience, vale
 
 The model must reference these IDs in the `memoryRef` field of each turn. A turn whose `memoryRef` is absent from the speaker's slice is replaced by a `manualPool` line.
 
+**Legal `memoryRef` anchors (0087)**. Exactly three values are accepted:
+
+1. a bracketed ID copied verbatim from a creature's own memory lines above;
+2. `shared_belief` — anchors the turn to the SHARED BELIEF block (§8); the line must share at least two content words with that block;
+3. the empty string — no anchor.
+
+Anything else (an invented ID) invalidates the whole scene. The prompt's BUDGET section names these three so the model never has to guess.
+
 ## 6. RECENT HUMAN ACTIONS
 
 Raw ledger events are too verbose. They are templated, not summarised, and the numbers survive because they are the ammunition for the Stage 3 recitation.

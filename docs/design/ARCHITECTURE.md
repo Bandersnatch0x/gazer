@@ -300,7 +300,7 @@ The simulation is a pure reducer over `(WorldState, SimEvent)`. No clock, no ran
 
 | Failure | Behaviour |
 | --- | --- |
-| Roundtable timeout (800 ms) | Manual pool lines, world continues |
+| Roundtable timeout (12000 ms, ADR 0023) | Manual pool lines, world continues |
 | Invalid JSON | Rejected, retried once, then manual pool |
 | Turn fails memory validation | That turn replaced by the speaker's manual pool |
 | Illegal world proposal | Refused by the engine, logged, world unchanged |
@@ -309,6 +309,8 @@ The simulation is a pure reducer over `(WorldState, SimEvent)`. No clock, no ran
 | Offline | Served from the service worker cache, world runs as usual |
 
 No loading spinner ever appears. Horror does not wait on a network call.
+
+**Service worker warmup (0085)**. The build emits a Vite manifest (`manifest: true`); the worker's install step precaches every entry it lists — entry bundle, lazy Pixi chunks, fonts — so an offline reload boots instead of black-screening. An HTML scan is the fallback for builds without a manifest, and an offline navigation falls back to the cached shell. The cache name is versioned (`gazer-shell-v2`); activating a new version deletes the old one.
 
 ## Voice
 
