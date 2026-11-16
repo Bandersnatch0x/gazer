@@ -682,6 +682,29 @@ function initialWorld(rawSeed?: number | string | null): WorldState {
       };
     }
   });
+  // CARE UNIT 07(GAME_REVIEW §9.1-3):开场白写着 07——01 到 06 在哪?
+  // 不解释,只留痕:第一只初始生物醒来时,记忆里已经有一条「孵出来之前
+  // 被喂过」的亲见记忆。atTick 0 = 世界的第一刻,先于玩家的任何一次操作;
+  // salience 0.8 让它早 consolidation,进「永久」栏,不被工作 FIFO 冲走。
+  // 固定 id + 固定条目:确定性,随存档持久,恰一次(暖启动走恢复路径,
+  // 不再播种)。
+  if (world.creatures["gazer_01"] !== undefined) {
+    world = step(world, {
+      kind: "remember",
+      creatureId: "gazer_01",
+      entry: {
+        id: "mem_gazer_01_origin",
+        atTick: 0,
+        wallClock: "12:00",
+        fact: "we were fed before we were hatched",
+        witnessed: "witnessed",
+        source: null,
+        distortion: null,
+        salience: 0.8,
+        valence: 0.2,
+      },
+    });
+  }
   // The starters wear the canonical ART-CORE-01 sprite from frame one.
   return canonicalizeGazerMasks(world);
 }

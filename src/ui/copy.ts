@@ -323,6 +323,13 @@ const FACT_PATTERNS_ZH: readonly {
     pattern: /^heard another say "(.+)"$/,
     zh: (match) => `听别的说过："${match[1]}"`,
   },
+  {
+    // `we were fed before we were hatched` — CARE UNIT 07 origin memory
+    // (game.ts initialWorld). The whole hook is this one line: it must not
+    // stay English in zh mode.
+    pattern: /^we were fed before we were hatched$/,
+    zh: () => `我们被喂过。在我们孵出来之前。`,
+  },
 ];
 
 /** Death causes in English; unknown causes pass through verbatim. */
