@@ -6,7 +6,7 @@
  * 所以每只生物都带一个来源计数，且工作记忆逐条标出来源。
  */
 
-import type { CreatureId, WorldState } from "../sim/types";
+import type { CreatureBehavior, CreatureId, WorldState } from "../sim/types";
 import type { ConsolidatedEntry, MemoryEntry, MemorySlice } from "../sim/memory";
 import { CONSOLIDATED_CAPACITY, WORKING_CAPACITY } from "../sim/memory";
 import type { GenomeTraits } from "../sim/genome";
@@ -27,6 +27,8 @@ export interface AlbumCreature {
   readonly generation: number;
   /** -1..1，对玩家的个人好感。 */
   readonly impression: number;
+  /** 档案观察到的行为状态(可玩性票 0089):状态词,不是数值条。 */
+  readonly behavior: CreatureBehavior;
   readonly traits: GenomeTraits;
   readonly memory: MemorySlice;
 }
@@ -36,6 +38,8 @@ export interface AlbumRow {
   readonly generation: number;
   readonly impression: number;
   readonly impressionText: string;
+  /** 档案观察到的行为状态词(可玩性票 0089)。 */
+  readonly careText: string;
   readonly traits: readonly (readonly [string, number])[];
   readonly traitsText: string;
   readonly workingCount: number;
@@ -49,6 +53,15 @@ export interface AlbumRow {
 }
 
 const TRAIT_LABELS: Readonly<Record<string, Text>> = COPY.traits;
+
+/** 行为名是引擎里的英文键；显示时换成对应语言，查不到就原样显示。 */
+const CONDITION_LABELS: Readonly<Record<string, Text>> = COPY.album.conditions;
+
+/** 状态词与行为键同表；查不到的键原样显示，绝不猜着翻。 */
+function conditionName(behavior: CreatureBehavior, locale: Locale): string {
+  const label = CONDITION_LABELS[behavior];
+  return label === undefined ? behavior : t(locale, label);
+}
 
 /** 性格名是基因组里的英文键；显示时换成对应语言，查不到就原样显示。 */
 function traitName(name: string, locale: Locale): string {
@@ -69,6 +82,7 @@ export function albumRow(creature: AlbumCreature, locale: Locale): AlbumRow {
     generation: creature.generation,
     impression: creature.impression,
     impressionText: signed(creature.impression),
+    careText: conditionName(creature.behavior, locale),
     traits,
     traitsText:
       traits.length === 0
@@ -246,6 +260,7 @@ function rowNode(doc: Doc, row: AlbumRow, locale: Locale): HTMLElement {
     className: "gazer-album__meta",
     children: [
       field(doc, "gazer-album__field", t(locale, COPY.album.impression), row.impressionText),
+      field(doc, "gazer-album__field", t(locale, COPY.album.care), row.careText),
       field(doc, "gazer-album__field", t(locale, COPY.album.traits), row.traitsText),
       field(doc, "gazer-album__field", t(locale, COPY.album.workingCount), row.workingText),
       field(doc, "gazer-album__field", t(locale, COPY.album.consolidated), row.consolidatedText),

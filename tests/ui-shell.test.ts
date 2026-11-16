@@ -182,6 +182,7 @@ describe("album panel", () => {
     id: "01",
     generation: 2,
     impression: -0.3,
+    behavior: "hungry",
     traits: {
       curiosity: 0.8,
       loyalty: 0.6,
@@ -216,11 +217,27 @@ describe("album panel", () => {
     expect(text).toContain("01");
     expect(text).toContain("gen 2");
     expect(text).toContain("-0.30");
+    // The care state is a word, not a dial (ticket 0089): the registry
+    // reports what it observed — hungry is hungry, in both voices.
+    expect(text).toContain("condition");
+    expect(text).toContain("hungry");
     expect(text).toContain("watchfulness");
     expect(text).toContain("curiosity");
     expect(text).toContain("3 of 60");
     expect(text).toContain("1 of 12");
     expect(text).toContain("your human once lied to you about 02");
+  });
+
+  it("names the care state in the reader's language, dead included", () => {
+    const view = createAlbum(doc(), "zh");
+    view.render([creature], memorial, "zh");
+    const text = asStub(view.root).textContent ?? "";
+    expect(text).toContain("状态");
+    expect(text).toContain("饿着");
+    const gone: AlbumCreature = { ...creature, id: "02", behavior: "dead" };
+    const second = createAlbum(doc(), "zh");
+    second.render([gone], memorial, "zh");
+    expect(asStub(second.root).textContent ?? "").toContain("不在了");
   });
 
   it("distinguishes witnessed from heard, including a distorted memory shown as fabricated", () => {

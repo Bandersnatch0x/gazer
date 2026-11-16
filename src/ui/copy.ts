@@ -81,6 +81,22 @@ export const COPY = {
     sourceFrom: { en: "from {id}", zh: "来自 {id}" },
     consolidatedRef: { en: "[{id}]", zh: "[{id}]" },
     impression: { en: "trust", zh: "信任" },
+    /**
+     * 照料态(可玩性票 0089):图鉴是档案,档案只记它观察到的状态——
+     * 行为词,不是数值条(设计宪法「每个数值系统有一个视觉等价物」,
+     * 姿势与瞳孔就是已选的等价物)。死去的不在册:复用纪念段的「不在」。
+     */
+    care: { en: "condition", zh: "状态" },
+    conditions: {
+      idle: { en: "watching", zh: "看着" },
+      hungry: { en: "hungry", zh: "饿着" },
+      eating: { en: "eating", zh: "吃着" },
+      dirty: { en: "unkempt", zh: "脏着" },
+      sleeping: { en: "asleep", zh: "睡着" },
+      playing: { en: "at play", zh: "玩着" },
+      mating: { en: "courting", zh: "求偶中" },
+      dead: { en: "gone", zh: "不在了" },
+    },
     traits: { en: "temperament", zh: "性情" },
     workingCount: { en: "recent", zh: "近期" },
     consolidated: { en: "permanent", zh: "永久" },

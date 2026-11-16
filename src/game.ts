@@ -4002,6 +4002,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
         id: creature.id,
         generation: creature.genome?.generation ?? 1,
         impression: albumImpression(slice),
+        behavior: creature.behavior,
         traits: creature.genome?.traits ?? {
           curiosity: 0.5,
           loyalty: 0.5,
