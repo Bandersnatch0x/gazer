@@ -75,7 +75,9 @@
         flex-direction: column;
         gap: 8px;
         margin-top: auto;
-        padding: 12px;
+        /* 0081: 一行反馈纸——空对话收成单行提示（theme.ts 同步），不再让
+           空转录占走 1/3 视高。 */
+        padding: 0 12px 10px;
         /* The HUD strip spans the full width but only its real widgets take
            clicks (playtest p1 finding F3): the strip itself must never eat
            canvas taps aimed at floor tiles near the bottom. */
@@ -102,13 +104,21 @@
         gap: 8px;
       }
       .gazer-key {
-        background: transparent;
+        /* 0081 P3: a hair of fill and inner shadow gives the keys the same
+           pressed-plastic weight as the bezel, without leaving the pixel
+           identity (no gradients, no radius). */
+        background: #101a14;
         color: #cfe8d5;
         border: 1px solid #2a322a;
+        box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(126, 240, 166, 0.07);
         font: 11px/1 "MS Gothic", "Fixedsys", "DotGothic16", ui-monospace, monospace;
         letter-spacing: 0.08em;
         padding: 6px 10px;
         cursor: pointer;
+      }
+      .gazer-key:active {
+        box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.5);
+        transform: translateY(1px);
       }
       .gazer-key:hover,
       .gazer-key:focus-visible {
@@ -120,6 +130,21 @@
         justify-content: center;
         gap: 12px;
         align-items: flex-end;
+      }
+      /* 0081: an idle transcript is one quiet row pinned bottom-center, not a
+         third of the viewport; content opens it back up. */
+      .gazer-dialogue[data-empty] {
+        border-color: transparent;
+        background: transparent;
+        max-height: none;
+      }
+      .gazer-dialogue[data-empty] .gazer-dialogue__bar {
+        display: none;
+      }
+      .gazer-dialogue[data-empty] .gazer-dialogue__body {
+        padding: 2px 6px;
+        min-height: 0;
+        opacity: 0.55;
       }
       /* The panel floats: opening it must never reflow the canvas container. */
       .gazer-panel {
@@ -139,6 +164,38 @@
       }
       .gazer-panel[hidden] {
         display: none;
+      }
+      /* 0081 reading mode: opening a panel dims the world so the archive is
+         clearly the thing being read, not a card floating over a live scene. */
+      body.gazer-reading #stage {
+        opacity: 0.35;
+        filter: saturate(0.65);
+      }
+      body.gazer-reading #canvas {
+        pointer-events: none;
+      }
+      /* The archive is the whole screen: chrome that would sit on top of the
+         text is hidden, and the panel's own exit key is the only way back. */
+      body.gazer-reading #hud,
+      body.gazer-reading .gazer-hud,
+      body.gazer-reading .gazer-osd-bar {
+        opacity: 0;
+        pointer-events: none;
+      }
+      body.gazer-reading .gazer-panel {
+        border-color: #4b5a4b;
+        box-shadow: 0 0 0 9999px rgba(4, 8, 5, 0.55);
+      }
+      @media (max-width: 720px) {
+        /* A phone reads an archive full-screen; the close key is the only exit. */
+        body.gazer-reading .gazer-panel {
+          inset: 0;
+          width: auto;
+          max-height: none;
+          border: 0;
+          padding: 12px;
+          box-shadow: none;
+        }
       }
       .gazer-form {
         display: flex;
@@ -252,8 +309,77 @@
         pointer-events: auto;
         z-index: 60;
       }
+      /* 票 0063 B1/B2:按钮条自身不吃点击,只有真按钮接输入;OSD 条挂到
+         #ui{z-index:50} 之上。窄视口把 HUD / OSD / 按钮条拆成互不重叠的三行。 */
+      .gazer-bar {
+        pointer-events: none;
+      }
+      .gazer-bar > * {
+        pointer-events: auto;
+      }
+      .gazer-osd-bar {
+        position: fixed;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 60; /* > #ui 50:elementFromPoint 命中 OSD 自身 */
+        display: flex;
+        pointer-events: none;
+      }
+      .gazer-osd-bar > * {
+        pointer-events: auto;
+        /* 0081: the OSD toggle is a touch target too. */
+        min-height: 44px;
+        min-width: 44px;
+      }
+      @media (max-width: 720px) {
+        /* 行 1(8..~32):OSD 钮;行 2(40..72):HUD;行 3(76+):7 个按钮折行。 */
+        /* 0081: 世界贴控件下方;底部留给对话/反馈。整数缩放下世界尺寸固定,
+           再居中只会把空区劈成两半,不如把世界与控件成组。 */
+        #stage {
+          place-items: start center;
+          padding-top: 186px;
+        }
+        .gazer-osd-bar {
+          top: 8px;
+          left: auto;
+          right: 12px;
+          transform: none;
+        }
+        #hud {
+          top: 40px;
+          left: 12px;
+          right: 12px;
+          max-width: calc(100vw - 24px);
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+          max-height: 32px;
+          overflow: hidden;
+        }
+        .gazer-hud > .gazer-bar {
+          top: 76px;
+          left: 12px;
+          right: 12px;
+          flex-wrap: wrap;
+          /* 0081 P2: fill the row left-to-right instead of hugging the right
+             edge — the wrapped second line keeps a visual anchor at the same
+             left edge as the status line above it. */
+          justify-content: flex-start;
+          gap: 8px;
+          pointer-events: none;
+        }
+        .gazer-hud > .gazer-bar > .gazer-key {
+          pointer-events: auto;
+          /* 0081: 触控目标 ≥44×44、间距 ≥8,便于单手点中。 */
+          min-height: 44px;
+          min-width: 44px;
+          padding: 10px 12px;
+          font-size: 12px;
+          letter-spacing: 0.04em;
+        }
+      }
     </style>
-    <script type="module" crossorigin src="./assets/main-EDzDAOQ7.js"></script>
+    <script type="module" crossorigin src="./assets/main-B7eDS7cg.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/CanvasPool-DKwixkad.js">
     <link rel="modulepreload" crossorigin href="./assets/canvasUtils-D_Bna_21.js">
     <link rel="modulepreload" crossorigin href="./assets/getPo2TextureFromSource-FNpERlIz.js">

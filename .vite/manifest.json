@@ -1,0 +1,178 @@
+{
+  "_BatchableSprite-CiydJWRw.js": {
+    "file": "assets/BatchableSprite-CiydJWRw.js",
+    "name": "BatchableSprite",
+    "imports": [
+      "_CanvasPool-DKwixkad.js"
+    ]
+  },
+  "_CanvasPool-DKwixkad.js": {
+    "file": "assets/CanvasPool-DKwixkad.js",
+    "name": "CanvasPool"
+  },
+  "_Filter-Cp8nu1Z3.js": {
+    "file": "assets/Filter-Cp8nu1Z3.js",
+    "name": "Filter",
+    "imports": [
+      "_CanvasPool-DKwixkad.js"
+    ]
+  },
+  "_Graphics-sANylmIs.js": {
+    "file": "assets/Graphics-sANylmIs.js",
+    "name": "Graphics",
+    "imports": [
+      "_CanvasPool-DKwixkad.js",
+      "_BatchableSprite-CiydJWRw.js",
+      "_getTextureBatchBindGroup-CvyZFopx.js",
+      "_canvasUtils-D_Bna_21.js"
+    ]
+  },
+  "_RenderTargetSystem-DLgvjFp0.js": {
+    "file": "assets/RenderTargetSystem-DLgvjFp0.js",
+    "name": "RenderTargetSystem",
+    "imports": [
+      "_CanvasPool-DKwixkad.js",
+      "_BatchableSprite-CiydJWRw.js",
+      "_Filter-Cp8nu1Z3.js"
+    ]
+  },
+  "_canvasUtils-D_Bna_21.js": {
+    "file": "assets/canvasUtils-D_Bna_21.js",
+    "name": "canvasUtils",
+    "imports": [
+      "_CanvasPool-DKwixkad.js"
+    ]
+  },
+  "_getPo2TextureFromSource-FNpERlIz.js": {
+    "file": "assets/getPo2TextureFromSource-FNpERlIz.js",
+    "name": "getPo2TextureFromSource",
+    "imports": [
+      "_CanvasPool-DKwixkad.js",
+      "_canvasUtils-D_Bna_21.js"
+    ]
+  },
+  "_getTexelRangeRects-sU_6mhhh.js": {
+    "file": "assets/getTexelRangeRects-sU_6mhhh.js",
+    "name": "getTexelRangeRects",
+    "imports": [
+      "_CanvasPool-DKwixkad.js",
+      "_BatchableSprite-CiydJWRw.js"
+    ]
+  },
+  "_getTextureBatchBindGroup-CvyZFopx.js": {
+    "file": "assets/getTextureBatchBindGroup-CvyZFopx.js",
+    "name": "getTextureBatchBindGroup",
+    "imports": [
+      "_CanvasPool-DKwixkad.js"
+    ]
+  },
+  "index.html": {
+    "file": "assets/main-B7eDS7cg.js",
+    "name": "main",
+    "src": "index.html",
+    "isEntry": true,
+    "imports": [
+      "_CanvasPool-DKwixkad.js",
+      "_getPo2TextureFromSource-FNpERlIz.js",
+      "_BatchableSprite-CiydJWRw.js",
+      "_Graphics-sANylmIs.js",
+      "_canvasUtils-D_Bna_21.js",
+      "_getTextureBatchBindGroup-CvyZFopx.js"
+    ],
+    "dynamicImports": [
+      "node_modules/pixi.js/lib/environment-browser/browserAll.mjs",
+      "node_modules/pixi.js/lib/environment-webworker/webworkerAll.mjs",
+      "node_modules/pixi.js/lib/rendering/renderers/gpu/WebGPURenderer.mjs",
+      "node_modules/pixi.js/lib/rendering/renderers/gl/WebGLRenderer.mjs",
+      "node_modules/pixi.js/lib/rendering/renderers/canvas/CanvasRenderer.mjs"
+    ],
+    "css": [
+      "assets/main-CvBHzWIQ.css"
+    ],
+    "assets": [
+      "assets/fusion-pixel-12px-proportional-sc-latin-400-normal-Xmey3kyP.woff2",
+      "assets/fusion-pixel-12px-proportional-sc-latin-400-normal-BXsFFLun.woff"
+    ]
+  },
+  "node_modules/@fontsource/fusion-pixel-12px-proportional-sc/files/fusion-pixel-12px-proportional-sc-latin-400-normal.woff": {
+    "file": "assets/fusion-pixel-12px-proportional-sc-latin-400-normal-BXsFFLun.woff",
+    "src": "node_modules/@fontsource/fusion-pixel-12px-proportional-sc/files/fusion-pixel-12px-proportional-sc-latin-400-normal.woff"
+  },
+  "node_modules/@fontsource/fusion-pixel-12px-proportional-sc/files/fusion-pixel-12px-proportional-sc-latin-400-normal.woff2": {
+    "file": "assets/fusion-pixel-12px-proportional-sc-latin-400-normal-Xmey3kyP.woff2",
+    "src": "node_modules/@fontsource/fusion-pixel-12px-proportional-sc/files/fusion-pixel-12px-proportional-sc-latin-400-normal.woff2"
+  },
+  "node_modules/pixi.js/lib/environment-browser/browserAll.mjs": {
+    "file": "assets/browserAll-fXfPLcmQ.js",
+    "name": "browserAll",
+    "src": "node_modules/pixi.js/lib/environment-browser/browserAll.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_CanvasPool-DKwixkad.js",
+      "_getPo2TextureFromSource-FNpERlIz.js",
+      "node_modules/pixi.js/lib/environment-webworker/webworkerAll.mjs",
+      "_canvasUtils-D_Bna_21.js",
+      "_Filter-Cp8nu1Z3.js"
+    ]
+  },
+  "node_modules/pixi.js/lib/environment-webworker/webworkerAll.mjs": {
+    "file": "assets/webworkerAll-o91G803r.js",
+    "name": "webworkerAll",
+    "src": "node_modules/pixi.js/lib/environment-webworker/webworkerAll.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_getPo2TextureFromSource-FNpERlIz.js",
+      "_CanvasPool-DKwixkad.js",
+      "_canvasUtils-D_Bna_21.js",
+      "_Filter-Cp8nu1Z3.js"
+    ]
+  },
+  "node_modules/pixi.js/lib/rendering/renderers/canvas/CanvasRenderer.mjs": {
+    "file": "assets/CanvasRenderer-D2ZQ0xdp.js",
+    "name": "CanvasRenderer",
+    "src": "node_modules/pixi.js/lib/rendering/renderers/canvas/CanvasRenderer.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_CanvasPool-DKwixkad.js",
+      "_RenderTargetSystem-DLgvjFp0.js",
+      "_canvasUtils-D_Bna_21.js",
+      "_Graphics-sANylmIs.js",
+      "_BatchableSprite-CiydJWRw.js",
+      "_Filter-Cp8nu1Z3.js",
+      "_getTextureBatchBindGroup-CvyZFopx.js"
+    ]
+  },
+  "node_modules/pixi.js/lib/rendering/renderers/gl/WebGLRenderer.mjs": {
+    "file": "assets/WebGLRenderer-BF8s8ctb.js",
+    "name": "WebGLRenderer",
+    "src": "node_modules/pixi.js/lib/rendering/renderers/gl/WebGLRenderer.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_CanvasPool-DKwixkad.js",
+      "_BatchableSprite-CiydJWRw.js",
+      "_getTexelRangeRects-sU_6mhhh.js",
+      "_RenderTargetSystem-DLgvjFp0.js",
+      "_Filter-Cp8nu1Z3.js"
+    ]
+  },
+  "node_modules/pixi.js/lib/rendering/renderers/gpu/WebGPURenderer.mjs": {
+    "file": "assets/WebGPURenderer-JWhOW3s1.js",
+    "name": "WebGPURenderer",
+    "src": "node_modules/pixi.js/lib/rendering/renderers/gpu/WebGPURenderer.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_CanvasPool-DKwixkad.js",
+      "_BatchableSprite-CiydJWRw.js",
+      "_getTexelRangeRects-sU_6mhhh.js",
+      "_getTextureBatchBindGroup-CvyZFopx.js",
+      "_RenderTargetSystem-DLgvjFp0.js",
+      "_Filter-Cp8nu1Z3.js"
+    ]
+  },
+  "src/shell/sw.ts": {
+    "file": "sw.js",
+    "name": "sw",
+    "src": "src/shell/sw.ts",
+    "isEntry": true
+  }
+}
