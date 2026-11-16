@@ -62,7 +62,9 @@ import {
   namingLine,
   isUnlivedMemory,
   SILENT_RUN_LINE,
-} from "./director/manual";import { parseRoundtable, validateTurns } from "./director/roundtable";
+  SILENT_WATCH_LINES,
+} from "./director/manual";
+import { parseRoundtable, validateTurns } from "./director/roundtable";
 import { createBridgeRuntime } from "./bridge";
 import type { BridgeCallSource, BridgeRuntime, BudgetSnapshot } from "./bridge";
 import { askWithFallback, filterPayload } from "./director/filter";
@@ -979,6 +981,29 @@ export function allowManualSpeech(silent: boolean): boolean {
 /** The single scripted line is due once, at exactly minute 40 (R6.2). */
 export function silentLineDue(tick: number, alreadySpoken: boolean): boolean {
   return tick >= SILENT_LINE_TICK && !alreadySpoken;
+}
+
+/**
+ * 静默周目的环境节拍(P-3):第 40 分钟破静默台词(R6.2)之前,每 8 分钟
+ * 一句 ticker 级环境词。标记点从 40 分钟线按比例派生(1/5、2/5、3/5、4/5),
+ * 与 R6.2 红线同源——红线动了,节拍跟着动。
+ */
+export const SILENT_WATCH_MARKS: readonly number[] = Object.freeze(
+  [0.2, 0.4, 0.6, 0.8].map((fraction) => Math.round(SILENT_LINE_TICK * fraction)),
+);
+
+/**
+ * 第一个「已到点且未说过」的环境句序号;没有则为 -1。`spokenCount` 之前
+ * (不含)的句子视为已说过。纯函数:(tick, spokenCount) 重放同值。
+ */
+export function silentWatchIndexDue(tick: number, spokenCount: number): number {
+  for (let index = Math.max(0, spokenCount); index < SILENT_WATCH_MARKS.length; index += 1) {
+    const mark = SILENT_WATCH_MARKS[index];
+    if (mark !== undefined && tick >= mark) {
+      return index;
+    }
+  }
+  return -1;
 }
 
 // ---------------------------------------------------------------------------
@@ -3484,6 +3509,8 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   }
 
   let silentLineShown = false;
+  /** 静默环境节拍已说出的句数(P-3);句序号即进度,catch-up 由纯函数处理。 */
+  let silentWatchSpoken = 0;
 
   // ---- §6.2 点击塔的反馈(票 0043):随阶段演变,零 LLM。 ----
 
@@ -3697,6 +3724,18 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       silentLineShown = true;
       // The breach line is pool copy: it re-renders in the active locale.
       speak(collective, (active) => t(active, SILENT_RUN_LINE), "heard");
+    }
+    // 静默环境节拍(P-3):破静默台词之前,每 8 分钟一句 pool 级环境词。
+    // 与 40 分钟线同源派生,确定性调度,零 LLM 配额;一次 tick 至多一句。
+    if (silent && silentWatchSpoken < SILENT_WATCH_LINES.length) {
+      const watchIndex = silentWatchIndexDue(world.tick, silentWatchSpoken);
+      if (watchIndex >= 0) {
+        const watchLine = SILENT_WATCH_LINES[watchIndex];
+        if (watchLine !== undefined) {
+          silentWatchSpoken = watchIndex + 1;
+          speak(collective, (active) => t(active, watchLine), "heard");
+        }
+      }
     }
     idleCheck();
     // 框体周期面(票 0036):自发消磁(GV≥60,种子+tick 确定性)与

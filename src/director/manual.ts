@@ -271,6 +271,23 @@ export const SILENT_RUN_LINE: ManualLine = Object.freeze({
 });
 
 /**
+ * 静默周目的环境节拍(GAME_REVIEW P-3)。第 40 分钟的破静默台词(R6.2 红线)
+ * 之前,每 8 分钟一句 ticker 级环境词:给无 key 的静默周目一根可感的时间轴,
+ * 让「四十分钟」从死寂变成蓄势。红线不破——第 40 分钟那一句仍是全游戏唯一
+ * 「打破静默」的台词,这些只是它之前的呼吸,由 game.ts 的静默节拍器按
+ * (seed, tick) 确定性调度,不消耗 LLM 配额、不走圆桌预算。
+ */
+export const SILENT_WATCH_LINES: readonly ManualLine[] = Object.freeze([
+  Object.freeze({ en: "the bowl is empty. the room is not.", zh: "碗是空的。房间不是。" }),
+  Object.freeze({ en: "we can hear the cursor breathe", zh: "我们听得见光标的呼吸。" }),
+  Object.freeze({
+    en: "the window is dark. we are not looking. we are listening.",
+    zh: "窗户黑着。我们没有在看。我们在听。",
+  }),
+  Object.freeze({ en: "almost. stay.", zh: "快了。留下。" }),
+]);
+
+/**
  * 命名台词(GAME_REVIEW C4①)。原为 game.ts:522-524 的硬编码英文,收编入池。
  * 接线请求已记入票 0004 的 Log;{name} 由调用方填入玩家起的名字。
  */
