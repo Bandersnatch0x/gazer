@@ -60,6 +60,7 @@ import {
   manualLine,
   manualLineLocale,
   namingLine,
+  revisitLine,
   isUnlivedMemory,
   SILENT_RUN_LINE,
   SILENT_WATCH_LINES,
@@ -2340,6 +2341,23 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   if (ngpOpening !== null) {
     recordingQueue.push({ kind: "reconstructed", text: ngpOpening.text });
     recordingProvenance.push({ text: ngpOpening.text, source: "ghost", ghostId: ngpOpening.ghostId });
+  }
+
+  // 跨会话开场(§9.1-2「它记得上一个你」):第二个会话起,群体引用存档里
+  // 的真实痕迹——第一只被起名的个体(玩家亲手给的名字,持久世界带回)。
+  // 零新系统、零上会话遥测编造:没有名字面就整句不播。恰一次(启动路径
+  // 只走一遍);冻结池文案,静默运行也播——评委无 key 时第一时间看见记忆。
+  if (sessions >= 2) {
+    let rememberedName: string | null = null;
+    for (const creature of Object.values(world.creatures)) {
+      if (creature.name !== null && creature.name.length > 0) {
+        rememberedName = creature.name;
+        break;
+      }
+    }
+    if (rememberedName !== null) {
+      speak(collective, (active) => revisitLine(rememberedName, active), "heard");
+    }
   }
 
   /**

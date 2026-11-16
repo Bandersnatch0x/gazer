@@ -1,5 +1,6 @@
 import { describe, expect, expectTypeOf, it } from "vitest";
 import {
+  REVISIT_LINE,
   SILENT_RUN_LINE,
   isUnlivedMemory,
   manualLine,
@@ -7,6 +8,7 @@ import {
   manualPairs,
   manualPool,
   namingLine,
+  revisitLine,
   unlivedMemories,
   type ManualTelemetry,
 } from "../src/director/manual";
@@ -193,5 +195,24 @@ describe("NAMING_LINE (C4①)", () => {
     // 模板占位符必须被填掉,不许漏到玩家眼前。
     expect(namingLine("铃", "en")).not.toContain("{name}");
     expect(namingLine("铃", "zh")).not.toContain("{name}");
+  });
+});
+
+describe("REVISIT_LINE (§9.1-2): the second session proves memory", () => {
+  it("exists in both languages and cites the persisted name", () => {
+    expect(REVISIT_LINE.en.trim().length).toBeGreaterThan(0);
+    expect(REVISIT_LINE.zh.trim().length).toBeGreaterThan(0);
+    expect(REVISIT_LINE.en).not.toBe(REVISIT_LINE.zh);
+    expect(revisitLine("moss", "en")).toBe("we have seen you before. moss remembers your hand.");
+    expect(revisitLine("moss", "zh")).toBe("我们见过你。moss 记得你的手。");
+    // 占位符必须被填掉;名字是调用方从持久世界解析的,空名不播由接线守门。
+    expect(revisitLine("moss", "en")).not.toContain("{name}");
+    expect(revisitLine("moss", "zh")).not.toContain("{name}");
+  });
+
+  it("stays in the pool voice: lowercase, no explanation, no external names", () => {
+    expect(REVISIT_LINE.en).toBe(REVISIT_LINE.en.toLowerCase());
+    expect(REVISIT_LINE.zh).not.toContain("AI");
+    expect(REVISIT_LINE.en).not.toContain("AI");
   });
 });

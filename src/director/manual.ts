@@ -299,3 +299,18 @@ export const NAMING_LINE: ManualLine = Object.freeze({
 export function namingLine(name: string, locale: ManualLocale): string {
   return fillLine(NAMING_LINE[locale], { name });
 }
+
+/**
+ * 跨会话开场台词(GAME_REVIEW §9.1-2「它记得上一个你」)。第二个会话开启
+ * 时,群体引用存档里留下的真实痕迹——第一只被起名的个体。零新系统:
+ * {name} 由调用方从持久世界解析(creature.name,玩家亲手给的),存档里
+ * 没有被起名的个体时整句不播——它们不编造记得的事。
+ */
+export const REVISIT_LINE: ManualLine = Object.freeze({
+  en: "we have seen you before. {name} remembers your hand.",
+  zh: "我们见过你。{name} 记得你的手。",
+});
+
+export function revisitLine(name: string, locale: ManualLocale): string {
+  return fillLine(REVISIT_LINE[locale], { name });
+}
