@@ -1,3 +1,5 @@
+演示视频:https://youtu.be/zwhoxORu-Rc
+
 # Project description
 
 Devpost text. English first, Chinese second. Each stays under 500 words.
@@ -45,3 +47,4 @@ GAZER，1997 年的像素宠物游戏，却从不是宠物游戏。你喂食、�
 删掉模型，世界照常运转，只是没有人在家——沉默周目：生物照常活动，一言不发，缺席即证明。
 
 演示三分钟：喂一只，看 GV 上升，听一句只有你能听到的话。
+
