@@ -13,6 +13,7 @@ import type { GenomeTraits } from "../sim/genome";
 import { topTraits } from "../sim/genome";
 import type { Telemetry } from "../director/telemetry";
 import { worldCalendarAt } from "../sim/clock";
+import { GLYPHS_TOTAL } from "../sim/endings";
 import { NEWS_TICKER_LABEL } from "../sim/news";
 import { beliefAboutPlayer, factionOf } from "../sim/social";
 import type { Locale, Text } from "./i18n";
@@ -146,6 +147,11 @@ export interface WorldMemorial {
   readonly news: string | null;
   /** 群内并存的派系数(tender/wrong);少于两派为 0——派系句只在两派并存时可见。 */
   readonly factions: number;
+  /**
+   * 已读刻符数(刻符目标串,P-2)。塔的条目本体永远空着(票 0017 设计),
+   * 进度只作为世界纪念的一个只读字段出现——目标「八枚」由此显式可见。
+   */
+  readonly glyphsRead: number;
 }
 
 function pad2(value: number): string {
@@ -181,6 +187,7 @@ export function worldMemorialFor(world: WorldState, telemetry: Telemetry): World
     shellClock: world.uiLabels["shell_clock"] ?? null,
     news: world.uiLabels[NEWS_TICKER_LABEL] ?? null,
     factions: countFactions(world),
+    glyphsRead: world.glyphsRead?.length ?? 0,
   };
 }
 
@@ -343,6 +350,16 @@ function memorialNode(doc: Doc, memorial: WorldMemorial, locale: Locale): HTMLEl
       ),
       field(doc, "gazer-album__field", t(locale, COPY.album.memorialShellClock), shellValue),
       field(doc, "gazer-album__field", t(locale, COPY.album.memorialNews), newsValue),
+      // 刻符进度(刻符目标串,P-2):目标「八枚」显式可见;塔条目本体仍空。
+      field(
+        doc,
+        "gazer-album__field",
+        t(locale, COPY.album.glyphs),
+        tf(locale, COPY.album.glyphsProgress, {
+          read: memorial.glyphsRead,
+          total: GLYPHS_TOTAL,
+        }),
+      ),
     ],
   });
   // 派系句(票 0017 死键接线):两派并存时图鉴才说这句话。

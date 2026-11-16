@@ -146,6 +146,12 @@ export const COPY = {
     memorialShellSilent: { en: "has not confessed yet", zh: "还没有坦白" },
     memorialNews: { en: "last broadcast", zh: "最近播报" },
     memorialNoNews: { en: "quiet", zh: "静默" },
+    /**
+     * 刻符进度(刻符目标串,P-2)。塔的条目本体永远空着(票 0017 设计);
+     * 进度只作为世界纪念字段出现,把「读满八枚」这个中期目标显式交给玩家。
+     */
+    glyphs: { en: "glyphs", zh: "刻符" },
+    glyphsProgress: { en: "{read} of {total} read", zh: "已读 {read} / {total}" },
   },
 
   traits: {

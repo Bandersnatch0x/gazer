@@ -206,6 +206,7 @@ describe("album panel", () => {
     shellClock: null,
     news: null,
     factions: 2,
+    glyphsRead: 0,
   };
 
   it("renders the creature fields the player needs", () => {
