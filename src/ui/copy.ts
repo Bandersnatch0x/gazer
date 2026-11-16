@@ -152,6 +152,20 @@ export const COPY = {
      */
     glyphs: { en: "glyphs", zh: "刻符" },
     glyphsProgress: { en: "{read} of {total} read", zh: "已读 {read} / {total}" },
+    /**
+     * 你的条目(GAME_REVIEW §9.1-1)。玩家自己在图鉴里的那条记录:存在、
+     * 持续更新、永远解码中——阶段越高可读字越多,但永远读不完。所有键
+     * 双语成对,allTextNodes 全覆盖。
+     */
+    playerTitle: { en: "YOUR RECORD", zh: "你的条目" },
+    playerRecordLine: {
+      en: "fed {feeds} · cleaned {cleans} · died {deaths} · gazed {seconds}s · named {names}",
+      zh: "喂 {feeds} · 清洁 {cleans} · 死亡 {deaths} · 注视 {seconds} 秒 · 名字 {names}",
+    },
+    playerNote: {
+      en: "decoding. this entry is not yours to write.",
+      zh: "解码中。这条记录不归你写。",
+    },
   },
 
   traits: {

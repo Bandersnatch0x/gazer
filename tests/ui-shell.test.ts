@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { MemorySlice } from "../src/sim/memory";
 import type { AlbumCreature } from "../src/ui/album";
-import { createAlbum } from "../src/ui/album";
+import { createAlbum, decodePlayerRecord } from "../src/ui/album";
 import { createDialogue } from "../src/ui/dialogue";
 import { HELP_SECTIONS, createHelp } from "../src/ui/help";
 
@@ -207,6 +207,8 @@ describe("album panel", () => {
     news: null,
     factions: 2,
     glyphsRead: 0,
+    stage: 2,
+    seed: 1997,
   };
 
   it("renders the creature fields the player needs", () => {
@@ -316,6 +318,82 @@ describe("album panel", () => {
     const text = asStub(none.root).textContent;
     expect(text).not.toContain("Right now, they are two factions.");
     expect(text).toContain("THE TOWER");
+  });
+
+  it("carries the player's own always-decoding entry after the memorial (§9.1-1)", () => {
+    const view = createAlbum(doc(), "en");
+    view.render([creature], memorial, "en");
+    const entryNodes = asStub(view.root)
+      .walk()
+      .filter((node) => node.className === "gazer-album__player-entry");
+    expect(entryNodes).toHaveLength(1);
+    const entryText = entryNodes[0]?.textContent ?? "";
+    // The record exists, it is titled, and it is never fully readable.
+    expect(entryText).toContain("YOUR RECORD");
+    expect(entryText).toContain("decoding. this entry is not yours to write.");
+    // The record line itself is distorted (the note is the only readable
+    // sentence on the entry; the blocks guarantee it).
+    const recordNodes = asStub(view.root)
+      .walk()
+      .filter((node) => node.className === "gazer-album__player-record");
+    expect(recordNodes).toHaveLength(1);
+    const recordText = recordNodes[0]?.textContent ?? "";
+    expect(recordText).toContain("█");
+    expect(recordText).not.toBe("fed 5 · cleaned 2 · died 0 · gazed 30s · named 铃");
+  });
+
+  it("the player entry speaks both languages", () => {
+    const zh = createAlbum(doc(), "zh");
+    zh.render([creature], memorial, "zh");
+    const text = asStub(zh.root).textContent ?? "";
+    expect(text).toContain("你的条目");
+    expect(text).toContain("解码中。这条记录不归你写。");
+  });
+});
+
+describe("decodePlayerRecord (§9.1-1): the entry that never finishes decoding", () => {
+  const RAW = "fed 5 · cleaned 2 · died 0 · gazed 30s · named moss";
+
+  it("is deterministic for the same (seed, day, stage)", () => {
+    expect(decodePlayerRecord(RAW, 2, 1, 1997)).toBe(decodePlayerRecord(RAW, 2, 1, 1997));
+  });
+
+  it("never completes: even the final stage keeps part of the record blocked", () => {
+    for (const stage of [0, 1, 2, 3, 4]) {
+      const decoded = decodePlayerRecord(RAW, stage, 1, 1997);
+      expect(decoded).toContain("█");
+      expect(decoded.length).toBe(RAW.length);
+    }
+  });
+
+  it("reveals more as the stage climbs, word shapes stay", () => {
+    const blocked = (text: string): number => (text.match(/█/g) ?? []).length;
+    const early = blocked(decodePlayerRecord(RAW, 0, 1, 1997));
+    const late = blocked(decodePlayerRecord(RAW, 4, 1, 1997));
+    expect(late).toBeLessThan(early);
+    // 空格与分隔符不遮:词形保留,遮住一半比全遮更瘆人。
+    const decoded = decodePlayerRecord(RAW, 1, 1, 1997);
+    expect(decoded.split(" ").length).toBe(RAW.split(" ").length);
+    for (let index = 0; index < RAW.length; index += 1) {
+      const rawChar = RAW[index] ?? "";
+      if (rawChar === " " || rawChar === "·") {
+        expect(decoded[index]).toBe(rawChar);
+      }
+    }
+  });
+
+  it("the decoding drifts across days (逐字解码中), then holds within one day", () => {
+    const day1 = decodePlayerRecord(RAW, 2, 1, 1997);
+    const day2 = decodePlayerRecord(RAW, 2, 2, 1997);
+    expect(day1).not.toBe(day2);
+    expect(decodePlayerRecord(RAW, 2, 1, 1997)).toBe(day1);
+  });
+
+  it("clamps impossible stages and survives weird input", () => {
+    expect(decodePlayerRecord(RAW, -3, 1, 1997)).toBe(decodePlayerRecord(RAW, 0, 1, 1997));
+    expect(decodePlayerRecord(RAW, 9, 1, 1997)).toBe(decodePlayerRecord(RAW, 4, 1, 1997));
+    expect(decodePlayerRecord("", 2, 1, 1997)).toBe("");
+    expect(decodePlayerRecord(RAW, Number.NaN, 1, 1997)).toBe(decodePlayerRecord(RAW, 0, 1, 1997));
   });
 });
 

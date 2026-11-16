@@ -15,6 +15,7 @@ import type { Telemetry } from "../director/telemetry";
 import { worldCalendarAt } from "../sim/clock";
 import { GLYPHS_TOTAL } from "../sim/endings";
 import { NEWS_TICKER_LABEL } from "../sim/news";
+import { hashString } from "../sim/rng";
 import { beliefAboutPlayer, factionOf } from "../sim/social";
 import type { Locale, Text } from "./i18n";
 import { t, tf } from "./i18n";
@@ -152,10 +153,36 @@ export interface WorldMemorial {
    * 进度只作为世界纪念的一个只读字段出现——目标「八枚」由此显式可见。
    */
   readonly glyphsRead: number;
+  /** 当前阶段(你的条目的解码进度按它走)。 */
+  readonly stage: number;
+  /** 世界种子(你的条目的解码位置由 (seed, day) 定死,重放同值)。 */
+  readonly seed: number;
 }
 
 function pad2(value: number): string {
   return value < 10 ? `0${value}` : `${value}`;
+}
+
+/**
+ * 你的条目的解码器(GAME_REVIEW §9.1-1)。可读比例随阶段爬升(0.15→0.75),
+ * 但**永远读不完**;可读的是哪些字由 (seed, day, index) 经 FNV 定死——
+ * 同一 (seed, day, stage) 重放逐字相同,换一天解码位置漂移(逐字解码中)。
+ * 词形保留:空格与分隔符不遮,数字与词被块符遮住一半,比全遮更瘆人。纯。
+ */
+export function decodePlayerRecord(raw: string, stage: number, day: number, seed: number): string {
+  const safeStage = Number.isFinite(stage) ? Math.min(4, Math.max(0, Math.floor(stage))) : 0;
+  const reveal = 0.15 + 0.15 * safeStage;
+  let out = "";
+  for (let index = 0; index < raw.length; index += 1) {
+    const char = raw[index] ?? "";
+    if (char === " " || char === "·") {
+      out += char;
+      continue;
+    }
+    const hash = hashString(`${seed}:${day}:${index}`);
+    out += (hash % 1000) / 1000 < reveal ? char : "█";
+  }
+  return out;
 }
 
 /** 只读推导:同一 (world, telemetry) 永远推出同一份纪念。 */
@@ -188,6 +215,8 @@ export function worldMemorialFor(world: WorldState, telemetry: Telemetry): World
     news: world.uiLabels[NEWS_TICKER_LABEL] ?? null,
     factions: countFactions(world),
     glyphsRead: world.glyphsRead?.length ?? 0,
+    stage: world.stage,
+    seed: world.seed,
   };
 }
 
@@ -385,6 +414,33 @@ function memorialNode(doc: Doc, memorial: WorldMemorial, locale: Locale): HTMLEl
   });
 }
 
+/** 你的条目段(§9.1-1):世界纪念之后,玩家自己那条永远解码中的记录。 */
+function playerEntryNode(doc: Doc, memorial: WorldMemorial, locale: Locale): HTMLElement {
+  const namesValue =
+    memorial.names.length === 0
+      ? t(locale, COPY.album.memorialNoNames)
+      : memorial.names.join(", ");
+  const raw = tf(locale, COPY.album.playerRecordLine, {
+    feeds: memorial.feeds,
+    cleans: memorial.cleans,
+    deaths: memorial.deaths,
+    seconds: memorial.gazeSeconds,
+    names: namesValue,
+  });
+  return el(doc, "section", {
+    className: "gazer-album__player-entry",
+    attrs: { "data-player-entry": "true" },
+    children: [
+      el(doc, "h2", { className: "gazer-album__memorial-title", text: t(locale, COPY.album.playerTitle) }),
+      el(doc, "p", {
+        className: "gazer-album__player-record",
+        text: decodePlayerRecord(raw, memorial.stage, memorial.day, memorial.seed),
+      }),
+      el(doc, "p", { className: "gazer-album__empty", text: t(locale, COPY.album.playerNote) }),
+    ],
+  });
+}
+
 export function createAlbum(doc: Doc, locale: Locale): AlbumView {
   const title = el(doc, "h1", { className: "gazer-album__heading", text: t(locale, COPY.album.title) });
   const subtitle = el(doc, "p", {
@@ -415,6 +471,8 @@ export function createAlbum(doc: Doc, locale: Locale): AlbumView {
         }
       }
       list.append(memorialNode(doc, memorial, active));
+      // 你的条目(§9.1-1):永远解码中,永远读不完——纪念段之后收尾。
+      list.append(playerEntryNode(doc, memorial, active));
     },
   };
 }
