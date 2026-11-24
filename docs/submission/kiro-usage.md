@@ -98,7 +98,7 @@ Kiro CLI 3.5.0, logged in with the project account, run from the repository root
 | `2e20fb08-31c6-4dc9-8fd5-3e96bf3e887a` | Read-only audit of R1.1–R7 against `tests/` | Read 20+ test files and returned a requirement→test matrix; found six requirements without a dedicated test and four partial gaps. It also caught R4.4 still saying 800 ms while ADR 0023 set 12 000 ms; fixed in this commit. |
 | `5230dc9f-8f2c-42f8-8f20-07bda55f22d6` | Create `tests/hook-probe.test.ts` | Wrote the file. The CLI 3.5.0 engine did not emit a `PostFileSave` event, so the hook remains unobserved in CLI; the IDE extension supports the trigger, and the file is valid there. |
 
-The audit report is kept locally at `.agent/keep/kiro-cli-audit-20261124.md`. The gaps it found are tracked as follow-up work; they do not change the shipped behaviour.
+The audit report is kept locally at `.agent/keep/kiro-cli-audit-20261124.md`. Its testable findings (R5.8, R2.4, R4.4, R6.3) are closed by tests in this repository; the findings that are missing implementations (R3.1/R3.2/R3.4/R7.2/R7.4/R7.5) are tracked as follow-up work and do not change the shipped behaviour.
 
 ## What is not used
 
@@ -116,4 +116,5 @@ In the repository, without running Kiro:
 - `.kiro/steering/` states the red lines, and the two checkable ones are checked by tests.
 - `.kiro/hooks/gate-on-src-change.json` exists, matches the current Kiro hook schema, and is not gitignored.
 - The 2026-11-24 Kiro CLI sessions read the spec and 20+ test files and returned a requirement-to-test matrix; the R4.4 drift they found is fixed in this repository.
-- `npm run check` runs 1207 tests across 85 files, including the boundary scan that fails on a leaked secret or a UI import of the machine.
+- The audit's testable gaps (R5.8, R2.4, R4.4, R6.3) are closed by `tests/memory-entry-contract.test.ts`, `tests/game-ontology-regression.test.ts` and `tests/director-fallback.test.ts`.
+- `npm run check` runs 1218 tests across 88 files, including the boundary scan that fails on a leaked secret or a UI import of the machine.

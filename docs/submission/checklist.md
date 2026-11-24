@@ -10,7 +10,7 @@ Kiroween 2026, Resurrection category. Deadline 2026-12-04 14:00 Pacific (2026-12
 | `.kiro` directory | specs, hooks, steering, not ignored | `.kiro/` | done (4 files tracked; `.gitignore` explicitly keeps it) |
 | Working demo URL | reachable | https://bandersnatch0x.github.io/gazer/ | done (HTTP 200; deployed bundle matches local build) |
 | Local run | `npm install && npm run dev` | `README.md` | done |
-| Gate | `npm run check` green | `package.json` | done (2026-11-24: 85 files / 1207 tests) |
+| Gate | `npm run check` green | `package.json` | done (2026-11-24: 88 files / 1218 tests) |
 | Build | `npm run build` | `dist/` | done (2026-11-24 exit 0) |
 | PWA | manifest, service worker, offline shell, installable | `public/`, `src/shell/` | done |
 | Project description | Devpost text, EN and ZH, ≤500 words each | `docs/submission/project-description.md` | done (EN 496 words / ZH 423 汉字) |
