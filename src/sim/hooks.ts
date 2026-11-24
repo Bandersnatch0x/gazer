@@ -46,13 +46,48 @@ export interface HookDef {
   guard?: (ctx: HookContext) => boolean;
   handler: (ctx: HookContext) => void | Promise<void>;
   logged: boolean;
+  /**
+   * Resources this hook declares it may write. A reserved resource can be
+   * declared by its named owner only; any other hook is refused at install.
+   */
+  writes?: readonly string[];
+}
+
+/** R7.2: a sync hook over this budget gets an overrun record, not a block. */
+export const HOOK_SYNC_BUDGET_MS = 5;
+
+export interface HookOverrun {
+  readonly hookId: string;
+  readonly point: LifecyclePoint;
+  readonly ms: number;
+}
+
+export interface HookRegistryOptions {
+  /**
+   * Injected clock for the 5 ms overrun measurement. Absent means no timing is
+   * taken, so the sim layer still reads no clock by default. The game layer
+   * injects `performance.now`.
+   */
+  readonly now?: () => number;
 }
 
 export interface HookRegistry {
   register(hook: HookDef): void;
   runPoint(point: LifecyclePoint, ctx: HookContext): readonly string[];
   drainAsync(): Promise<readonly string[]>;
+  /** Sync-hook overruns observed after the last `runPoint` pass, newest last. */
+  overruns(): readonly HookOverrun[];
 }
+
+/** R7.4: single-writer resources, by hook id. */
+const RESERVED_WRITES: Readonly<Record<string, string>> = Object.freeze({
+  ontology: "ontology_ratchet_check",
+});
+
+/** The first registry's declared write scopes. */
+const FIRST_WRITES: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  ontology_ratchet_check: ["ontology"],
+});
 
 /** Points whose hooks are enqueued rather than run inside the tick. */
 const ASYNC_POINTS: ReadonlySet<LifecyclePoint> = new Set<LifecyclePoint>([
@@ -89,14 +124,22 @@ function passesGuard(hook: HookDef, ctx: HookContext): boolean {
   }
 }
 
-export function createRegistry(): HookRegistry {
+export function createRegistry(options: HookRegistryOptions = {}): HookRegistry {
   const hooks: HookDef[] = [];
   const queue: { readonly hook: HookDef; readonly ctx: HookContext }[] = [];
+  const overruns: HookOverrun[] = [];
+  const now = options.now;
 
   const registry: HookRegistry = {
     register(hook: HookDef): void {
       if (!LIFECYCLE_POINTS.includes(hook.point)) {
         throw new Error(`hook ${hook.id} targets unknown lifecycle point ${hook.point}`);
+      }
+      for (const resource of hook.writes ?? []) {
+        const owner = RESERVED_WRITES[resource];
+        if (owner !== undefined && owner !== hook.id) {
+          throw new Error(`hook ${hook.id} may not write ${resource}; reserved for ${owner}`);
+        }
       }
       hooks.push(hook);
     },
@@ -112,10 +155,18 @@ export function createRegistry(): HookRegistry {
           continue;
         }
         ran.push(hook.id);
+        const startedAt = now === undefined ? 0 : now();
         try {
           hook.handler(ctx);
         } catch {
           // Recorded by id above; one broken hook never aborts the rest.
+        }
+        if (now !== undefined) {
+          const elapsed = now() - startedAt;
+          if (elapsed > HOOK_SYNC_BUDGET_MS) {
+            // R7.2: record the overrun; the tick is not blocked further.
+            overruns.push({ hookId: hook.id, point, ms: elapsed });
+          }
         }
       }
       return ran;
@@ -134,6 +185,9 @@ export function createRegistry(): HookRegistry {
       }
       return ran;
     },
+    overruns(): readonly HookOverrun[] {
+      return [...overruns];
+    },
   };
 
   for (const [point, ids] of FIRST_REGISTRY) {
@@ -145,6 +199,7 @@ export function createRegistry(): HookRegistry {
         sync: !ASYNC_POINTS.has(point),
         handler: () => undefined,
         logged: false,
+        writes: FIRST_WRITES[id] ?? [],
       });
     });
   }

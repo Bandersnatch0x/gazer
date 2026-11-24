@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createBridgeRuntime } from "../src/bridge/runtime";
 import { createDirectorClient } from "../src/director/client";
 import type { DirectorLike } from "../src/director/filter";
-import { resolveRoundtableScene } from "../src/game";
+import { resolveRoundtableScene, voiceDegradedFor } from "../src/game";
 import { HELP_SECTIONS } from "../src/ui/help";
 
 const NOW = 1_000_000;
@@ -49,6 +49,29 @@ describe("R4.4 · roundtable timeout degrades to the manual pool", () => {
       verified: 0,
     });
     expect(runtime.budget.snapshot(NOW).used).toBe(0);
+  });
+});
+
+describe("R7.5 · the degraded voice is observable", () => {
+  it("a real scene is not degraded; a manual outcome is", () => {
+    const scene = {
+      kind: "scene" as const,
+      script: { scene: [] },
+      source: "model" as const,
+      budgetRefused: false,
+      inferred: [],
+      verified: 0,
+    };
+    const manual = {
+      kind: "manual" as const,
+      line: "manual line",
+      source: "fallback" as const,
+      budgetRefused: false,
+      inferred: [],
+      verified: 0,
+    };
+    expect(voiceDegradedFor(scene)).toBe(false);
+    expect(voiceDegradedFor(manual)).toBe(true);
   });
 });
 

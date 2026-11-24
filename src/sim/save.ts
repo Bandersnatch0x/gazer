@@ -22,6 +22,7 @@
  * non-`gazer:` save key.
  */
 import type { WorldState } from "./types";
+import { LEDGER_CAPACITY } from "./ledger";
 
 // Key is assembled from short words: a save key outside the `gazer:` namespace.
 const SAVE_KEY_PARTS = ["gazer", "world", "save"] as const;
@@ -199,6 +200,50 @@ function isProjectionState(value: unknown): boolean {
   return true;
 }
 
+/** Ledger event kinds accepted from a save; an unknown kind is a malformed archive. */
+const LEDGER_KINDS: ReadonlySet<string> = new Set([
+  "feed",
+  "clean",
+  "stare",
+  "rapid_click",
+  "drag_to_hazard",
+  "death",
+  "idle",
+  "session_start",
+  "reset",
+  "player_answer",
+  "carry",
+  "name",
+  "hatch",
+  "glyph_read",
+  "terminal_line",
+]);
+
+function isLedgerEvent(value: unknown): boolean {
+  if (!isRecord(value) || typeof value["kind"] !== "string" || !LEDGER_KINDS.has(value["kind"])) {
+    return false;
+  }
+  // Only the fields the lifetime summary reads are validated; the rest are
+  // opaque narrative payloads the runtime already wrote.
+  switch (value["kind"]) {
+    case "feed":
+      return typeof value["creatureId"] === "string" && isFiniteNumber(value["hesitationMs"]);
+    case "session_start":
+      return isFiniteNumber(value["localHour"]);
+    default:
+      return true;
+  }
+}
+
+function isLedgerEntry(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    isFiniteNumber(value["at"]) &&
+    typeof value["wallClock"] === "string" &&
+    isLedgerEvent(value["event"])
+  );
+}
+
 function isGhostProfile(value: unknown): boolean {
   if (!isRecord(value)) return false;
   if (typeof value["id"] !== "string") return false;
@@ -298,6 +343,12 @@ function validateWorld(value: unknown): WorldState | null {
   if (ghosts !== undefined) {
     if (!Array.isArray(ghosts) || !ghosts.every(isGhostProfile)) return null;
     normalized["ghosts"] = ghosts;
+  }
+  const ledger = value["ledger"];
+  if (ledger !== undefined) {
+    if (!Array.isArray(ledger) || !ledger.every(isLedgerEntry)) return null;
+    // A forged archive cannot widen the rolling window.
+    normalized["ledger"] = ledger.slice(-LEDGER_CAPACITY);
   }
   const ending = value["ending"];
   if (ending !== undefined) {

@@ -12,6 +12,8 @@ export type LedgerEvent =
   | { readonly kind: "death"; readonly creatureId: CreatureId; readonly cause: "starvation" | "neglect" }
   | { readonly kind: "idle"; readonly durationMs: number }
   | { readonly kind: "session_start"; readonly localHour: number }
+  /** Power-button restart. Narrative, not care: weight 0, never moves GV. */
+  | { readonly kind: "reset" }
   | { readonly kind: "player_answer"; readonly question: string; readonly answer: string }
   // Stream A wiring additions: the remaining runtime increments previously
   // inlined in game.ts needed an honest ledger kind. Weights preserve the exact
@@ -75,6 +77,7 @@ const GV_WEIGHTS: Readonly<Record<LedgerEvent["kind"], number>> = {
   // cost of a spam burst, now only emitted on confirmed feeds.
   idle: 2,
   session_start: 0,
+  reset: 0,
   player_answer: 0,
   carry: 1,
   name: 2,
@@ -101,4 +104,78 @@ const GV_WEIGHTS: Readonly<Record<LedgerEvent["kind"], number>> = {
 export function gvDeltaFor(event: LedgerEvent, localHour: number, stage?: number): number {
   const base = GV_WEIGHTS[event.kind] * (stage === undefined ? 1 : stageDecayFor(stage));
   return isNightHour(localHour) ? base * 1.5 : base;
+}
+
+/**
+ * Append one behaviour entry. The ledger is a rolling window: when it exceeds
+ * `LEDGER_CAPACITY`, the oldest entries fall off. Pure; the caller owns the
+ * clock face (`wallClock`) so the sim layer never reads a wall clock.
+ */
+export function appendLedgerEntry(
+  entries: readonly LedgerEntry[],
+  entry: LedgerEntry,
+): readonly LedgerEntry[] {
+  const next = [...entries, entry];
+  return next.length > LEDGER_CAPACITY ? next.slice(next.length - LEDGER_CAPACITY) : next;
+}
+
+/**
+ * The lifetime summary over the retained ledger window. Feeds/deaths are
+ * counted, hesitation is averaged over feed events, the favourite creature is
+ * the most-fed id (ties keep the earliest first-fed id), and typical hours are
+ * the sorted unique `session_start` hours. Sessions and resets are counted from
+ * their own entries, so the summary has one source: the ledger.
+ */
+export function lifetimeSummary(entries: readonly LedgerEntry[]): LifetimeSummary {
+  let feeds = 0;
+  let deaths = 0;
+  let hesitationTotal = 0;
+  let sessions = 0;
+  let resets = 0;
+  const feedsByCreature = new Map<CreatureId, number>();
+  const hours = new Set<number>();
+
+  for (const entry of entries) {
+    const event = entry.event;
+    switch (event.kind) {
+      case "feed":
+        feeds += 1;
+        hesitationTotal += event.hesitationMs;
+        feedsByCreature.set(event.creatureId, (feedsByCreature.get(event.creatureId) ?? 0) + 1);
+        break;
+      case "death":
+        deaths += 1;
+        break;
+      case "session_start":
+        sessions += 1;
+        hours.add(event.localHour);
+        break;
+      case "reset":
+        resets += 1;
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Map iteration follows first-feed order, so equal counts keep the creature
+  // the player fed first — deterministic, no second tie-break pass.
+  let favoriteCreatureId: CreatureId | null = null;
+  let bestFeeds = 0;
+  for (const [creatureId, count] of feedsByCreature) {
+    if (count > bestFeeds) {
+      bestFeeds = count;
+      favoriteCreatureId = creatureId;
+    }
+  }
+
+  return {
+    feeds,
+    deaths,
+    meanHesitationMs: feeds === 0 ? 0 : hesitationTotal / feeds,
+    favoriteCreatureId,
+    typicalHours: [...hours].sort((left, right) => left - right),
+    sessions,
+    resets,
+  };
 }

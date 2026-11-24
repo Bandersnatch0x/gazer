@@ -85,8 +85,8 @@ import type { EntityKind, OntologyLedger, OntologyShift } from "./sim/ontology";
 import { resolveWhisper, WHISPER_RANGE, WHISPER_TICKS } from "./sim/gossip";
 import { crossFaction } from "./sim/social";
 import { applyConsolidation, fallbackConsolidate } from "./sim/consolidate";
-import { gvDeltaFor } from "./sim/ledger";
-import type { LedgerEvent } from "./sim/ledger";
+import { appendLedgerEntry, gvDeltaFor, lifetimeSummary } from "./sim/ledger";
+import type { LedgerEntry, LedgerEvent, LifetimeSummary } from "./sim/ledger";
 import { RHYTHM, TICK_MS, seasonParamsForStage } from "./sim/rhythm";
 import { DEFAULT_WORLD_SEED, normalizeWorldSeed, worldCalendarAt, worldDay, worldHour } from "./sim/clock";
 import { midnightSilenceAt, shellPerformanceAt } from "./sim/shell";
@@ -115,6 +115,7 @@ import type { RoundtableScript, RoundtableTurn, TurnIntent } from "./sim/roundta
 import { courtshipStep, step, DEFAULT_MASK, GRID_MAX, GRID_MIN, towerSpawnDue } from "./sim/engine";
 import type { HatchChoice, TilePos } from "./sim/types";
 import { createRegistry } from "./sim/hooks";
+import type { HookOverrun } from "./sim/hooks";
 import {
   armSilenceQuota,
   assertDemagnetizeChannel,
@@ -1392,6 +1393,11 @@ export type SceneOutcome =
       readonly verified: number;
     };
 
+/** R7.5: the manual route is the degraded voice; a real or cached scene is not. */
+export function voiceDegradedFor(outcome: SceneOutcome): boolean {
+  return outcome.kind === "manual";
+}
+
 /**
  * `runtime.call` owns the hard budget and the cache (cache hit -> budget
  * refusal -> ask -> settle -> cache set). `ask` goes through `askWithFallback`
@@ -1546,6 +1552,10 @@ export interface GameHandle {
   readonly drainShellFx: () => readonly ShellAudioFxDispatch[];
   /** 执行器账本面(票 0030 CI:silence_quota 等条目从这里断言)。 */
   readonly fxLedger: () => readonly FxLedgerEntry[];
+  /** 行为账本窗口(R3.1/R3.2,票 0091):最近的玩家行为条目。 */
+  readonly ledger: () => readonly LedgerEntry[];
+  /** 行为账本的终身摘要(R3.4):从当前窗口计算。 */
+  readonly lifetimeSummary: () => LifetimeSummary;
   /**
    * 觉醒七件套只读快照(票 0030 CI:E4 塔注视恰 1 次、配额状态从这里断言)。
    */
@@ -1632,9 +1642,16 @@ export interface GameHandle {
    * fallback; `budgetRefused` means `llm:budget` refused the call. No error
    * UI is ever shown — exhaustion stays inside the fiction.
    */
-  readonly llmStatus: () => { readonly source: BridgeCallSource | null; readonly budgetRefused: boolean };
+  readonly llmStatus: () => {
+    readonly source: BridgeCallSource | null;
+    readonly budgetRefused: boolean;
+    /** R7.5: the last scene came from the fallback route, not a model. */
+    readonly voiceDegraded: boolean;
+  };
   /** 0066: snapshot of the very admission object the llm:budget hook reads. */
   readonly budgetSnapshot: () => BudgetSnapshot | null;
+  /** R7.2: sync-hook overruns observed by the registry, newest last. */
+  readonly hookOverruns: () => readonly HookOverrun[];
   destroy(): void;
 }
 
@@ -1779,6 +1796,9 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   const prevSessions = Number.parseInt(storageGet(FRAME_SESSIONS_STORAGE_KEY) ?? "0", 10);
   const sessions = (Number.isFinite(prevSessions) && prevSessions > 0 ? prevSessions : 0) + 1;
   storageSet(FRAME_SESSIONS_STORAGE_KEY, String(sessions));
+  // R3.4: session_start rides the ledger's own deterministic clock face; it
+  // carries weight 0 and never moves GV.
+  recordBehavior({ kind: "session_start", localHour: worldHour(world.tick) });
   function fireDegauss(spontaneous: boolean): void {
     // G8:眨眼走 G4 眨眼时钟内部通道,不经 C-05(执行器通道)。
     assertDemagnetizeChannel(DEMAGNETIZE_CHANNEL);
@@ -1803,6 +1823,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
         biosRecord = { ...biosRecord, resetDone: true };
         storageSet(FRAME_BIOS_STORAGE_KEY, JSON.stringify(biosRecord));
       }
+      recordBehavior({ kind: "reset" });
     } else if (outcome === "rebound") {
       // `> no.` 全存档恰一次;canon 取用,不进运行时字面。
       if (!frameNoShown) {
@@ -1863,12 +1884,15 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
    * the HUD can re-render the ticker in the active locale on a locale switch. */
   let latestNews: NewsSnapshot | null = null;
   const telemetry = createTelemetryRecorder();
-  const registry = createRegistry();
+  // R7.2: the game owns the clock; the sim registry only measures when it is
+  // injected, so `src/sim/hooks.ts` stays clock-free.
+  const registry = createRegistry({ now: () => performance.now() });
   // 0066: the single bridge import. game.ts keeps no second budget/cache;
   // vite.config.ts middleware shares createBudgetAdmission with this runtime.
   const runtime = createBridgeRuntime();
   let lastLlmSource: BridgeCallSource | null = null;
   let budgetRefusedForHud = false;
+  let voiceDegraded = false;
   let lastBudgetSnapshot: BudgetSnapshot | null = null;
   /**
    * 0073: late-bound re-arm hook. No-op until the visibility driver exists, so
@@ -2201,6 +2225,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     const latencyMs = Date.now() - askStartedAt;
     lastLlmSource = outcome.source;
     budgetRefusedForHud = outcome.budgetRefused;
+    voiceDegraded = voiceDegradedFor(outcome);
     if (outcome.kind === "manual") {
       // speakScene degrades to the manual pool; no error UI, no spinner.
       return null;
@@ -2994,6 +3019,22 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
   }
 
   /**
+   * R3.1/R3.2: append one player-action entry with the deterministic world
+   * clock face. The entry rides the world state, so it survives a save and a
+   * replay; the rolling window is enforced by `appendLedgerEntry`.
+   */
+  function recordBehavior(event: LedgerEvent): void {
+    world = {
+      ...world,
+      ledger: appendLedgerEntry(world.ledger ?? [], {
+        at: world.tick,
+        wallClock: gameTimeAt(world.tick),
+        event,
+      }),
+    };
+  }
+
+  /**
    * Every runtime GV delta goes through the ledger (single truth) and the
    * stage taper, then the tower pre-beat runs if a boundary was crossed.
    */
@@ -3003,6 +3044,7 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       kind: "gv",
       delta: gvDeltaFor(event, worldHour(world.tick), world.stage),
     });
+    recordBehavior(event);
     // 觉醒七件套先于舞台拍裁断(同一 gv 步内 E 事件先落)。
     maybeAwaken();
     onStageChange(before, world.stage);
@@ -3594,14 +3636,16 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
 
   function handleDeaths(before: Readonly<Record<CreatureId, CreatureState>>): void {
     for (const death of detectDeaths(before, world.creatures)) {
+      const event: LedgerEvent = {
+        kind: "death",
+        creatureId: death.creatureId,
+        cause: death.cause,
+      };
       world = step(world, {
         kind: "gv",
-        delta: gvDeltaFor(
-          { kind: "death", creatureId: death.creatureId, cause: death.cause },
-          worldHour(world.tick),
-          world.stage,
-        ),
+        delta: gvDeltaFor(event, worldHour(world.tick), world.stage),
       });
+      recordBehavior(event);
       telemetry.recordDeath();
       noteAction(`${death.creatureId} died of ${death.cause}`);
       // The death has a body language of its own (playtest p2 finding §11):
@@ -4427,6 +4471,16 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       sceneProbe(): readonly string[] {
         return [...sceneProbeLog];
       },
+      /** R3.1/R3.4: live behaviour ledger and its summary (DEV+debug only). */
+      ledger: () => world.ledger ?? [],
+      lifetimeSummary: () => lifetimeSummary(world.ledger ?? []),
+      /** R7.2: sync-hook overruns observed by the registry. */
+      hookOverruns: () => registry.overruns(),
+      /** R7.5: the last scene's voice route. */
+      llmStatus: () => ({ source: lastLlmSource, budgetRefused: budgetRefusedForHud, voiceDegraded }),
+      /** Smoke-only verbs: the same paths the keyboard and power button use. */
+      feedNearest: () => keyboardVerb("feed"),
+      powerPress: () => powerPress(),
     };
     (window as unknown as Record<string, unknown>).__gazerDebug = debugFace;
     // 箭头键 GV 微调(dev-only):↑ +5 / ↓ −5,确定性步进。
@@ -4461,6 +4515,8 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
       return drained;
     },
     fxLedger: () => fxState.ledger,
+    ledger: () => world.ledger ?? [],
+    lifetimeSummary: () => lifetimeSummary(world.ledger ?? []),
     awakening: () => ({
       fired: [...awakening.fired],
       towerGazeCount: awakening.towerGazeLog.length,
@@ -4533,8 +4589,13 @@ export async function createGame(options: GameOptions): Promise<GameHandle> {
     bloomPoints: () => bloomPoints(),
     ngPlus: () => ngPlus,
     recordingUnlocked: () => isGazeTower(world.glyphsRead),
-    llmStatus: () => ({ source: lastLlmSource, budgetRefused: budgetRefusedForHud }),
+    llmStatus: () => ({
+      source: lastLlmSource,
+      budgetRefused: budgetRefusedForHud,
+      voiceDegraded,
+    }),
     budgetSnapshot: () => lastBudgetSnapshot,
+    hookOverruns: () => registry.overruns(),
     destroy() {
       visibilityDriver.stop();
       doc.removeEventListener("visibilitychange", onVisibilityChange);

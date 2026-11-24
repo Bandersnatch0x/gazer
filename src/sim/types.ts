@@ -1,5 +1,6 @@
 import type { MemoryEntry, MemorySlice } from "./memory";
 import type { LearningState, PromptGenome } from "./genome";
+import type { LedgerEntry } from "./ledger";
 
 export type CreatureId = string;
 
@@ -119,6 +120,13 @@ export interface WorldState {
    * stays valid; present once the game layer feeds entries in via `remember`.
    */
   readonly memories?: Readonly<Record<CreatureId, MemorySlice>>;
+  /**
+   * Behaviour ledger (R3.1/R3.2, ticket 0091): the append-only player-action
+   * record, capped at `LEDGER_CAPACITY`. `wallClock` is the deterministic world
+   * clock face (`gameTimeAt`), so a replay reproduces the same entries. Optional
+   * so legacy saves stay valid; written by the game layer, never by the reducer.
+   */
+  readonly ledger?: readonly LedgerEntry[];
   /**
    * The social layer (stream F, ticket 0006): sexes, moods, mourning circles,
    * terrain traces. Shape lives in `./social`; optional so legacy worlds and

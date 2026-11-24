@@ -130,3 +130,55 @@ describe("hook registry", () => {
     expect(LIFECYCLE_POINTS).toHaveLength(12);
   });
 });
+
+describe("R7.2 · sync hook overruns", () => {
+  it("records a hook over 5 ms and keeps running the rest", () => {
+    const times = [0, 6, 6, 10];
+    let index = 0;
+    const registry = createRegistry({ now: () => times[index++] ?? 0 });
+    const calls: string[] = [];
+    registry.register({
+      ...hook("slow", 10),
+      handler: () => {
+        calls.push("slow");
+      },
+    });
+    registry.register({
+      ...hook("fast", 20),
+      handler: () => {
+        calls.push("fast");
+      },
+    });
+
+    expect(registry.runPoint("llm:budget", ctx("llm:budget"))).toEqual(["slow", "fast"]);
+    expect(calls).toEqual(["slow", "fast"]);
+    expect(registry.overruns()).toEqual([{ hookId: "slow", point: "llm:budget", ms: 6 }]);
+  });
+
+  it("does not record a hook at exactly the budget", () => {
+    const times = [0, 5];
+    let index = 0;
+    const registry = createRegistry({ now: () => times[index++] ?? 0 });
+    registry.register(hook("edge", 10));
+
+    registry.runPoint("llm:budget", ctx("llm:budget"));
+
+    expect(registry.overruns()).toEqual([]);
+  });
+});
+
+describe("R7.4 · reserved ontology writer", () => {
+  it("refuses another hook that declares the ontology write", () => {
+    const registry = createRegistry();
+    expect(() =>
+      registry.register({ ...hook("intruder", 0), writes: ["ontology"] }),
+    ).toThrow(/reserved for ontology_ratchet_check/);
+  });
+
+  it("allows a hook to declare a resource without a reserved owner", () => {
+    const registry = createRegistry();
+    expect(() =>
+      registry.register({ ...hook("memory_writer", 0), writes: ["memories"] }),
+    ).not.toThrow();
+  });
+});
