@@ -15,7 +15,7 @@ Kiroween 2026, Resurrection category. Deadline 2026-12-04 14:00 Pacific (2026-12
 | PWA | manifest, service worker, offline shell, installable | `public/`, `src/shell/` | done |
 | Project description | Devpost text, EN and ZH, ≤500 words each | `docs/submission/project-description.md` | done (EN 496 words / ZH 423 汉字) |
 | Devpost form fields | paste-ready pack | `docs/submission/devpost-fields.md` | done (字段包就绪;表单提交待人工登录) |
-| Kiro usage write-up | eight prompts, one section each | `docs/submission/kiro-usage.md` | done (MCP and powers marked as unused) |
+| Kiro usage write-up | eight prompts, one section each | `docs/submission/kiro-usage.md` | done (MCP and powers marked as unused; Kiro CLI session evidence 2026-11-24) |
 | Demo video | public YouTube, ≤3 minutes | https://youtu.be/zwhoxORu-Rc | done (2:56; 无旁白备份在本地产出目录) |
 | Tagline | ≤140 characters | `docs/submission/tagline.txt` | done (86 chars) |
 | Art anchors + canon + endings | 四锚点美术/FX 30 项/canon 45 条/四结局实机可达 | `docs/design/art/`, `docs/design/fx/`, `docs/design/narrative/`, `src/canon/` | done (评审+处置批 0041–0047+实机联调 0053/0055) |

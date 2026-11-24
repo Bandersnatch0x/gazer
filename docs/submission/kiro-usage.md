@@ -2,7 +2,7 @@
 
 What Kiro was asked to do, what it produced, and what the engine enforces.
 
-**Status.** The `.kiro` assets in this repository are written and load-bearing: specs pin the behaviour the tests assert, steering pins the red lines, and the hook runs the gate. The MCP server and Kiro powers are **not** used, and this document says so rather than implying otherwise.
+**Status.** The `.kiro` assets in this repository are written and load-bearing: specs pin the behaviour the tests assert, steering pins the red lines, and the hook runs the gate. The MCP server and Kiro powers are **not** used, and this document says so rather than implying otherwise. Kiro CLI 3.5.0 was used for a real session on 2026-11-24; see §9.
 
 ## 1. Spec: simulation core
 
@@ -88,6 +88,18 @@ What Kiro was asked to do, what it produced, and what the engine enforces.
 
 **Status.** The hook file uses the current Kiro 1.x schema (`*.json`, not the legacy `.kiro.hook` format). It has **not** been observed firing inside Kiro; this document does not claim otherwise. The same gate runs locally on every commit and in CI on every push, so the protection is real even while the hook itself is unverified.
 
+## 9. Session evidence (2026-11-24)
+
+Kiro CLI 3.5.0, logged in with the project account, run from the repository root. The sessions are on disk under `~/.kiro/sessions/cli/`:
+
+| Session | Prompt | Result |
+| --- | --- | --- |
+| `172f83e1-7c07-4bf5-8110-c27d5844149d` | Read `.kiro/specs/gazer/requirements.md`; return R1.1 verbatim | Returned R1.1 exactly after reading the spec |
+| `2e20fb08-31c6-4dc9-8fd5-3e96bf3e887a` | Read-only audit of R1.1–R7 against `tests/` | Read 20+ test files and returned a requirement→test matrix; found six requirements without a dedicated test and four partial gaps. It also caught R4.4 still saying 800 ms while ADR 0023 set 12 000 ms; fixed in this commit. |
+| `5230dc9f-8f2c-42f8-8f20-07bda55f22d6` | Create `tests/hook-probe.test.ts` | Wrote the file. The CLI 3.5.0 engine did not emit a `PostFileSave` event, so the hook remains unobserved in CLI; the IDE extension supports the trigger, and the file is valid there. |
+
+The audit report is kept locally at `.agent/keep/kiro-cli-audit-20261124.md`. The gaps it found are tracked as follow-up work; they do not change the shipped behaviour.
+
 ## What is not used
 
 **MCP.** No MCP server is configured and no tool call is recorded. The project does not claim MCP usage.
@@ -103,4 +115,5 @@ In the repository, without running Kiro:
 - `.kiro/specs/gazer/requirements.md` states the behaviour the tests assert.
 - `.kiro/steering/` states the red lines, and the two checkable ones are checked by tests.
 - `.kiro/hooks/gate-on-src-change.json` exists, matches the current Kiro hook schema, and is not gitignored.
+- The 2026-11-24 Kiro CLI sessions read the spec and 20+ test files and returned a requirement-to-test matrix; the R4.4 drift they found is fixed in this repository.
 - `npm run check` runs 1207 tests across 85 files, including the boundary scan that fails on a leaked secret or a UI import of the machine.

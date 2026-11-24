@@ -46,7 +46,7 @@ The simulation is a pure reducer over `(WorldState, SimEvent)`. It owns physics;
 
 **R4.3** The system shall not silently drop a rejected turn; the script shall keep its turn count after replacement.
 
-**R4.4** When the roundtable call exceeds 800 ms, the system shall abandon it and fill the scene from `manualPool` lines.
+**R4.4** When the roundtable call exceeds the configured budget (12 000 ms per ADR 0023, superseding the original 800 ms), the system shall abandon it and fill the scene from `manualPool` lines.
 
 **R4.5** When a turn's text and its cited memory fall below the keyword-overlap threshold, the system shall replace that turn with a `manualPool` line and record the replacement.
 
