@@ -92,7 +92,7 @@ GV 80 起终端伪按钮 `[ _ ]` 会切出**倒影信道**(OSD 层):群体对「
 - `.kiro/specs/gazer/requirements.md`:模拟核心、GV、账本、圆桌校验、私有记忆、静默运行的 EARS 需求。
 - `.kiro/steering/product.md`:产品边界与七条红线。
 - `.kiro/steering/engineering.md`:纯 reducer、种子唯一随机源、LLM 不进重放路径、客户端无密钥。
-- `.kiro/hooks/gate-on-src-change.kiro.hook`:`src/**` 或 `tests/**` 变更时跑 `npm run check`。
+- `.kiro/hooks/gate-on-src-change.json`:`src/**` 或 `tests/**` 保存时跑 `npm run check`(Kiro 1.x hook schema v1)。
 
 八个提示词的逐条记录在 `docs/submission/kiro-usage.md`。
 

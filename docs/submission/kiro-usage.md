@@ -2,7 +2,7 @@
 
 What Kiro was asked to do, what it produced, and what the engine enforces.
 
-**Status.** The `.kiro` assets in this repository are written and load-bearing: specs pin the behaviour the tests assert, steering pins the red lines, and the hook runs the gate. The MCP server and Kiro powers are **not** used, and this document says so rather than implying otherwise. A recorded Kiro session is still pending; see the last section.
+**Status.** The `.kiro` assets in this repository are written and load-bearing: specs pin the behaviour the tests assert, steering pins the red lines, and the hook runs the gate. The MCP server and Kiro powers are **not** used, and this document says so rather than implying otherwise.
 
 ## 1. Spec: simulation core
 
@@ -84,9 +84,9 @@ What Kiro was asked to do, what it produced, and what the engine enforces.
 
 **Prompt.** Run the repository gate whenever simulation source or tests change.
 
-**Produced.** `.kiro/hooks/gate-on-src-change.kiro.hook`, watching `src/**` and `tests/**` and running `npm run check`.
+**Produced.** `.kiro/hooks/gate-on-src-change.json`, watching `src/**` and `tests/**` on file save and running `npm run check` (Kiro hook schema v1: `version` / `hooks[]` / `trigger: PostFileSave` / `matcher` / `action.type: command`).
 
-**Status.** The hook file is written to Kiro's hook schema. It has **not** been observed firing inside Kiro. This document does not claim otherwise. The same gate runs locally on every commit and in CI on every push, so the protection is real even while the hook itself is unverified.
+**Status.** The hook file uses the current Kiro 1.x schema (`*.json`, not the legacy `.kiro.hook` format). It has **not** been observed firing inside Kiro; this document does not claim otherwise. The same gate runs locally on every commit and in CI on every push, so the protection is real even while the hook itself is unverified.
 
 ## What is not used
 
@@ -102,5 +102,5 @@ In the repository, without running Kiro:
 
 - `.kiro/specs/gazer/requirements.md` states the behaviour the tests assert.
 - `.kiro/steering/` states the red lines, and the two checkable ones are checked by tests.
-- `.kiro/hooks/gate-on-src-change.kiro.hook` exists and is not gitignored.
-- `npm run check` runs 171 tests, including the boundary scan that fails on a leaked secret or a UI import of the machine.
+- `.kiro/hooks/gate-on-src-change.json` exists, matches the current Kiro hook schema, and is not gitignored.
+- `npm run check` runs 1207 tests across 85 files, including the boundary scan that fails on a leaked secret or a UI import of the machine.
