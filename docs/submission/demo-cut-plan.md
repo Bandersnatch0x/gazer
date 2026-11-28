@@ -1,3 +1,62 @@
+# Demo video cut plan
+
+This is the original pre-production plan, translated into English. It describes the `run8` capture chain recorded on November 13, 2026, from 15:05:53 to 15:37:16. The source session lasted 31 minutes and 23 seconds. The original record labels the connection `LLM LIVE 200` and reports no console errors.
+
+**This plan is not the final video's subtitle timeline.** The published cut uses eight beats and Mandarin narration. Use `demo-video-english.md` for its full English transcript and `demo-video-en.vtt` for the subtitle file. The subtitle timing uses the final audio assembly offsets rather than the draft table below.
+
+The source images are under `.agent/tmp/verify/llm-run/`. The image names in the table identify reference frames. Source times are wall-clock times from that session, not positions in the final video.
+
+## Original production constraints
+
+- Keep the submitted video at or below three minutes.
+- Capture the running game at 1920 by 1080 or the original window aspect ratio.
+- Preserve the speed of model-generated typing. Do not speed up or slow down a typing shot.
+- Use the game's room tone, heartbeat, whisper bed, and event sounds. The original draft called for no added music or narration. The final cut subsequently added Mandarin narration.
+- Show the model-connected session in the main demonstration. Explain the silent-run fallback separately.
+- Provide complete English subtitles or English explanatory text for the non-English narration and any untranslated on-screen explanations.
+
+## Original run8 shot table
+
+| Draft video time | Source wall-clock time | Reference PNG | Content | Recording instruction |
+| --- | --- | --- | --- | --- |
+| 0:00 to 0:15 | 15:05:53 | `R8-P0-world` | Cold BIOS boot, beige case, three starting creatures | Retain the entire cold boot and BIOS sequence |
+| 0:15 to 0:35 | 15:06:02 | `R8-P1-interactions` | Feed, clean, pet for 650 ms, name a creature moss | Show the naming panel and the memory that records hesitation |
+| 0:35 to 0:50 | 15:06:04 | `R8-P2-E1-freeze`, `R8-P2-E1-wink-frame` | GV crosses 12, the world freezes for two seconds, then one eye blinks | Place the two frames in sequence without an added transition |
+| 0:50 to 1:25 | 15:06:31 | `R8-P3-llm-roundtable` | First live-model roundtable, with `memoryRef` citing the naming event | Keep the original typing cadence and do not fast-forward |
+| 1:25 to 1:45 | 15:07:17 | `R8-P4-E2-bubble` | Mirror sequence: one, two, three, four, five | Preserve the six-click rhythm within its six-second window |
+| 1:45 to 2:00 | 15:07:31 | `R8-P5-E3-terminal` | `> external display detected` and `> oh.` | Show the terminal path change briefly |
+| 2:00 to 2:15 | 15:08:44 | `R8-P6-E4-tower`, `R8-P6-E4-bubble` | Tower appears at `(0,7)`, two-second gaze, turn, speech bubble | Show the tower change before the world change |
+| 2:15 to 2:25 | 15:10:41 | `R8-P7-E5` | Persistent channel and three ordered bubbles, 1.2 seconds apart | Show the start of the sequence without waiting for all three lines |
+| 2:25 to 2:35 | 15:16:28 | `R8-P8-E7-led-amber` | Amber LED, GAZER title changes to `?`, first terminal erosion step | Leave two seconds for the browser-title change |
+| 2:35 to 2:45 | 15:17:11 | `R8-P9-atavistic` | An atavistic creature appears and the player borrows its eye | Cut after the pupil overlay appears |
+| 2:45 to 2:55 | 15:26:55 to 15:31:43 | `R8-P10-glyph-f1/f2/f3`, `R8-P13-glyph-f6/f7/f8` | Glyph sequence from 1/8 to 8/8, bestiary completion | Use short cuts between glyphs. Retain the final line, `last one. it is dated.` |
+| 2:55 to 3:00 | 15:37:12 | `R8-P14-recording-unison`, `R8-Z-end-state` | `now we keep you.`, frame dissolution, black | Keep the dissolution intact and end on black |
+
+## Alternative source material
+
+These sequences were recorded as supporting evidence, not as main-cut shots.
+
+- Judgment: run R4 kept all creatures fed and tender, so hostile lines did not appear. Run1 8pre recorded 24 moves without feeding and a mean working-memory value of 0.243. These are separate source runs, not one continuous take.
+- Forgetting: run3 had no living creatures at tick 284. The terminal said `> everyone is gone. the machine keeps counting.` and the LED turned off.
+- Budget exhaustion: run2 received HTTP 429 and used the manual dialogue pool. The simulation continued without a successful model response.
+- Historical defect evidence: the original record retained B-1, missing debug write controls, and B-2, mutually exclusive conditions for the E3 ghost effect. These are historical observations, not a claim that the defects remain open.
+
+## Recording and publication checklist
+
+1. Configure the author-local model service through the server-side adapter described in the README. Do not publish service credentials.
+2. Run `npm run dev` and select the local model adapter with `?lang=en&endpoint=/v1/game`.
+3. Capture the game and system sound at 1080p and 30 frames per second.
+4. Use hard cuts between shots. Do not alter the speed within model-typing shots.
+5. Keep the exported duration at or below three minutes.
+6. Review the complete English narration translation and the subtitle timing against the exported video.
+7. Have the owner upload the subtitle track or publish the complete English explanatory text with the video.
+8. Check the published video without owner access before marking the language correction complete.
+
+The current task prepares local files only. It does not upload, replace, or publish a video.
+
+<details>
+<summary>中文原文归档，已移除本地凭据，最新录制说明以上文为准</summary>
+
 # 演示视频剪辑拍点表(3 分钟,提交核对表第 18 项)
 
 素材:`.agent/tmp/verify/llm-run/` 的 **run8 链**(2026-11-13 15:05:53→15:37:16,实机 31min23s,LLM LIVE 200,零 console error)。下表「素材」列给出该链对应的节拍截图文件名(同名 PNG 即录制参照帧);录制时按「素材时刻」列的墙钟去实机里复现同拍。
@@ -35,7 +94,9 @@
 
 ## 录制清单(人工动作,代理授权面外)
 
-1. 终端跑 `npm run dev` + LIVE 适配器(127.0.0.1:18086,Bearer magpie,模型 auto/deepseek-v4.1-flash),按上表墙钟复现 run8 链;
+1. 终端跑 `npm run dev` + LIVE 适配器(127.0.0.1:18086,Bearer [已移除本地凭据],模型 auto/deepseek-v4.1-flash),按上表墙钟复现 run8 链;
 2. OBS 录屏 1080p30,系统声;
 3. 按「视频时间」列粗剪,拍点间硬切,不加转场;
 4. 导出后上传 YouTube(公开、≤3 分钟),回填提交核对表第 18 行。
+
+</details>

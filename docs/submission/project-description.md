@@ -1,4 +1,4 @@
-演示视频:https://youtu.be/zwhoxORu-Rc
+Demo video: https://youtu.be/zwhoxORu-Rc
 
 # Project description
 

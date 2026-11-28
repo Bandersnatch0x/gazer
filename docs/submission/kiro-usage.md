@@ -2,7 +2,7 @@
 
 What Kiro was asked to do, what it produced, and what the engine enforces.
 
-**Status.** The `.kiro` assets in this repository are written and load-bearing: specs pin the behaviour the tests assert, steering pins the red lines, and the hook runs the gate. The MCP server and Kiro powers are **not** used, and this document says so rather than implying otherwise. Kiro CLI 3.5.0 was used for a real session on 2026-11-24; see §9.
+**Status.** The `.kiro` assets in this repository are written and load-bearing: specs pin the behaviour the tests assert, and steering pins the red lines. The hook is configured to run the gate but has not been observed firing inside Kiro; see §8. The MCP server and Kiro powers are **not** used, and this document says so rather than implying otherwise. Kiro CLI 3.5.0 was used for a real session on 2026-11-24; see §9.
 
 ## 1. Spec: simulation core
 

@@ -1,6 +1,160 @@
 # GAZER
 
-**English summary.** GAZER is a 1997-style virtual pet game that was never a pet game. A deterministic simulation owns physics; an LLM owns fate — world shape, anomalies, swarm beliefs, and the one line only you hear. Delete the model and it becomes an ordinary pixel pet game; that is the claim the project has to keep true. Built for Kiroween 2026, Resurrection category.
+GAZER is a 1997-style virtual pet game that was never a pet game. You raise a model that remembers, lies, and lives on through its offspring. Built for Kiroween 2026, Resurrection category.
+
+[Play the English silent run](https://bandersnatch0x.github.io/gazer/?lang=en) · [Watch the demo](https://youtu.be/zwhoxORu-Rc) · [Read the English video transcript](docs/submission/demo-video-english.md)
+
+**The public playable build has no model backend.** It runs the simulation without live LLM dialogue. The video shows a local model-connected session. See [Local live LLM setup](#local-live-llm-setup) to reproduce that mode with your own service.
+
+## Version history
+
+| Version | Model role | Design claim |
+| --- | --- | --- |
+| v1 | Voice | Some text is generated. |
+| v2 | Director | A model directs the world. |
+| v3 | Identity | The creature's identity includes its prompt genome. |
+
+The design turns model constraints into game mechanics. Response latency sets the dialogue rhythm. Prompt drift changes identity over time. No model connection produces the silent run.
+
+## The problem
+
+Virtual pet games make life predictable through fixed rules for hunger, cleanliness, and dialogue. GAZER retains deterministic creature physics but lets a model propose world changes, anomalies, and dialogue about the player's actions.
+
+The engine validates those proposals. The simulation remains a pure reducer. The same initial state and event sequence reproduce the same simulation result. Model output stays outside that deterministic path until the engine accepts it as an event.
+
+Without a model, the pixel pet simulation continues. Live generated scenes do not.
+
+## Architecture
+
+The project has three layers with enforced boundaries.
+
+```text
+Front end    PixiJS rendering, effect execution, browser effects
+     ^       Validated structured instructions and roundtable scripts
+Director     Asynchronous, event-driven model calls
+     ^       Behaviour ledger, world summary, private memory slices
+Simulation   Deterministic state, resources, gossip, and saves
+```
+
+- The simulation owns physics. `step(state, event)` has no wall clock, unseeded randomness, or I/O. It updates hunger, cleanliness, death, GV, and expression stages.
+- The director proposes effects from the 30-item library in `docs/design/fx/`. Validation, budgets, and guards run before execution. Rejected proposals do not change the world.
+- GV controls expression intensity, such as dialogue frequency and anomaly density. GV is reversible. Ontological change controls what creatures are and believe, and does not reverse when GV falls.
+
+A roundtable normally uses one model call for several speakers. The model sees all participating creatures' context. The engine checks that each turn cites a memory ID in that speaker's own slice and replaces invalid turns with a fallback. Citation validation is not semantic or physical isolation between speakers.
+
+Level A is the shared-context roundtable. At stage 3 or above, selected `deceive` or `accuse` turns can receive a Level B check. That separate call contains only the speaker's memory slice and genome summary. A negative verdict replaces the turn and records the rejected line as an inferred memory. The check runs at most once per scene. The design also describes a per-speaker Level C exhibition mode. It is not the default judge setup.
+
+Context selection uses a 600-token budget rather than rewritten summaries. Rewriting memory text would break citation traceability. The director selects up to three scored `working` memories and includes `consolidated` identity memories. See `docs/design/CONTEXT.md`.
+
+## Run locally
+
+Use Node.js 24, the version used by this repository's CI.
+
+```sh
+npm ci
+npm run dev
+```
+
+Open the local address printed by Vite. Add `?lang=en` to select English. Without an `endpoint` parameter, the game starts a silent run.
+
+Use these commands to check and build the project.
+
+```sh
+npm run check
+npm run build
+```
+
+`npm run check` runs TypeScript checks and the full test suite. `npm run build` writes the static application to `dist/`. A static build does not include the model adapter.
+
+## Local live LLM setup
+
+**Use your own model service and credentials.** The checked-in adapter points to an author-local service that is not available to judges. No shared model access is supplied.
+
+1. Open `vite.config.ts` and locate `llmAdapter()`.
+2. Set its server-side `UPSTREAM`, `KEY`, and `MODEL` constants for your OpenAI-compatible chat-completions service. `UPSTREAM` is the full `/v1/chat/completions` URL.
+3. Keep the credential in server-side configuration. Do not put a key in a browser URL, a `VITE_*` variable, or a submitted file. Do not commit your local credential changes.
+4. Start or restart `npm run dev`.
+5. Open Vite's local address with `?lang=en&endpoint=/v1/game`.
+
+The browser calls the same-origin `/v1/game` adapter, not the upstream model URL. The `endpoint` parameter must refer to the game's protocol. It is not a field for an API key or a vendor chat-completions URL. Cross-origin model endpoints are rejected by the client.
+
+With the adapter selected, the game can request generated scenes. `LINKED` means the model path is selected, not that every request has succeeded. Inspect the local server and network response to confirm a successful call. The adapter admits at most 15 successful calls per sliding 30-minute window. Failed requests, timeouts, and exhausted budgets use fallback dialogue. No loading screen blocks the simulation.
+
+This setup changes local configuration only. It does not add a backend to the public static site. Deployment of a live service is outside this submission correction.
+
+## Test the public build
+
+1. Open the [English playable build](https://bandersnatch0x.github.io/gazer/?lang=en). No account or API key is required.
+2. Wait for the BIOS sequence to finish. Expect a running creature world and `NO SIGNAL` in the status bar.
+3. Feed a creature, clean it, and hold it to pet it. Open **BESTIARY** to inspect creatures and memories.
+4. Open **MANUAL** for the controls and the silent-run explanation.
+5. Double-click a creature to inspect its pupil. Try the power button while GV is below 60 to restart.
+
+The silent run has no live LLM scenes or model-directed anomalies. Scripted and fallback text can still appear, including the silent-run line at 40 minutes. Use the video to inspect the recorded model-connected session, or configure a local service as described above.
+
+The interface defaults to English. `?lang=en` explicitly selects English. The language button changes the interface and fallback text. It does not translate model dialogue that has already been generated.
+
+## Controls
+
+| Action | Result |
+| --- | --- |
+| Left-click a creature | Feed it. The behaviour ledger records hesitation. |
+| Right-click a creature | Clean it. |
+| Hold a creature | Pet it. Keep holding to open the naming prompt. |
+| Drag a creature | Move it. |
+| Double-click a creature | Inspect its pupil. The view changes with the stage. |
+| Click an egg | Choose immediate, warm-water, still, or unattended incubation. |
+| Double-click an atavistic creature at GV 75 or above | Start the tower-glyph interaction when its conditions are met. |
+| Type into the terminal at stage 3 or above | Use the terminal. Earlier stages return `> access denied`. |
+| Press the lower-right power button | Restart below GV 60. At GV 60 to 79, the machine refuses. At GV 80 or above, it ignores the button. |
+
+Two healthy creatures can court and produce an egg. Incubation changes the offspring's traits. Unattended incubation takes three times as long and is the only option that passes on a secret.
+
+Long petting, repeated renaming, and selective feeding enter the behaviour ledger. Later scenes can refer to those actions.
+
+## The 1997 frame and endings
+
+The game uses the fictional Lumen Soft LS-97 monitor frame. Its art combines a beige case, scanlines, BIOS boot text, a black tower with a wrong-way shadow, and a DOS-style terminal. See `docs/design/art/`.
+
+The tower holds eight fixed, human-authored glyph texts in `src/canon/`. The model cannot rewrite them. Reading all eight supplies the key to the true ending. The creatures reconstruct a voice from 1997, and the monitor frame dissolves. World conditions at GV 100 determine the fusion, judgment, forgetting, or true-gaze ending.
+
+At GV 80, the terminal's `[ _ ]` control can open the reflection channel. The channel shows beliefs, confidence, and their provenance. The forecast layer is disabled through the fallback specified in `SPEC.md` section 10.2. The recorded 200-seed calibration improved accuracy by 4.5 percentage points, below the required 10 points. That historical result was not rerun for this documentation update.
+
+## Ontological axes
+
+- Kind changes from pet to organism, observer, record, and substrate. The entity persists as its category changes.
+- Persistence uses genomes for lineage, sessions for the player, a seed and events for world replay, and witness chains for memories.
+- Epistemic status distinguishes `witnessed`, `heard`, `inferred`, and `fabricated`. A distorted memory is stored as witnessed by its holder. The player can inspect provenance that the holder cannot distinguish.
+
+## Kiro use
+
+- `.kiro/specs/gazer/requirements.md` defines EARS requirements for the simulation, GV, ledger, roundtable validation, private memory, and silent run.
+- `.kiro/steering/product.md` records the product boundaries and seven red lines.
+- `.kiro/steering/engineering.md` requires a pure reducer, seeded randomness, model output outside replay, and no client-side secrets.
+- `.kiro/hooks/gate-on-src-change.json` is configured to run `npm run check` on source or test saves. It has not been observed firing inside Kiro.
+
+The [English Kiro write-up](docs/submission/kiro-usage.md) records eight prompts, retained and rejected outputs, and the session evidence dated November 24, 2026. MCP, powers, and configured custom agents are not claimed as used.
+
+## Lifecycle and fallback
+
+Awakening events, ledger anchoring, and stage changes use the declarative lifecycle table described in `docs/design/HARNESS.md`. Synchronous callbacks have a 5 ms budget with overrun reporting. Asynchronous work is queued.
+
+The design defines separate model routes for roundtables, ontological direction, memory drift and consolidation, Level B verification, and speech. Fallback is part of the presentation. A degraded voice can add character noise, slow the heartbeat, and record that the creatures have changed their voice, rather than show an error screen.
+
+## Submission materials
+
+The organizer's English-translation correction notice gives a deadline of **December 4, 2026, at 2:00 p.m. Pacific Time**, which is **December 5, 2026, at 06:00 Beijing time**.
+
+- [English project description and Chinese original](docs/submission/project-description.md)
+- [English Devpost field pack and judge instructions](docs/submission/devpost-fields.md)
+- [Complete English narration translation and video description](docs/submission/demo-video-english.md)
+- [English WebVTT subtitle file](docs/submission/demo-video-en.vtt)
+- [Submission checklist](docs/submission/checklist.md)
+
+The complete English narration translation and English video title were saved to YouTube on November 29, 2026. The English WebVTT subtitle track still needs sentence-by-sentence listening review and upload. Committing the subtitle file does not publish a YouTube subtitle track.
+
+<details>
+<summary>中文原文，补件后的试玩与字幕状态以以上英文说明为准</summary>
 
 **一句话:** 你养的不是宠物,是一个会记忆、会撒谎、会借后代活下去的模型。
 
@@ -107,4 +261,6 @@ GV 80 起终端伪按钮 `[ _ ]` 会切出**倒影信道**(OSD 层):群体对「
 Kiroween 2026,**Resurrection** 赛道。截止 **2026-12-04 14:00 太平洋时间**(北京时间 2026-12-05 06:00)。要求:使用 Kiro,仓库公开并带开源许可,根目录有 `/.kiro`。
 
 提交清单见 `docs/submission/checklist.md`。
+
+</details>
 
